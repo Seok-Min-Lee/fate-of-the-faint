@@ -624,6 +624,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 796098039519068836}
+  - component: {fileID: 7563431042317341752}
+  - component: {fileID: 1417925118630404026}
   m_Layer: 5
   m_Name: Power Card
   m_TagString: Untagged
@@ -652,6 +654,41 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 300, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &7563431042317341752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7457746064626439576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0299230ae8f44b2409e241da6d3b5e3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CombatCard
+  type: 0
+  cost: {fileID: 5611704556878957064}
+  name: {fileID: 5278340118754781056}
+  desc: {fileID: 5696761504090642716}
+  image: {fileID: 5705374330136531428}
+--- !u!114 &1417925118630404026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7457746064626439576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0570fd64ab4c86f47b733cb01f4b077d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardUIInteraction
+  hoverLiftY: 80
+  hoverScale: 1.15
+  hoverRotateToZ: 0
+  dragScale: 1.1
+  rotateFlatWhileDrag: 1
+  snapBackSpeed: 25
 --- !u!1 &7921474596540231581
 GameObject:
   m_ObjectHideFlags: 0
@@ -893,7 +930,7 @@ RectTransform:
   m_GameObject: {fileID: 8320051356711400667}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2700812462406966917}

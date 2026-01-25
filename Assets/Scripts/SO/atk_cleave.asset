@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3cca72567dd0a84c857b9f8729cf2b8, type: 3}
+  m_Name: atk_cleave
+  m_EditorClassIdentifier: Assembly-CSharp::CardSO
+  id: atk_cleave
+  name: "\uC804\uCCB4 \uACF5\uACA9"
+  description: "\uC801 \uC804\uCCB4 \uD53C\uD574 7"
+  image: {fileID: -1910036739, guid: feb56837674cabc448f6b2f814049aed, type: 3}
+  type: 0
+  rarity: 0
+  target: 2
+  cost: 2
+  effects:
+  - target: 2
+    effectType: 0
+    repeat: 1
+    value: 7
+  upgradeCard: {fileID: 0}
