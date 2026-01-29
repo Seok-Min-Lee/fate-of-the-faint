@@ -21,7 +21,7 @@ MonoBehaviour:
   target: 2
   cost: 2
   effects:
-  - target: 2
+  - targetType: 2
     effectType: 0
     repeat: 1
     value: 7

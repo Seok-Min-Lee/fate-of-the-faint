@@ -11,20 +11,18 @@ public class CardViewPool : MonoBehaviour
     private Queue<CardView> SkillPool => skillQueue;
     private Queue<CardView> PowerPool => powerQueue;
 
-    public IReadOnlyList<CardView> AttackList => attackList;
-    public IReadOnlyList<CardView> SkillList => skillList;
-    public IReadOnlyList<CardView> PowerList => powerList;
+    public IReadOnlyList<CardView> Actives => actives;
 
     private Queue<CardView> attackQueue = new Queue<CardView>();
     private Queue<CardView> skillQueue = new Queue<CardView>();
     private Queue<CardView> powerQueue = new Queue<CardView>();
 
-    private List<CardView> attackList = new List<CardView>();
-    private List<CardView> skillList = new List<CardView>();
-    private List<CardView> powerList = new List<CardView>();
+    private List<CardView> actives = new List<CardView>();
 
     public void Push(CardView cardView)
     {
+        actives.Remove(cardView);
+
         switch (cardView.Type)
         {
             case CardView.ViewType.Attack:
@@ -45,25 +43,34 @@ public class CardViewPool : MonoBehaviour
     }
     public CardView Pop(CardType type)
     {
+        CardView cardView;
+
         switch (type)
         {
             case CardType.Attack:
-                return attackQueue.Count > 0 ? 
-                        attackQueue.Dequeue() : 
-                        GameObject.Instantiate<CardView>(attackViewPrefab, transform);
+                cardView = attackQueue.Count > 0 ? 
+                           attackQueue.Dequeue() : 
+                           GameObject.Instantiate<CardView>(attackViewPrefab, transform);
+                break;
 
             case CardType.Skill:
-                return skillQueue.Count > 0 ?
-                        skillQueue.Dequeue() :
-                        GameObject.Instantiate<CardView>(skillViewPrefab, transform);
+                cardView = skillQueue.Count > 0 ?
+                           skillQueue.Dequeue() :
+                           GameObject.Instantiate<CardView>(skillViewPrefab, transform);
+                break;
 
             case CardType.Power:
-                return powerQueue.Count > 0 ?
-                        powerQueue.Dequeue() :
-                        GameObject.Instantiate<CardView>(powerViewPrefab, transform);
+                cardView = powerQueue.Count > 0 ?
+                           powerQueue.Dequeue() :
+                           GameObject.Instantiate<CardView>(powerViewPrefab, transform);
+                break;
 
             default:
                 return null;
         }
+
+        actives.Add(cardView);
+
+        return cardView;
     }
 }

@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class CardInstance
+﻿public class CardInstance
 {
     public CardInstance(
         string instanceId, 

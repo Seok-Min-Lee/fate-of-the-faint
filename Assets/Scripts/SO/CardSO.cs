@@ -24,7 +24,6 @@ public class CardSO : ScriptableObject
     [Header("Upgrade")]
     [SerializeField] private CardSO upgradeCard;
 
-    #region ##### getter #####
     public string Id => id;
     public string Name => name;
     public string Description => description;
@@ -35,12 +34,11 @@ public class CardSO : ScriptableObject
     public int Cost => cost;
     public CardEffect[] Effects => effects;
     public CardSO UpgradeCard => upgradeCard;
-    #endregion
 }
 [Serializable]
 public struct CardEffect
 {
-    public TargetType target;
+    public TargetType targetType;
     public EffectType effectType;
     public int repeat;
     public int value;
