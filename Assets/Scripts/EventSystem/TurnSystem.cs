@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TurnSystem : MonoBehaviour
@@ -7,6 +8,7 @@ public class TurnSystem : MonoBehaviour
     [SerializeField] private Enemy[] enemies;
 
     public TurnContext TurnContext { get; private set; }
+    public List<Enemy> livedEnemies => enemies.Where(e => !e.IsDeath).ToList();
     private int turnId = 0;
 
     private void OnEnable()

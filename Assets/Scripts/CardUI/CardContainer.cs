@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using config;
+﻿using config;
 using DefaultNamespace;
 using events;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 public class CardContainer : MonoBehaviour
 {
@@ -38,6 +39,18 @@ public class CardContainer : MonoBehaviour
 
     [SerializeField]
     private CardPlayConfig cardPlayConfig;
+
+    [Header("Targetting")]
+    [SerializeField] private Camera worldCamera;
+    [SerializeField] private LayerMask targetLayerMask; // Enemy/Player 레이어
+    [SerializeField] private float targetRayDistance = 200f; 
+
+    [SerializeField] private LineRenderer targetLine;
+    [SerializeField] private Color noTargetColor = Color.gray;
+    [SerializeField] private Color hasTargetColor = Color.red;
+
+    [SerializeField] private Transform prepareArea;
+
 
     [Header("Events")]
     [SerializeField]
@@ -113,6 +126,7 @@ public class CardContainer : MonoBehaviour
             wrapper.eventsConfig = eventsConfig;
             wrapper.preventCardInteraction = preventCardInteraction;
             wrapper.container = this;
+            wrapper.prepareArea = prepareArea;
         }
     }
 
@@ -250,19 +264,36 @@ public class CardContainer : MonoBehaviour
     {
         currentDraggedCard = card;
     }
-
     public void OnCardDragEnd()
     {
-        // If card is in play area, play it!
-        if (IsCursorInPlayArea())
+        if (currentDraggedCard == null)
+        {
+            return;
+        }
+
+        bool b = false;
+        ITargetable target = null;
+        if (currentDraggedCard.CardInstance.BaseDef.Target == TargetType.EnemySingle)
+        {
+            // 라치되었든 아니든, 종료 시점의 타겟을 한 번 확정
+            // (타겟팅 라치가 된 카드만 플레이하도록 강제하려면 조건 추가 가능)
+            target = RaycastTargetUnderCursor(currentDraggedCard);
+            b = target != null;
+        }
+        else
+        {
+            b = IsCursorInPlayArea();
+        }
+
+        if (b)
         {
             eventsConfig?.OnCardPlayed?.Invoke(new CardPlayed(currentDraggedCard));
             if (cardPlayConfig.destroyOnPlay)
             {
-                //DestroyCard(currentDraggedCard);
-                currentDraggedCard.PlayCardStart();
+                currentDraggedCard.PlayCardStart(target);
             }
         }
+
         currentDraggedCard = null;
     }
 
@@ -273,18 +304,162 @@ public class CardContainer : MonoBehaviour
         //Destroy(card.gameObject);
     }
 
-    private bool IsCursorInPlayArea()
+    public ITargetable UpdateTargetingUI(CardView card)
     {
-        if (cardPlayConfig.playArea == null) return false;
+        if (targetLine == null || worldCamera == null)
+        {
+            return null;
+        }
 
-        var cursorPosition = Input.mousePosition;
-        var playArea = cardPlayConfig.playArea;
-        var playAreaCorners = new Vector3[4];
+        targetLine.enabled = true;
+
+        // 카드 중심 (Screen → World)
+        Vector3 cardScreen = RectTransformUtility.WorldToScreenPoint(null, card.transform.position);
+        Vector3 from = worldCamera.ScreenToWorldPoint(
+            new Vector3(cardScreen.x, cardScreen.y, worldCamera.nearClipPlane + 1f)
+        );
+
+        // 기본 끝점: 마우스
+        Vector3 mouseScreen = Input.mousePosition;
+        Vector3 to = worldCamera.ScreenToWorldPoint(
+            new Vector3(mouseScreen.x, mouseScreen.y, worldCamera.nearClipPlane + 1f)
+        );
+
+        ITargetable target = RaycastTargetUnderCursor(card);
+        bool hasTarget = target != null;
+
+        // 타겟이 있으면 AimPoint로 스냅
+        if (hasTarget)
+        {
+            Vector3 aim = target.AimPoint.position;
+            to = aim;
+        }
+
+        targetLine.positionCount = 2;
+        targetLine.SetPosition(0, from);
+        targetLine.SetPosition(1, to);
+
+        Color c = hasTarget ? hasTargetColor : noTargetColor;
+        targetLine.startColor = c;
+        targetLine.endColor = c;
+
+        return target;
+    }
+
+    public void HideTargetLine()
+    {
+        if (targetLine != null)
+        { 
+            targetLine.enabled = false;
+        }
+    }
+
+    private ITargetable RaycastTargetUnderCursor(CardView card)
+    {
+        if (worldCamera == null) 
+        {
+            return null;
+        }
+
+        Ray ray = worldCamera.ScreenPointToRay(Input.mousePosition);
+
+        // --- Debug 기록 ---
+        _lastTargetRay = ray;
+        _hasLastRay = true;
+        _lastRayHit = false;
+        _lastHitCollider = null;
+        _lastHitPoint = ray.origin + ray.direction * targetRayDistance;
+        // -------------------
+
+        if (Physics.Raycast(ray, out RaycastHit hit, targetRayDistance, targetLayerMask))
+        {
+            // --- Debug 기록 ---
+            _lastRayHit = true;
+            _lastHitPoint = hit.point;
+            _lastHitCollider = hit.collider;
+            // -------------------
+
+            var t = hit.collider.GetComponentInParent<ITargetable>();
+            if (t != null)
+            {
+                return t;
+            }
+        }
+
+        return null;
+    }
+    public bool IsCursorInPlayArea()
+    {
+        if (cardPlayConfig.playArea == null) 
+        {
+            return false;
+        }
+
+        Vector3 cursorPosition = Input.mousePosition;
+        RectTransform playArea = cardPlayConfig.playArea;
+        Vector3[] playAreaCorners = new Vector3[4];
         playArea.GetWorldCorners(playAreaCorners);
+
         return cursorPosition.x > playAreaCorners[0].x &&
                cursorPosition.x < playAreaCorners[2].x &&
                cursorPosition.y > playAreaCorners[0].y &&
                cursorPosition.y < playAreaCorners[2].y;
 
+    }
+    public void SetTargetLine(CardView card, bool visible)
+    {
+        if (targetLine == null)
+        {
+            return;
+        }
+
+        targetLine.enabled = visible;
+
+        if (!visible)
+        {
+            return;
+        }
+
+        // 카드 중심(화면 좌표) -> 현재 포인터(화면 좌표)
+        Vector3 from = card.transform.position;
+        Vector3 to = Input.mousePosition;
+
+        targetLine.positionCount = 2;
+        targetLine.SetPosition(0, from);
+        targetLine.SetPosition(1, to);
+    }
+
+    [Header("Debug")]
+    [SerializeField] private bool drawTargetRayGizmo = true;
+
+    private Ray _lastTargetRay;
+    private bool _hasLastRay;
+    private bool _lastRayHit;
+    private Vector3 _lastHitPoint;
+    private Collider _lastHitCollider;
+    private void OnDrawGizmos()
+    {
+        if (!drawTargetRayGizmo || !_hasLastRay)
+        {
+            return;
+        }
+
+        // 레이 자체
+        Gizmos.color = _lastRayHit ? Color.green : Color.yellow;
+        Gizmos.DrawLine(_lastTargetRay.origin, _lastHitPoint);
+
+        // 히트 지점 표시
+        if (_lastRayHit)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawSphere(_lastHitPoint, 0.05f);
+
+            // 히트한 콜라이더의 bounds 표시(선택)
+            if (_lastHitCollider != null)
+            {
+                Gizmos.color = new Color(0f, 1f, 1f, 0.2f);
+                Gizmos.DrawWireCube(_lastHitCollider.bounds.center, _lastHitCollider.bounds.size);
+            }
+        }
     }
 }

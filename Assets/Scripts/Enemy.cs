@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 
 public class Enemy : Entity
 {
@@ -60,14 +61,14 @@ public class Enemy : Entity
         {
             e.Damage.Add(strength, this);
         }
-        else if (e.Damage.Target == this)
+        else if (e.Damage.Target == this as ITargetable)
         {
             e.Damage.Subtract(shield, this);
         }
     }
     private void OnDamageResolved(DamageResolved e)
     {
-        if (e.Target == this)
+        if (e.Target == this as ITargetable)
         {
             int startAmount = hp;
             hp -= e.Amount;

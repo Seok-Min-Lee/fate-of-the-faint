@@ -48,7 +48,7 @@ public class DamageSystem : MonoBehaviour
 }
 public class DamageContext
 {
-    public DamageContext(int amount, Entity source, Entity target)
+    public DamageContext(int amount, Entity source, ITargetable target)
     {
         Amount = amount;
         Source = source;
@@ -57,7 +57,7 @@ public class DamageContext
     }
     public int Amount { get; private set; }
     public Entity Source { get; private set; }
-    public Entity Target { get; private set; }
+    public ITargetable Target { get; private set; }
     public List<object> Modifiers { get; private set; }
     public void Add(int value, object source)
     {

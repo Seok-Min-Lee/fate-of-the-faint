@@ -255,7 +255,7 @@ public struct CardPlayDeclared : ICombatEvent
 }
 public struct AttackDeclared : ICombatEvent
 {
-    public AttackDeclared(EventContext context, Entity source, Entity target, int amount)
+    public AttackDeclared(EventContext context, Entity source, ITargetable target, int amount)
     {
         Context = context;
         Source = source;
@@ -264,7 +264,7 @@ public struct AttackDeclared : ICombatEvent
     }
     public EventContext Context { get; private set; }
     public Entity Source { get; private set; }
-    public Entity Target { get; private set; }
+    public ITargetable Target { get; private set; }
     public int Amount { get; private set; }
     public EventMeta Meta => EventMetas.AttackDeclared;
 }
@@ -344,7 +344,7 @@ public struct DamageRequested : ICombatEvent
 }
 public struct DamageResolved : ICombatEvent
 {
-    public DamageResolved(EventContext context, Entity source, Entity target, int amount)
+    public DamageResolved(EventContext context, Entity source, ITargetable target, int amount)
     {
         Context = context;
         Source = source;
@@ -353,7 +353,7 @@ public struct DamageResolved : ICombatEvent
     }
     public EventContext Context { get; private set; }
     public Entity Source { get; private set; }
-    public Entity Target { get; private set; }
+    public ITargetable Target { get; private set; }
     public int Amount { get; private set; }
     public EventMeta Meta => EventMetas.DamageResolved;
 }

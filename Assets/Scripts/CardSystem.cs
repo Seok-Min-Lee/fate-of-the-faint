@@ -8,7 +8,6 @@ public class CardSystem : MonoBehaviour
 {
     [SerializeField] private CombatManager combatManager;
     [SerializeField] private Player player;
-    [SerializeField] private Enemy tempTarget;
 
     [SerializeField] private CardContainer cardHand;
     [SerializeField] private CardViewPool cardViewPool;
@@ -25,6 +24,7 @@ public class CardSystem : MonoBehaviour
 
     private CardView cardView;
     private CardInstance cardInstance;
+    private ITargetable target;
     private void Start()
     {
         foreach (CardSO so in Utils.Shuffle(cardSOs))
@@ -53,10 +53,11 @@ public class CardSystem : MonoBehaviour
         combatManager.EventBus.Unsubscribe<DamageResolved>(OnDamageResolved);
         combatManager.EventBus.Unsubscribe<PlayerTurnEnded>(OnPlayerTurnEnded);
     }
-    public void PlayCardStart(CardView cardView)
+    public void PlayCardStart(CardView cardView, ITargetable target)
     {
         this.cardView = cardView;
         this.cardInstance = cardView.CardInstance;
+        this.target = target;
 
         ActionContext actionContext = new ActionContext(source: player, type: ActionType.PlayerCardPlay);
 
@@ -83,6 +84,7 @@ public class CardSystem : MonoBehaviour
             {
                 cardView = null;
                 cardInstance = null;
+                target = null;
             }
         });
     }
@@ -109,53 +111,72 @@ public class CardSystem : MonoBehaviour
     {
         foreach (CardEffect ce in cardInstance.BaseDef.Effects)
         {
-            EventContext context = new EventContext(
-                source: this,
-                action: e.Context.Action,
-                turn: e.Context.Turn,
-                combat: e.Context.Combat
-            );
+            List<ITargetable> targets = new List<ITargetable>();
+            switch (ce.targetType)
+            {
+                case TargetType.Self:
+                    targets.Add(player);
+                    break;
+                case TargetType.EnemySingle:
+                    targets.Add(target);
+                    break;
+                case TargetType.EnemyAll:
+                    targets.AddRange(combatManager.TurnSystem.livedEnemies);
+                    break;
+            }
 
-            if (ce.effectType == EffectType.Attack)
+            for (int i = 0; i < targets.Count; i++)
             {
-                combatManager.EventBus.Publish<AttackDeclared>(new AttackDeclared(
-                    context: context,
-                    source: player,
-                    target: tempTarget,
-                    amount: ce.value
-                ));
-            }
-            else if (ce.effectType == EffectType.Shield)
-            {
-                combatManager.EventBus.Publish<ShieldDeclared>(new ShieldDeclared(context: context));
-            }
-            else if (ce.effectType == EffectType.DrawCard)
-            {
-                combatManager.EventBus.Publish<DrawCardDeclared>(new DrawCardDeclared(context: context));
-            }
-            else if (ce.effectType == EffectType.GainEnergy)
-            {
-                combatManager.EventBus.Publish<GainEnergyDeclared>(new GainEnergyDeclared(context: context));
-            }
-            else if (ce.effectType == EffectType.ModifyCost)
-            {
-                combatManager.EventBus.Publish<ModifyCostDeclared>(new ModifyCostDeclared(context: context));
-            }
-            else if (ce.effectType == EffectType.Strengthen)
-            {
-                combatManager.EventBus.Publish<StrengthenDeclared>(new StrengthenDeclared(context: context));
-            }
-            else if (ce.effectType == EffectType.Weaken)
-            {
-                combatManager.EventBus.Publish<WeakenDeclared>(new WeakenDeclared(context: context));
-            }
-            else if (ce.effectType == EffectType.Vulnerable)
-            {
-                combatManager.EventBus.Publish<VulnerableDeclared>(new VulnerableDeclared(context: context));
-            }
-            else
-            {
-                return;
+                ITargetable target = targets[i];
+
+                EventContext context = new EventContext(
+                    source: this,
+                    action: e.Context.Action,
+                    turn: e.Context.Turn,
+                    combat: e.Context.Combat
+                );
+
+                if (ce.effectType == EffectType.Attack)
+                {
+                    combatManager.EventBus.Publish<AttackDeclared>(new AttackDeclared(
+                        context: context,
+                        source: player,
+                        target: target,
+                        amount: ce.value
+                    ));
+                }
+                else if (ce.effectType == EffectType.Shield)
+                {
+                    combatManager.EventBus.Publish<ShieldDeclared>(new ShieldDeclared(context: context));
+                }
+                else if (ce.effectType == EffectType.DrawCard)
+                {
+                    combatManager.EventBus.Publish<DrawCardDeclared>(new DrawCardDeclared(context: context));
+                }
+                else if (ce.effectType == EffectType.GainEnergy)
+                {
+                    combatManager.EventBus.Publish<GainEnergyDeclared>(new GainEnergyDeclared(context: context));
+                }
+                else if (ce.effectType == EffectType.ModifyCost)
+                {
+                    combatManager.EventBus.Publish<ModifyCostDeclared>(new ModifyCostDeclared(context: context));
+                }
+                else if (ce.effectType == EffectType.Strengthen)
+                {
+                    combatManager.EventBus.Publish<StrengthenDeclared>(new StrengthenDeclared(context: context));
+                }
+                else if (ce.effectType == EffectType.Weaken)
+                {
+                    combatManager.EventBus.Publish<WeakenDeclared>(new WeakenDeclared(context: context));
+                }
+                else if (ce.effectType == EffectType.Vulnerable)
+                {
+                    combatManager.EventBus.Publish<VulnerableDeclared>(new VulnerableDeclared(context: context));
+                }
+                else
+                {
+                    return;
+                }
             }
         }
     }
