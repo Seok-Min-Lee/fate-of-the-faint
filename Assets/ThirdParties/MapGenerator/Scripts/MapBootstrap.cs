@@ -63,12 +63,12 @@ public class MapBootstrap : MonoBehaviour
         {
             MapNodeView nodeView;
 
-            nodeView = nodePool.Count > 0 ? 
+            nodeView = nodePool.Count > 0 ?
                         nodePool.Dequeue() :
                         GameObject.Instantiate<MapNodeView>(nodePrefab, nodeParent);
-            
+
             nodeView.Init(
-                node: n, 
+                node: n,
                 normal: nodeIconPairs[(int)n.Type].normal,
                 hover: nodeIconPairs[(int)n.Type].hover,
                 isVisible: n.Id != 1
@@ -121,6 +121,7 @@ public class MapBootstrap : MonoBehaviour
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         line.localRotation = Quaternion.Euler(0, 0, angle);
     }
+}
 [Serializable]
 public struct MapNodeIconPair
 {
