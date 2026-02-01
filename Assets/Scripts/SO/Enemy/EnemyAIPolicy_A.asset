@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1c63f272b58a394da1275a370b44a02, type: 3}
+  m_Name: EnemyAIPolicy_A
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAIPolicySO
+  actions:
+  - {fileID: 11400000, guid: 609c60c1aaf73a340ac2ac0f3d72c262, type: 2}
+  - {fileID: 11400000, guid: 61f7cbdaff0c9e840988a3d3a3c85bc4, type: 2}
+  globalMaxRepeat: 1
+  allowFallbackPick: 1

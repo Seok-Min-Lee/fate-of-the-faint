@@ -5,10 +5,10 @@ using UnityEngine;
 public class TurnSystem : MonoBehaviour
 {
     [SerializeField] private CombatManager combatManager;
-    [SerializeField] private Enemy[] enemies;
+    [SerializeField] private EnemyView[] enemies;
 
     public TurnContext TurnContext { get; private set; }
-    public List<Enemy> livedEnemies => enemies.Where(e => !e.IsDeath).ToList();
+    public List<EnemyView> livedEnemies => enemies.Where(e => !e.IsDeath).ToList();
     private int turnId = 0;
 
     private void OnEnable()
@@ -172,7 +172,7 @@ public class TurnContext
     public TurnPhase Phase { get; private set; }
     public object Source { get; private set; }
 
-    public Queue<Enemy> EnemyQueue { get; private set; } = new Queue<Enemy>();
+    public Queue<EnemyView> EnemyQueue { get; private set; } = new Queue<EnemyView>();
 }
 public enum TurnPhase
 {

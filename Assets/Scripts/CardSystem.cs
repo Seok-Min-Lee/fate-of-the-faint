@@ -147,7 +147,12 @@ public class CardSystem : MonoBehaviour
                 }
                 else if (ce.effectType == EffectType.Shield)
                 {
-                    combatManager.EventBus.Publish<ShieldDeclared>(new ShieldDeclared(context: context));
+                    combatManager.EventBus.Publish<ShieldDeclared>(new ShieldDeclared(
+                        context: context,
+                        source: player,
+                        target: player,
+                        amount: -1
+                    ));
                 }
                 else if (ce.effectType == EffectType.DrawCard)
                 {

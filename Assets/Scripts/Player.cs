@@ -1,8 +1,12 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 
 public class Player : Entity
 {
     [SerializeField] private CombatManager combatManager;
+
+    [SerializeField] private TextMeshPro hpText;
+
     public int hp;
     public int strength;
     public int shield;
@@ -39,6 +43,8 @@ public class Player : Entity
         {
             int startAmount = hp;
             hp -= e.Amount;
+
+            hpText.text = hp.ToString();
 
             EventContext eventContext = new EventContext(
                 source: this,

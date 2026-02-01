@@ -21,11 +21,6 @@ public class CombatManager : MonoBehaviour
         CardSystem = GetComponent<CardSystem>();
         UISystem = GetComponent<UISystem>();
     }
-    private void Start()
-    {
-        CombatStart();
-        TryPlayerTurnStart();
-    }
     private void OnEnable()
     {
         EventBus.Subscribe<CombatEndRequested>(OnCombatEndRequested);
@@ -74,7 +69,7 @@ public class CombatManager : MonoBehaviour
             request: requestContext
         ));
     }
-    private void CombatStart()
+    public void CombatStart()
     {
         CombatContext = new CombatContext(combatId: 0, source: this);
 
@@ -84,7 +79,10 @@ public class CombatManager : MonoBehaviour
             turn: null,
             combat: CombatContext
         );
+
         EventBus.Publish<CombatStarted>(new CombatStarted(eventContext));
+
+        TryPlayerTurnStart();
     }
     public void ExcuteAction(ActionContext action, System.Action<EventContext> declared)
     {

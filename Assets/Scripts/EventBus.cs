@@ -149,7 +149,7 @@ public struct EnemyTurnEnded : ICombatEvent
 }
 public struct EnemyActionStartRequested : ICombatEvent
 {
-    public EnemyActionStartRequested(EventContext context, RequestContext request, Enemy enemy)
+    public EnemyActionStartRequested(EventContext context, RequestContext request, EnemyView enemy)
     {
         Context = context;
         Request = request;
@@ -157,7 +157,7 @@ public struct EnemyActionStartRequested : ICombatEvent
     }
     public EventContext Context { get; private set; }
     public RequestContext Request { get; private set; }
-    public Enemy Enemy { get; private set; }
+    public EnemyView Enemy { get; private set; }
     public EventMeta Meta => EventMetas.EnemyActionStartRequested;
 }
 public struct ActionStarted : ICombatEvent
@@ -270,11 +270,17 @@ public struct AttackDeclared : ICombatEvent
 }
 public struct ShieldDeclared : ICombatEvent
 {
-    public ShieldDeclared(EventContext context)
+    public ShieldDeclared(EventContext context, Entity source, Entity target, int amount)
     {
         Context = context;
+        Source = source;
+        Target = target;
+        Amount = amount;
     }
     public EventContext Context { get; private set; }
+    public Entity Source { get; private set; }
+    public Entity Target { get; private set; }
+    public int Amount { get; private set; }
     public EventMeta Meta => EventMetas.ShieldDeclared;
 }
 public struct DrawCardDeclared : ICombatEvent
@@ -377,9 +383,9 @@ public struct DeathDeclared : ICombatEvent
     public DeathDeclared(EventContext context, Entity target)
     {
         Context = context;
-        Target = target;
+        Source = target;
     }
     public EventContext Context { get; private set; }
-    public Entity Target { get; private set; }
+    public Entity Source { get; private set; }
     public EventMeta Meta => EventMetas.DeathDeclared;
 }

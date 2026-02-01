@@ -40,9 +40,9 @@ public class DamageSystem : MonoBehaviour
         );
         combatManager.EventBus.Publish<DamageResolved>(new DamageResolved(
             context: eventContext,
-            damage.Source,
-            damage.Target,
-            damage.Amount
+            source: damage.Source,
+            target: damage.Target,
+            amount: Mathf.Max(0, damage.Amount)
         ));
     }
 }
