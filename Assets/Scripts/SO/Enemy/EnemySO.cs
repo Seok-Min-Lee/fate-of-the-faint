@@ -25,24 +25,6 @@ public sealed class EnemySO : ScriptableObject
     [Header("Rewards (Optional)")]
     public IntRange goldReward;
     [Range(0f, 1f)] public float rareRelicChance;
-
-    private void OnValidate()
-    {
-        if (id != null)
-        {
-            id = id.Trim();
-        }
-
-        if (displayName != null)
-        {
-            displayName = displayName.Trim();
-        }
-
-        if (maxHpRange.max < maxHpRange.min)
-        {
-            maxHpRange.max = maxHpRange.min;
-        }
-    }
 }
 public enum IntentType
 {
@@ -66,29 +48,11 @@ public enum StatusType
 [Serializable]
 public struct IntRange
 {
-    [Min(0)] public int min;
-    [Min(0)] public int max;
+    [SerializeField] private int min;
+    [SerializeField] private int max;
 
-    public int ClampMinMax(int value)
+    public int Roll()
     {
-        int lo = min;
-        int hi = max;
-
-        if (hi < lo)
-        {
-            hi = lo;
-        }
-
-        if (value < lo)
-        {
-            return lo;
-        }
-
-        if (value > hi)
-        {
-            return hi;
-        }
-
-        return value;
+        return UnityEngine.Random.Range(min, max + 1);
     }
 }

@@ -24,25 +24,6 @@ public class EventContext
     // 발생 주체 (선택)
     public object Source { get; private set; }
 }
-public class ActionContext
-{
-    public ActionContext(Entity source, ActionType type)
-    {
-        ActionId = Guid.NewGuid();
-        Source = source;
-        Type = type;
-    }
-    public Guid ActionId { get; private set; }
-    public Entity Source { get; private set; }   // Card, Monster, Relic 등
-    public ActionType Type { get; private set; }
-    public bool isCancelled = false;
-}
-public enum ActionType
-{
-    PlayerCardPlay,
-    PlayerTurnEnd,
-    EnemyAct,
-}
 public class RequestContext
 {
     public RequestContext(object source)

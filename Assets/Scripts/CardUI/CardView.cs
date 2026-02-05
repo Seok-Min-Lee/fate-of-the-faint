@@ -5,8 +5,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler,
-    IPointerUpHandler {
+public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler 
+{
     private const float EPS = 0.01f;
 
     public float targetRotation;
@@ -79,7 +79,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         else
         {
             // 1) 아직 라치 안 됐고, PlayArea에 닿으면 라치!
-            if (!targetingLatched && container.IsCursorInPlayArea() && CardInstance.BaseDef.Target == TargetType.EnemySingle)
+            if (!targetingLatched && container.IsCursorInPlayArea() && CardInstance.Origin.Target == TargetType.EnemySingle)
             {
                 targetingLatched = true;
                 lockedPosition = prepareArea.position;   // 닿는 순간 위치에 고정(원하면 스냅으로 변경 가능)
@@ -88,7 +88,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             // 2) 라치 됐으면: 카드 고정 + 타겟팅 UI 업데이트(라인/색)
             if (targetingLatched)
             {
-                if (CardInstance.BaseDef.Target == TargetType.EnemySingle)
+                if (CardInstance.Origin.Target == TargetType.EnemySingle)
                 {
                     rectTransform.position = lockedPosition;
                     container.UpdateTargetingUI(this);
@@ -223,10 +223,10 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         CardSystem = cardSystem;
         Pool = pool;
 
-        cost.text = cardInstance.BaseDef.Cost.ToString();
-        name.text = cardInstance.BaseDef.Name;
-        desc.text = cardInstance.BaseDef.Description;
-        image.sprite = cardInstance.BaseDef.Image;
+        cost.text = cardInstance.Origin.Cost.ToString();
+        name.text = cardInstance.Origin.Name;
+        desc.text = cardInstance.Origin.Description;
+        image.sprite = cardInstance.Origin.Image;
 
         gameObject.SetActive(true);
     }

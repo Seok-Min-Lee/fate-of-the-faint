@@ -17,8 +17,8 @@ MonoBehaviour:
   prefab: {fileID: 5893366658468600014, guid: 52ce31d693267fc44becdf145a27e5ad, type: 3}
   portrait: {fileID: 0}
   maxHpRange:
-    min: 50
-    max: 100
+    min: 10
+    max: 20
   baseBlock: 0
   baseStrength: 0
   aiPolicy: {fileID: 11400000, guid: 8c87ba47a15226d498ae4afebfb8224e, type: 2}

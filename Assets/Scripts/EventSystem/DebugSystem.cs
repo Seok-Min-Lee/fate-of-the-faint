@@ -17,15 +17,17 @@ public class DebugSystem : MonoBehaviour
     private bool bRebuild = false;
     private void OnEnable()
     {
-        combatManager.EventBus.OnPublished += Record;
-        combatManager.EventBus.Subscribe<ActionEnded>(OnActionEnded);
-        combatManager.EventBus.Subscribe<EnemyTurnEnded>(OnEnemyTurnEnded);
+        combatManager.CombatSystem.EventBus.OnPublished += Record;
+        combatManager.CombatSystem.EventBus.Subscribe<ActionEnded>(OnActionEnded);
+        combatManager.CombatSystem.EventBus.Subscribe<EnemyTurnEnded>(OnEnemyTurnEnded);
+        combatManager.CombatSystem.EventBus.Subscribe<CombatEnded>(OnCombatEnded);
     }
     private void OnDisable()
     {
-        combatManager.EventBus.OnPublished -= Record;
-        combatManager.EventBus.Unsubscribe<ActionEnded>(OnActionEnded);
-        combatManager.EventBus.Unsubscribe<EnemyTurnEnded>(OnEnemyTurnEnded);
+        combatManager.CombatSystem.EventBus.OnPublished -= Record;
+        combatManager.CombatSystem.EventBus.Unsubscribe<ActionEnded>(OnActionEnded);
+        combatManager.CombatSystem.EventBus.Unsubscribe<EnemyTurnEnded>(OnEnemyTurnEnded);
+        combatManager.CombatSystem.EventBus.Unsubscribe<CombatEnded>(OnCombatEnded);
     }
     private void LateUpdate()
     {
@@ -42,6 +44,10 @@ public class DebugSystem : MonoBehaviour
         bRebuild = true;
     }
     private void OnEnemyTurnEnded(EnemyTurnEnded e)
+    {
+        bRebuild = true;
+    }
+    private void OnCombatEnded(CombatEnded e)
     {
         bRebuild = true;
     }
@@ -84,7 +90,7 @@ public class DebugSystem : MonoBehaviour
                 // Turn-level events
                 foreach (var te in turn.TurnEvents)
                 {
-                    sb.AppendLine($"    [Turn] {te.ToDebugString()}");
+                    sb.AppendLine($"      {te.ToDebugString()}");
                 }
 
                 // Actions

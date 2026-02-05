@@ -1,0 +1,27 @@
+{
+    "playerId": "Player_A",
+    "currentHp": 100,
+    "maxHp": 100,
+    "gold": 0,
+    "rng": {
+        "seed": 1234,
+        "calls": 0
+    },
+    "nodes": [],
+    "cardIds": [
+        "atk_strike",
+        "atk_strike",
+        "atk_strike",
+        "atk_strike",
+        "atk_strike",
+        "skl_defend",
+        "skl_defend",
+        "skl_defend",
+        "skl_defend",
+        "skl_defend"
+    ],
+    "relicIds": [
+        "Relic_A"
+    ],
+    "potionIds": []
+}

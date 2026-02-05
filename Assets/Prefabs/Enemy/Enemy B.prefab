@@ -2033,7 +2033,7 @@ GameObject:
   - component: {fileID: 6460756203346933961}
   - component: {fileID: 9086454140340452781}
   m_Layer: 8
-  m_Name: Enemy (1)
+  m_Name: Enemy B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2092,11 +2092,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e59ff66dad1e8ba4eaf6a54d709e2822, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyView
-  aimPoint: {fileID: 0}
-  intentRenderer: {fileID: 0}
-  intentText: {fileID: 0}
-  hpText: {fileID: 0}
-  hp: 0
+  aimPoint: {fileID: 6711977895858098569}
+  intentRenderer: {fileID: 7099852418529909244}
+  intentText: {fileID: 4747070068791516446}
+  hpText: {fileID: 4639175181430164055}
+  hp: 100
   strength: 0
   shield: 0
   intent: 0

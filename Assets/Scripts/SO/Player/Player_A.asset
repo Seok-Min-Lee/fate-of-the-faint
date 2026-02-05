@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9be67b569a23a94b9648ec465a9d6c2, type: 3}
+  m_Name: Player_A
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSO
+  id: Player_A
+  displayName: Player_A
+  maxHp: 100
+  baseEnergy: 3
+  startingCards:
+  - {fileID: 11400000, guid: 1c0121fe95eeb5c408098a0970a2710d, type: 2}
+  - {fileID: 11400000, guid: 1c0121fe95eeb5c408098a0970a2710d, type: 2}
+  - {fileID: 11400000, guid: 1c0121fe95eeb5c408098a0970a2710d, type: 2}
+  - {fileID: 11400000, guid: 1c0121fe95eeb5c408098a0970a2710d, type: 2}
+  - {fileID: 11400000, guid: 1c0121fe95eeb5c408098a0970a2710d, type: 2}
+  - {fileID: 11400000, guid: cb0129a8410730c4aab3c28d4af99208, type: 2}
+  - {fileID: 11400000, guid: cb0129a8410730c4aab3c28d4af99208, type: 2}
+  - {fileID: 11400000, guid: cb0129a8410730c4aab3c28d4af99208, type: 2}
+  - {fileID: 11400000, guid: cb0129a8410730c4aab3c28d4af99208, type: 2}
+  - {fileID: 11400000, guid: cb0129a8410730c4aab3c28d4af99208, type: 2}
+  startingRelics:
+  - {fileID: 0}

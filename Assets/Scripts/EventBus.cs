@@ -47,36 +47,16 @@ public struct CombatStarted : ICombatEvent
     public EventContext Context { get; private set; }
     public EventMeta Meta => EventMetas.CombatStarted;
 }
-public struct CombatEndRequested : ICombatEvent
-{
-    public CombatEndRequested(EventContext context, RequestContext request)
-    {
-        Context = context;
-        Request = request;
-    }
-    public EventContext Context { get; private set; }
-    public RequestContext Request { get; private set; }
-    public EventMeta Meta => EventMetas.CombatEndRequested;
-}
 public struct CombatEnded : ICombatEvent
 {
-    public CombatEnded(EventContext context)
+    public CombatEnded(EventContext context, CombatState result)
     {
         Context = context;
+        Result = result;
     }
     public EventContext Context { get; private set; }
     public EventMeta Meta => EventMetas.CombatEnded;
-}
-public struct PlayerTurnStartRequested : ICombatEvent
-{
-    public PlayerTurnStartRequested(EventContext context, RequestContext request)
-    {
-        Context = context;
-        Request = request;
-    }
-    public EventContext Context { get; private set; }
-    public RequestContext Request { get; private set; }
-    public EventMeta Meta => EventMetas.PlayerTurnStartRequested;
+    public CombatState Result;
 }
 public struct PlayerTurnStarted : ICombatEvent
 {
@@ -107,17 +87,6 @@ public struct PlayerTurnEnded : ICombatEvent
     public EventContext Context { get; private set; }
     public EventMeta Meta => EventMetas.PlayerTurnEnded;
 }
-public struct EnemyTurnStartRequested : ICombatEvent
-{
-    public EnemyTurnStartRequested(EventContext context, RequestContext request)
-    {
-        Context = context;
-        Request = request;
-    }
-    public EventContext Context { get; private set; }
-    public RequestContext Request { get; private set; }
-    public EventMeta Meta => EventMetas.EnemyTurnStartRequested;
-}
 public struct EnemyTurnStarted : ICombatEvent
 {
     public EnemyTurnStarted(EventContext context)
@@ -126,17 +95,6 @@ public struct EnemyTurnStarted : ICombatEvent
     }
     public EventContext Context { get; private set; }
     public EventMeta Meta => EventMetas.EnemyTurnStarted;
-}
-public struct EnemyTurnEndRequested : ICombatEvent
-{
-    public EnemyTurnEndRequested(EventContext context, RequestContext request)
-    {
-        Context = context;
-        Request = request;
-    }
-    public EventContext Context { get; private set; }
-    public RequestContext Request { get; private set; }
-    public EventMeta Meta => EventMetas.EnemyTurnEndRequested;
 }
 public struct EnemyTurnEnded : ICombatEvent
 {
@@ -388,4 +346,22 @@ public struct DeathDeclared : ICombatEvent
     public EventContext Context { get; private set; }
     public Entity Source { get; private set; }
     public EventMeta Meta => EventMetas.DeathDeclared;
+}
+public struct AnimationStarted : ICombatEvent
+{
+    public AnimationStarted(EventContext context)
+    {
+        Context = context;
+    }
+    public EventContext Context { get; private set; }
+    public EventMeta Meta => EventMetas.AnimationStarted;
+}
+public struct AnimationEnded : ICombatEvent
+{
+    public AnimationEnded(EventContext context)
+    {
+        Context = context;
+    }
+    public EventContext Context { get; private set; }
+    public EventMeta Meta => EventMetas.AnimationEnded;
 }

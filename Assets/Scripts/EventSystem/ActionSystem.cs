@@ -1,0 +1,46 @@
+﻿using System;
+
+public class ActionSystem
+{
+    private readonly CombatSystem combatSystem;
+    private readonly EventBus eventBus;
+    public ActionSystem(EventBus eventBus, CombatSystem combatSystem) 
+    {
+        this.eventBus = eventBus;
+        this.combatSystem = combatSystem;
+    }
+    public void ExcuteAction(ActionContext action, Action<EventContext> declared)
+    {
+        EventContext eventContext = new EventContext(
+            source: action.Source,
+            action: action,
+            turn: combatSystem.TurnSystem.TurnContext,
+            combat: combatSystem.CombatContext
+        );
+
+        eventBus.Publish<ActionStarted>(new ActionStarted(eventContext));
+
+        declared?.Invoke(eventContext);
+
+        eventBus.Publish<ActionEnded>(new ActionEnded(eventContext));
+    }
+}
+public class ActionContext
+{
+    public ActionContext(object source, ActionType type)
+    {
+        ActionId = Guid.NewGuid();
+        Source = source;
+        Type = type;
+    }
+    public Guid ActionId { get; private set; }
+    public object Source { get; private set; }   // Card, Monster, Relic 등
+    public ActionType Type { get; private set; }
+    public bool isCancelled = false;
+}
+public enum ActionType
+{
+    PlayerCardPlay,
+    PlayerTurnEnd,
+    EnemyAct,
+}

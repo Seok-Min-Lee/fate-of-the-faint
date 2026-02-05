@@ -1,43 +1,51 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
-public class TurnSystem : MonoBehaviour
+public class TurnSystem
 {
-    [SerializeField] private CombatManager combatManager;
-    [SerializeField] private EnemyView[] enemies;
+    private readonly EventBus eventBus;
+    public TurnSystem(EventBus eventBus)
+    {
+        this.eventBus = eventBus;
+    }
 
     public TurnContext TurnContext { get; private set; }
-    public List<EnemyView> livedEnemies => enemies.Where(e => !e.IsDeath).ToList();
     private int turnId = 0;
+    private List<EnemyView> enemies;
+    private Queue<Action> eventQueue = new Queue<Action>();
+    public void Init(IEnumerable<EnemyView> enemies)
+    {
+        this.enemies = new List<EnemyView>(enemies);
+    }
+    public void UpdateTick()
+    {
+        if (eventQueue.Count > 0)
+        {
+            eventQueue.Dequeue().Invoke();
+        }
+    }
+    public void OnCombatStarted(CombatStarted e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
 
-    private void OnEnable()
-    {
-        combatManager.EventBus.Subscribe<ActionEnded>(OnActionEnded);
-        combatManager.EventBus.Subscribe<PlayerTurnStartRequested>(OnPlayerTurnStartRequested);
-        combatManager.EventBus.Subscribe<PlayerTurnEndRequested>(OnPlayerTurnEndRequested);
-        combatManager.EventBus.Subscribe<EnemyTurnStartRequested>(OnEnemyTurnStartRequested);
-        combatManager.EventBus.Subscribe<EnemyTurnStarted>(OnEnemyTurnStarted);
-        combatManager.EventBus.Subscribe<EnemyTurnEndRequested>(OnEnemyTurnEndRequested);
+        PublishPlayerTurnStarted(e);
     }
-    private void OnDisable()
+    public void OnActionEnded(ActionEnded e)
     {
-        combatManager.EventBus.Unsubscribe<ActionEnded>(OnActionEnded);
-        combatManager.EventBus.Unsubscribe<PlayerTurnStartRequested>(OnPlayerTurnStartRequested);
-        combatManager.EventBus.Unsubscribe<PlayerTurnEndRequested>(OnPlayerTurnEndRequested);
-        combatManager.EventBus.Unsubscribe<EnemyTurnStartRequested>(OnEnemyTurnStartRequested);
-        combatManager.EventBus.Unsubscribe<EnemyTurnStarted>(OnEnemyTurnStarted);
-        combatManager.EventBus.Unsubscribe<EnemyTurnEndRequested>(OnEnemyTurnEndRequested);
-    }
-    private void OnActionEnded(ActionEnded e)
-    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
         if (TurnContext.Phase == TurnPhase.Player)
         {
             if (e.Context.Action.Type == ActionType.PlayerTurnEnd)
             {
-                // enemy turn start
-                RequestContext request = new RequestContext(source: this);
-                combatManager.EventBus.Publish<EnemyTurnStartRequested>(new EnemyTurnStartRequested(e.Context, request));
+                eventQueue.Enqueue(() => PublishEnemyTurnStarted(e));
             }
             else if (e.Context.Action.Type == ActionType.PlayerCardPlay)
             {
@@ -50,49 +58,22 @@ public class TurnSystem : MonoBehaviour
             {
                 if (TurnContext.EnemyQueue.Count > 0)
                 {
-                    EventContext eventContext = new EventContext(
-                        source: this,
-                        action: e.Context.Action,
-                        turn: e.Context.Turn,
-                        combat: e.Context.Combat
-                    );
-
-                    RequestContext request = new RequestContext(source: this);
-
-                    combatManager.EventBus.Publish<EnemyActionStartRequested>(new EnemyActionStartRequested(
-                        context: eventContext,
-                        request: request,
-                        enemy: TurnContext.EnemyQueue.Dequeue()
-                    ));
+                    eventQueue.Enqueue(() => PublishEnemyActionStartRequested(e));
                 }
                 else
                 {
-                    RequestContext request = new RequestContext(source: this);
-                    combatManager.EventBus.Publish<EnemyTurnEndRequested>(new EnemyTurnEndRequested(e.Context, request));
+                    eventQueue.Enqueue(() => PublishEnemyTurnEnded(e));
                 }
             }
         }
     }
-    private void OnPlayerTurnStartRequested(PlayerTurnStartRequested e)
+    public void OnPlayerTurnEndRequested(PlayerTurnEndRequested e)
     {
-        e.Request.isResult = true;
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
 
-        TurnContext = new TurnContext(
-            turnId: ++turnId,
-            phase: TurnPhase.Player,
-            source: this
-        );
-
-        EventContext eventContext = new EventContext(
-            source: this,
-            action: e.Context.Action,
-            turn: e.Context.Turn,
-            combat: e.Context.Combat
-        );
-        combatManager.EventBus.Publish<PlayerTurnStarted>(new PlayerTurnStarted(context: eventContext));
-    }
-    private void OnPlayerTurnEndRequested(PlayerTurnEndRequested e)
-    {
         e.Request.isResult = true;
 
         EventContext eventContext = new EventContext(
@@ -101,42 +82,16 @@ public class TurnSystem : MonoBehaviour
             turn: e.Context.Turn,
             combat: e.Context.Combat
         );
-        combatManager.EventBus.Publish<PlayerTurnEnded>(new PlayerTurnEnded(context: eventContext));
+        eventBus.Publish<PlayerTurnEnded>(new PlayerTurnEnded(context: eventContext));
     }
-    public void OnEnemyTurnStartRequested(EnemyTurnStartRequested e)
+    public void OnEnemyTurnStarted(EnemyTurnStarted e)
     {
-        e.Request.isResult = true;
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
 
-        TurnContext = new TurnContext(
-            turnId: ++turnId,
-            phase: TurnPhase.Enemy,
-            source: this
-        );
-
-        EventContext eventContext = new EventContext(
-            source: this,
-            action: e.Context.Action,
-            turn: e.Context.Turn,
-            combat: e.Context.Combat
-        );
-        combatManager.EventBus.Publish<EnemyTurnStarted>(new EnemyTurnStarted(context: eventContext));
-    }
-
-    private void OnEnemyTurnEndRequested(EnemyTurnEndRequested e)
-    {
-        e.Request.isResult = true;
-
-        EventContext eventContext = new EventContext(
-            source: this,
-            action: e.Context.Action,
-            turn: e.Context.Turn,
-            combat: e.Context.Combat
-        );
-        combatManager.EventBus.Publish<EnemyTurnEnded>(new EnemyTurnEnded(context: eventContext));
-    }
-    private void OnEnemyTurnStarted(EnemyTurnStarted e)
-    {
-        for (int i = 0; i < enemies.Length; i++)
+        for (int i = 0; i < enemies.Count; i++)
         {
             if (!enemies[i].IsDeath)
             {
@@ -153,7 +108,69 @@ public class TurnSystem : MonoBehaviour
 
         RequestContext request = new RequestContext(source: this);
 
-        combatManager.EventBus.Publish<EnemyActionStartRequested>(new EnemyActionStartRequested(
+        eventBus.Publish<EnemyActionStartRequested>(new EnemyActionStartRequested(
+            context: eventContext,
+            request: request,
+            enemy: TurnContext.EnemyQueue.Dequeue()
+        ));
+    }
+    private void PublishPlayerTurnStarted(ICombatEvent e)
+    {
+        TurnContext = new TurnContext(
+            turnId: ++turnId,
+            phase: TurnPhase.Player,
+            source: this
+        );
+
+        EventContext eventContext = new EventContext(
+            source: this,
+            action: e.Context.Action,
+            turn: e.Context.Turn,
+            combat: e.Context.Combat
+        );
+        eventBus.Publish<PlayerTurnStarted>(new PlayerTurnStarted(context: eventContext));
+    }
+    private void PublishEnemyTurnStarted(ICombatEvent e)
+    {
+        TurnContext = new TurnContext(
+            turnId: ++turnId,
+            phase: TurnPhase.Enemy,
+            source: this
+        );
+
+        EventContext eventContext = new EventContext(
+            source: this,
+            action: null,
+            turn: TurnContext,
+            combat: e.Context.Combat
+        );
+        eventBus.Publish<EnemyTurnStarted>(new EnemyTurnStarted(context: eventContext));
+    }
+    private void PublishEnemyTurnEnded(ICombatEvent e)
+    {
+        EventContext eventContext = new EventContext(
+            source: this,
+            action: null,
+            turn: e.Context.Turn,
+            combat: e.Context.Combat
+        );
+
+        eventBus.Publish<EnemyTurnEnded>(new EnemyTurnEnded(context: eventContext));
+
+        eventQueue.Enqueue(() => PublishPlayerTurnStarted(e));
+    }
+    private void PublishEnemyActionStartRequested(ICombatEvent e)
+    {
+        EventContext eventContext = new EventContext(
+            source: this,
+            action: null,
+            turn: e.Context.Turn,
+            combat: e.Context.Combat
+        );
+
+        RequestContext request = new RequestContext(source: this);
+
+        eventBus.Publish<EnemyActionStartRequested>(new EnemyActionStartRequested(
             context: eventContext,
             request: request,
             enemy: TurnContext.EnemyQueue.Dequeue()

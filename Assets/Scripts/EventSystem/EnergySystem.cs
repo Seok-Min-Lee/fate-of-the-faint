@@ -1,26 +1,33 @@
 ﻿using UnityEngine;
 
-public class EnergySystem : MonoBehaviour
+public class EnergySystem
 {
-    [SerializeField] private CombatManager combatManager;
+    private readonly EventBus eventBus;
     public int MaxEnergy;
     public int Energy;
-    private void OnEnable()
+    public EnergySystem(EventBus eventBus)
     {
-        combatManager.EventBus.Subscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
-        combatManager.EventBus.Subscribe<EnergyChangeRequested>(OnEnergyChangeRequested);
+        this.eventBus = eventBus;
+
+        MaxEnergy = 3;
+        Energy = MaxEnergy;
     }
-    private void OnDisable()
+    public void OnPlayerTurnStarted(PlayerTurnStarted e)
     {
-        combatManager.EventBus.Unsubscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
-        combatManager.EventBus.Unsubscribe<EnergyChangeRequested>(OnEnergyChangeRequested);
-    }
-    private void OnPlayerTurnStarted(PlayerTurnStarted e)
-    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
         EnergyChanged(MaxEnergy - Energy, e.Context);
     }
-    private void OnEnergyChangeRequested(EnergyChangeRequested e)
+    public void OnEnergyChangeRequested(EnergyChangeRequested e)
     {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
         bool result = false;
 
         if (e.Amount == 0) // 비용 0
@@ -54,7 +61,7 @@ public class EnergySystem : MonoBehaviour
             turn: e.Context.Turn,
             combat: e.Context.Combat
         );
-        combatManager.EventBus.Publish(new EnergyResolved(context: e.Context, result: result));
+        eventBus.Publish(new EnergyResolved(context: e.Context, result: result));
     }
     private void EnergyChanged(int amount, EventContext context)
     {
@@ -68,7 +75,7 @@ public class EnergySystem : MonoBehaviour
             combat: context.Combat
         );
 
-        combatManager.EventBus.Publish<EnergyChanged>(new EnergyChanged(
+        eventBus.Publish<EnergyChanged>(new EnergyChanged(
             context: eventContext,
             startAmount: startAmount, 
             endAmount: Energy

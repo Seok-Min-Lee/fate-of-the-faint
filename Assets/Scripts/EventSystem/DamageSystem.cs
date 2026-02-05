@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class DamageSystem : MonoBehaviour
+public class DamageSystem
 {
-    [SerializeField] private CombatManager combatManager;
+    private readonly EventBus eventBus;
+    public DamageSystem(EventBus eventBus)
+    {
+        this.eventBus = eventBus;
+    }
+    public void OnAttackDeclared(AttackDeclared e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
 
-    private void OnEnable()
-    {
-        combatManager.EventBus.Subscribe<AttackDeclared>(OnAttackDeclared);
-    }
-    private void OnDisable()
-    {
-        combatManager.EventBus.Unsubscribe<AttackDeclared>(OnAttackDeclared);
-    }
-    private void OnAttackDeclared(AttackDeclared e)
-    {
         DamageContext damage = new DamageContext(
             amount: e.Amount,
             source: e.Source,
@@ -27,7 +27,7 @@ public class DamageSystem : MonoBehaviour
             turn: e.Context.Turn,
             combat: e.Context.Combat
         );
-        combatManager.EventBus.Publish<DamageRequested>(new DamageRequested(
+        eventBus.Publish<DamageRequested>(new DamageRequested(
             context: eventContext,
             damage: damage
         ));
@@ -38,7 +38,7 @@ public class DamageSystem : MonoBehaviour
             turn: e.Context.Turn,
             combat: e.Context.Combat
         );
-        combatManager.EventBus.Publish<DamageResolved>(new DamageResolved(
+        eventBus.Publish<DamageResolved>(new DamageResolved(
             context: eventContext,
             source: damage.Source,
             target: damage.Target,

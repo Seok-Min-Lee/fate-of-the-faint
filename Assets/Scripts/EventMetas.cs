@@ -3,13 +3,13 @@
     public static readonly EventMeta CombatStarted = new("CombatStarted", EventCategory.Combat);
     public static readonly EventMeta CombatEndRequested = new("CombatEndRequested", EventCategory.Combat);
     public static readonly EventMeta CombatEnded = new("CombatEnded", EventCategory.Combat);
-    public static readonly EventMeta PlayerTurnStartRequested = new("PlayerTurnStartRequested", EventCategory.Turn);
+    //public static readonly EventMeta PlayerTurnStartRequested = new("PlayerTurnStartRequested", EventCategory.Turn);
     public static readonly EventMeta PlayerTurnStarted = new("PlayerTurnStarted", EventCategory.Turn);
     public static readonly EventMeta PlayerTurnEndRequested = new("PlayerTurnEndRequested", EventCategory.Turn);
     public static readonly EventMeta PlayerTurnEnded = new("PlayerTurnEnded", EventCategory.Turn);
-    public static readonly EventMeta EnemyTurnStartRequested = new("EnemyTurnStartRequested", EventCategory.Turn);
+    //public static readonly EventMeta EnemyTurnStartRequested = new("EnemyTurnStartRequested", EventCategory.Turn);
     public static readonly EventMeta EnemyTurnStarted = new("EnemyTurnStarted", EventCategory.Turn);
-    public static readonly EventMeta EnemyTurnEndRequested = new("EnemyTurnEndRequested", EventCategory.Turn);
+    //public static readonly EventMeta EnemyTurnEndRequested = new("EnemyTurnEndRequested", EventCategory.Turn);
     public static readonly EventMeta EnemyTurnEnded = new("EnemyTurnEnded", EventCategory.Turn);
     public static readonly EventMeta EnemyActionStartRequested = new("EnemyActionStartRequested", EventCategory.Action);
     public static readonly EventMeta ActionStarted = new("ActionStarted", EventCategory.Action);
@@ -33,6 +33,9 @@
     public static readonly EventMeta DamageResolved = new("DamageResolved", EventCategory.Damage);
     public static readonly EventMeta HpChanged = new("HpChanged", EventCategory.Status);
     public static readonly EventMeta DeathDeclared = new("DeathDeclared", EventCategory.Status);
+
+    public static readonly EventMeta AnimationStarted = new("AnimationStarted", EventCategory.UI);
+    public static readonly EventMeta AnimationEnded = new("AnimationEnded", EventCategory.UI);
 }
 public readonly struct EventMeta
 {
@@ -53,6 +56,7 @@ public enum EventCategory
     Energy,
     Damage,
     Card,
-    Status
+    Status,
+    UI
 }
 

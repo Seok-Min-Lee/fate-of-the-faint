@@ -1,112 +1,195 @@
 ﻿using JetBrains.Annotations;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CombatManager : MonoBehaviour
 {
-    public DamageSystem DamageSystem { get; private set; }
-    public EnergySystem EnergySystem { get; private set; }
-    public TurnSystem TurnSystem { get; private set; }
-    public CardSystem CardSystem { get; private set; }
-    public UISystem UISystem { get; private set; }
+    [SerializeField] CardSystem cardSystem;
+    [SerializeField] UISystem uiSystem;
+    [SerializeField] RelicSystem relicSystem;
+    [SerializeField] private PlayerView playerPrefab;
 
-    public EventBus EventBus = new EventBus();
-
-    public CombatContext CombatContext { get; private set; }
-
+    [Header("Instance")]
+    [SerializeField] private EnemySpawnPlan[] normalPlans;
+    [SerializeField] private EnemySpawnPlan[] elitePlans;
+    public CombatSystem CombatSystem { get; private set; }
     private void Awake()
     {
-        DamageSystem = GetComponent<DamageSystem>();
-        EnergySystem = GetComponent<EnergySystem>();
-        TurnSystem = GetComponent<TurnSystem>();
-        CardSystem = GetComponent<CardSystem>();
-        UISystem = GetComponent<UISystem>();
+        if (!PlayManager.Instance.isLoad)
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.INIT);
+        }
+        CombatSystem = new CombatSystem();
+        DamageSystem damageSystem = new DamageSystem(CombatSystem.EventBus);
+        EnergySystem energySystem = new EnergySystem(CombatSystem.EventBus);
+
+        PlayerInstance playerInstance = CreatePlayerInstance(PlayManager.Instance.CurrentData);
+        PlayerView playerView = GameObject.Instantiate<PlayerView>(playerPrefab);
+        playerView.Init(
+            instance: playerInstance,
+            combatManager: this,
+            position: new Vector3(-0.71f, 0f, -0.71f)
+        );
+
+        List<EnemyInstance> enemyInstances = CreateEnemyInstances();
+        List<EnemyView> enemyViews = ConvertEnemyInstanceToView(enemyInstances, playerView);
+
+        List<CardInstance> cardInstance = CreateCardInstances(PlayManager.Instance.CurrentData.Cards.Select(x => x.Origin));
+
+        uiSystem.Init(
+            eventBus: CombatSystem.EventBus,
+            actionSystem: CombatSystem.ActionSystem
+        );
+        relicSystem.Init(
+            eventBus: CombatSystem.EventBus,
+            player: playerView
+        );
+        cardSystem.Init(
+            eventBus: CombatSystem.EventBus, 
+            combatSystem: CombatSystem,
+            actionSystem: CombatSystem.ActionSystem,
+            cardInstances: cardInstance, 
+            player: playerView
+        );
+        CombatSystem.Init(
+            damageSystem: damageSystem, 
+            energySystem: energySystem, 
+            cardSystem: cardSystem, 
+            uiSystem: uiSystem, 
+            relicSystem: relicSystem,
+            player: playerView,
+            enemies: enemyViews
+        );
     }
     private void OnEnable()
     {
-        EventBus.Subscribe<CombatEndRequested>(OnCombatEndRequested);
-        EventBus.Subscribe<EnemyTurnEnded>(OnEnemyTurnEnded);
+        CombatSystem.OnEnable();
+    }
+    private IEnumerator Start()
+    {
+        yield return new WaitForSeconds(1f);
+        CombatSystem.CombatStart();
     }
     private void OnDisable()
     {
-        EventBus.Unsubscribe<CombatEndRequested>(OnCombatEndRequested);
-        EventBus.Unsubscribe<EnemyTurnEnded>(OnEnemyTurnEnded);
+        CombatSystem.OnDisable();
     }
-    private void OnCombatEndRequested(CombatEndRequested e)
+    private void Update()
     {
-        if (CombatContext.CombatId != e.Context.Combat.CombatId)
+        CombatSystem.TurnSystem.UpdateTick();
+    }
+    private PlayerInstance CreatePlayerInstance(PlayData run)
+    {
+        if (PlayManager.Instance.Catalog.TryGetPlayerSO(run.PlayerId, out PlayerSO playerSo))
         {
-            e.Request.isResult = false;
-            return;
+            return new PlayerInstance(
+                data: playerSo,
+                maxHp: run.MaxHp,
+                currentHp: run.CurrentHp
+            );
         }
-        e.Request.isResult = true;
-
-        CombatContext = null;
-
-        EventContext eventContext = new EventContext(
-            source: this, 
-            action: e.Context.Action,
-            turn: e.Context.Turn,
-            combat: e.Context.Combat
-        );
-        EventBus.Publish<CombatEnded>(new CombatEnded(eventContext));
+        
+        return null;
     }
-    private void OnEnemyTurnEnded(EnemyTurnEnded e)
+    private List<EnemyInstance> CreateEnemyInstances()
     {
-        TryPlayerTurnStart();
+        EnemySpawnPlan team = normalPlans[UnityEngine.Random.Range(0, normalPlans.Length)];
+
+        List<EnemyInstance> enemies = new List<EnemyInstance>();
+
+        int enemyId = 0;
+        for (int i = 0; i < team.details.Length; i++)
+        {
+            EnemySpawnPlanDetail detail = team.details[i];
+
+            for (int j = 0; j < detail.count; j++)
+            {
+                enemies.Add(new EnemyInstance(
+                    id: enemyId++,
+                    data: detail.origin,
+                    maxHp: detail.origin.maxHpRange.Roll()
+                ));
+            }
+        }
+
+        return enemies;
     }
-    private void TryPlayerTurnStart()
+    private List<EnemyView> ConvertEnemyInstanceToView(IEnumerable<EnemyInstance> instances, ITargetable target)
     {
-        EventContext eventContext = new EventContext(
-            source: this,
-            action: null,
-            turn: TurnSystem.TurnContext,
-            combat: CombatContext
-        );
-        RequestContext requestContext = new RequestContext(source: this);
+        int instanceCount = instances.Count();
 
-        EventBus.Publish<PlayerTurnStartRequested>(new PlayerTurnStartRequested(
-            context: eventContext,
-            request: requestContext
-        ));
+        List<Vector3> positions = new List<Vector3>();
+        switch (instanceCount)
+        {
+            case 1:
+                positions.Add(new Vector3(0, 0, 6.43f));
+                break;
+            case 2:
+                positions.Add(new Vector3(-1.75f, 0, 6.43f));
+                positions.Add(new Vector3(1.75f, 0, 6.43f));
+                break;
+            case 3:
+                positions.Add(new Vector3(-2.5f, 0, 6.43f));
+                positions.Add(new Vector3(0, 0, 6.43f));
+                positions.Add(new Vector3(2.5f, 0, 6.43f));
+                break;
+        }
+
+        List<EnemyView> enemies = new List<EnemyView>();
+
+        for (int i = 0; i < instanceCount; i++)
+        {
+            EnemyInstance _instance = instances.ElementAt(i);
+            GameObject go = GameObject.Instantiate(_instance.Data.prefab);
+
+            EnemyView view = go.GetComponent<EnemyView>();
+            view.Init(
+                instance: _instance,
+                player: target,
+                position: positions[i],
+                combat: this
+            );
+
+            enemies.Add(view);
+        }
+
+        return enemies;
     }
-    public void CombatStart()
+    private List<CardInstance> CreateCardInstances(IEnumerable<CardSO> samples)
     {
-        CombatContext = new CombatContext(combatId: 0, source: this);
+        List<CardInstance> instances = new List<CardInstance>();
 
-        EventContext eventContext = new EventContext(
-            source: this, 
-            action: null,
-            turn: null,
-            combat: CombatContext
-        );
+        foreach (CardSO sample in samples)
+        {
+            instances.Add(new CardInstance(
+                instanceId: sample.Id,
+                origin: sample,
+                costForTurn: sample.Cost,
+                costForCombat: sample.Cost
+            ));
+        }
 
-        EventBus.Publish<CombatStarted>(new CombatStarted(eventContext));
-
-        TryPlayerTurnStart();
+        return instances;
     }
-    public void ExcuteAction(ActionContext action, System.Action<EventContext> declared)
+    private void Save()
     {
-        EventContext eventContext = new EventContext(
-            source: action.Source,
-            action: action,
-            turn: TurnSystem.TurnContext,
-            combat: CombatContext
-        );
+        //CombatResult result = new CombatResult();
 
-        EventBus.Publish<ActionStarted>(new ActionStarted(eventContext));
-
-        declared?.Invoke(eventContext);
-
-        EventBus.Publish<ActionEnded>(new ActionEnded(eventContext));
     }
 }
-public class CombatContext
+[Serializable]
+public struct EnemySpawnPlan
 {
-    public CombatContext(int combatId, object source)
-    {
-        CombatId = combatId;
-        Source = source;
-    }
-    public int CombatId { get; set; }
-    public object Source { get; private set; }
+    public EnemySpawnPlanDetail[] details;
+    public int Count => details.Sum(x => x.count);
+}
+[Serializable]
+public struct EnemySpawnPlanDetail
+{
+    public EnemySO origin;
+    public int count;
 }

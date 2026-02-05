@@ -11,46 +11,37 @@ public class EnemyView : Entity
     private CombatManager combatManager;
     private ITargetable player;
 
-    public int hp;
+    public int hp = 100;
     public int strength;
     public int shield;
     public EnemyIntent intent;
     public int intentValue;
 
     public bool IsDeath => hp <= 0;
-
-    private void OnEnable()
-    {
-        combatManager.EventBus.Subscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
-        combatManager.EventBus.Subscribe<EnemyActionStartRequested>(OnEnemyActionStartRequested);
-        combatManager.EventBus.Subscribe<DamageRequested>(OnDamageRequested);
-        combatManager.EventBus.Subscribe<DamageResolved>(OnDamageResolved);
-    }
     private void OnDisable()
     {
-        combatManager.EventBus.Unsubscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
-        combatManager.EventBus.Unsubscribe<EnemyActionStartRequested>(OnEnemyActionStartRequested);
-        combatManager.EventBus.Unsubscribe<DamageRequested>(OnDamageRequested);
-        combatManager.EventBus.Unsubscribe<DamageResolved>(OnDamageResolved);
+        combatManager.CombatSystem.EventBus.Unsubscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
+        combatManager.CombatSystem.EventBus.Unsubscribe<EnemyActionStartRequested>(OnEnemyActionStartRequested);
+        combatManager.CombatSystem.EventBus.Unsubscribe<DamageRequested>(OnDamageRequested);
+        combatManager.CombatSystem.EventBus.Unsubscribe<DamageResolved>(OnDamageResolved);
     }
     public void OnPlayerTurnStarted(PlayerTurnStarted e)
     {
-        shield = 0;
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
 
         if (Random.Range(0, 2) == 0)
         {
             intent = EnemyIntent.Attack;
-            //intentValue = attackPower;
-
-            //intentRenderer.sprite = attackIcon;
+            intentValue = 33;
             intentText.text = intentValue.ToString();
         }
         else
         {
             intent = EnemyIntent.Defend;
-            //intentValue = shieldPower;
-
-            //intentRenderer.sprite = shieldIcon;
+            intentValue = 5;
             intentText.text = intentValue.ToString();
         }
 
@@ -59,6 +50,11 @@ public class EnemyView : Entity
     }
     public void OnEnemyActionStartRequested(EnemyActionStartRequested e)
     {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
         if (e.Enemy != this)
         {
             return;
@@ -69,11 +65,12 @@ public class EnemyView : Entity
             source: this,
             type: ActionType.EnemyAct
         );
-        combatManager.ExcuteAction(actionContext, (eventContext) =>
+
+        combatManager.CombatSystem.ActionSystem.ExcuteAction(actionContext, (eventContext) =>
         {
             EventContext context = new EventContext(
                 source: this,
-                action: e.Context.Action,
+                action: actionContext,
                 turn: e.Context.Turn,
                 combat: e.Context.Combat
             );
@@ -81,7 +78,7 @@ public class EnemyView : Entity
             switch (intent)
             {
                 case EnemyIntent.Attack:
-                    combatManager.EventBus.Publish<AttackDeclared>(new AttackDeclared(
+                    combatManager.CombatSystem.EventBus.Publish<AttackDeclared>(new AttackDeclared(
                         context: context,
                         source: this,
                         target: player,
@@ -92,7 +89,7 @@ public class EnemyView : Entity
                     break;
 
                 case EnemyIntent.Defend:
-                    combatManager.EventBus.Publish<ShieldDeclared>(new ShieldDeclared(
+                    combatManager.CombatSystem.EventBus.Publish<ShieldDeclared>(new ShieldDeclared(
                         context: context,
                         source: this,
                         target: this,
@@ -111,6 +108,11 @@ public class EnemyView : Entity
     }
     private void OnDamageRequested(DamageRequested e)
     {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
         if (e.Damage.Target == this as ITargetable)
         {
             e.Damage.Subtract(shield, this);
@@ -118,6 +120,11 @@ public class EnemyView : Entity
     }
     private void OnDamageResolved(DamageResolved e)
     {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
         if (e.Target == this as ITargetable)
         {
             int startAmount = hp;
@@ -128,11 +135,11 @@ public class EnemyView : Entity
             EventContext eventContext = new EventContext(
                 source: this, 
                 action: e.Context.Action,
-                turn: combatManager.TurnSystem.TurnContext,
-                combat: combatManager.CombatContext
+                turn: e.Context.Turn,
+                combat: e.Context.Combat
             );
 
-            combatManager.EventBus.Publish<HpChanged>(new HpChanged(
+            combatManager.CombatSystem.EventBus.Publish<HpChanged>(new HpChanged(
                 context: eventContext,
                 target: this,
                 startAmount: startAmount,
@@ -146,11 +153,11 @@ public class EnemyView : Entity
                 eventContext = new EventContext(
                     source: this,
                     action: e.Context.Action,
-                    turn: combatManager.TurnSystem.TurnContext,
-                    combat: combatManager.CombatContext
+                    turn: e.Context.Turn,
+                    combat: e.Context.Combat
                 );
 
-                combatManager.EventBus.Publish<DeathDeclared>(new DeathDeclared(
+                combatManager.CombatSystem.EventBus.Publish<DeathDeclared>(new DeathDeclared(
                     context: eventContext,
                     target: this
                 ));
@@ -165,6 +172,14 @@ public class EnemyView : Entity
         this.player = player;
         transform.position = position;
         combatManager = combat;
+
+        combatManager.CombatSystem.EventBus.Subscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
+        combatManager.CombatSystem.EventBus.Subscribe<EnemyActionStartRequested>(OnEnemyActionStartRequested);
+        combatManager.CombatSystem.EventBus.Subscribe<DamageRequested>(OnDamageRequested);
+        combatManager.CombatSystem.EventBus.Subscribe<DamageResolved>(OnDamageResolved);
+
+        hp = Instance.MaxHp;
+        hpText.text = hp.ToString();
     }
 }
 public enum EnemyIntent

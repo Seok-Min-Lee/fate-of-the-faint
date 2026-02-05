@@ -6,12 +6,16 @@ public class MapCtrl : MonoBehaviour
     [SerializeField] private MapBootstrap bootstrap;
     public MapGraph Graph { get; private set; }
     public int CurrentNodeId { get; private set; } = -1;
-
+    private void Awake()
+    {
+        Graph = PlayManager.Instance.MapGraph;
+        bootstrap.Init(Graph);
+    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            NewRun(bootstrap.Config);
+            Graph = MapGenerator.Generate(bootstrap.Config);
             bootstrap.Init(Graph);
         }
 
@@ -25,10 +29,6 @@ public class MapCtrl : MonoBehaviour
             LoadRun();
             bootstrap.Init(Graph);
         }
-    }
-    public void NewRun(MapGenConfig cfg)
-    {
-        Graph = MapGenerator.Generate(cfg);
     }
 
     public void SaveRun()

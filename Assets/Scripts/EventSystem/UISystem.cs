@@ -1,55 +1,203 @@
-﻿using TMPro;
+﻿using DG.Tweening;
+using System;
+using TMPro;
 using UnityEngine;
 
 public class UISystem : MonoBehaviour
 {
-    [SerializeField] private CombatManager combatManager;
-    [SerializeField] private Player player;
+    private ActionSystem actionSystem;
+    private EventBus eventBus;
 
     [Header("World")]
     [SerializeField] private TextMeshPro playerHp;
     [SerializeField] private TextMeshPro enemyHp;
 
     [Header("Canvas")]
+    [SerializeField] private CanvasGroup combatUICG;
+    [SerializeField] private GameObject playerTurnAlarm;
+    [SerializeField] private GameObject rewardWindow;
+    [SerializeField] private GameObject defeatWindow;
+
     [SerializeField] private TextMeshProUGUI energy;
     [SerializeField] private TextMeshProUGUI drawPile;
     [SerializeField] private TextMeshProUGUI discardPile;
-    private void OnEnable()
+
+    private Sequence sequence;
+    public void Init(EventBus eventBus, ActionSystem actionSystem)
     {
-        combatManager.EventBus.Subscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
-        combatManager.EventBus.Subscribe<PlayerTurnEnded>(OnPlayerTurnEnded);
-        combatManager.EventBus.Subscribe<EnergyChanged>(OnEnergyChanged);
+        this.eventBus = eventBus;
+        this.actionSystem = actionSystem;
     }
-    private void OnDisable()
+    public void OnCombatStarted(CombatStarted e)
     {
-        combatManager.EventBus.Unsubscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
-        combatManager.EventBus.Subscribe<PlayerTurnEnded>(OnPlayerTurnEnded);
-        combatManager.EventBus.Unsubscribe<EnergyChanged>(OnEnergyChanged);
+        EventContext eventContext = new EventContext(
+            source: this,
+            action: e.Context.Action,
+            turn: e.Context.Turn,
+            combat: e.Context.Combat
+        );
+
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+
+        sequence.AppendCallback(() =>
+        {
+            eventBus.Publish<AnimationStarted>(new AnimationStarted(context: eventContext));
+            combatUICG.alpha = 0f;
+            combatUICG.blocksRaycasts = false;
+            combatUICG.DOFade(1f, 1f);
+        });
+        sequence.AppendInterval(1f);
+        sequence.AppendCallback(() =>
+        {
+            combatUICG.blocksRaycasts = true;
+            eventBus.Publish<AnimationEnded>(new AnimationEnded(context: eventContext));
+        });
     }
-    private void OnPlayerTurnStarted(PlayerTurnStarted e)
+    public void OnCombatEnded(CombatEnded e)
     {
-        // draw card
+        Action<EventContext> preProcess, postProcess;
+        float interval = 0;
+        if (e.Context.Combat.state == CombatState.Victory)
+        {
+            preProcess = (eventContext) =>
+            {
+                eventBus.Publish<AnimationStarted>(new AnimationStarted(context: eventContext));
+                rewardWindow.SetActive(true);
+            };
+            interval = 0f;
+            postProcess = (eventContext) =>
+            {
+                eventBus.Publish<AnimationEnded>(new AnimationEnded(context: eventContext));
+            };
+        }
+        else if (e.Context.Combat.state == CombatState.Defeat)
+        {
+            preProcess = (eventContext) =>
+            {
+                eventBus.Publish<AnimationStarted>(new AnimationStarted(context: eventContext));
+                defeatWindow.SetActive(true);
+            };
+            interval = 0f;
+            postProcess = (eventContext) =>
+            {
+                eventBus.Publish<AnimationEnded>(new AnimationEnded(context: eventContext));
+            };
+        }
+        else
+        {
+            return;
+        }
+
+        EventContext eventContext = new EventContext(
+            source: this,
+            action: e.Context.Action,
+            turn: e.Context.Turn,
+            combat: e.Context.Combat
+        );
+
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+
+        sequence.AppendCallback(() => preProcess(eventContext));
+        sequence.AppendInterval(interval);
+        sequence.AppendCallback(() => postProcess(eventContext));
     }
-    private void OnPlayerTurnEnded(PlayerTurnEnded e)
+    public void OnPlayerTurnStarted(PlayerTurnStarted e)
     {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
+        EventContext eventContext = new EventContext(
+            source: this,
+            action: e.Context.Action,
+            turn: e.Context.Turn,
+            combat: e.Context.Combat
+        );
+
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+
+        sequence.AppendCallback(() =>
+        {
+            eventBus.Publish<AnimationStarted>(new AnimationStarted(context: eventContext));
+            playerTurnAlarm.SetActive(true);
+            combatUICG.blocksRaycasts = false;
+        });
+        sequence.AppendInterval(0.5f);
+        sequence.AppendCallback(() =>
+        {
+            playerTurnAlarm.SetActive(false);
+            combatUICG.blocksRaycasts = true;
+            eventBus.Publish<AnimationEnded>(new AnimationEnded(context: eventContext));
+        });
     }
-    private void OnEnergyChanged(EnergyChanged e)
+    public void OnPlayerTurnEnded(PlayerTurnEnded e)
     {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
+    }
+    public void OnEnergyChanged(EnergyChanged e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
         energy.text = e.EndAmount.ToString();
     }
     public void OnClickReturn()
     {
         TryPlayerTurnEnd();
     }
+    public void OnClickGoldButton()
+    {
+        //PlayManager.Instance.CurrentData.AddGold();
+    }
+    public void OnClickRelicButton()
+    {
+        //PlayManager.Instance.CurrentData.AddRelic();
+    }
+    public void OnClickCardButton()
+    {
+
+    }
+    public void OnClickRewardCard()
+    {
+        //PlayManager.Instance.CurrentData.AddCard();
+    }
+    public void OnClickRewardEnd()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
+    }
+    public void OnClickDefeatEnd()
+    {
+        PlayManager.Instance.ClearPlayData();
+        UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.HOME);
+    }
     private void TryPlayerTurnEnd()
     {
-        ActionContext actionContext = new ActionContext(source: player, type: ActionType.PlayerTurnEnd);
+        ActionContext actionContext = new ActionContext(source: this, type: ActionType.PlayerTurnEnd);
 
-        combatManager.ExcuteAction(actionContext, (eventContext) =>
+        actionSystem.ExcuteAction(actionContext, (eventContext) =>
         {
-            RequestContext requestContext = new RequestContext(source: player);
+            RequestContext requestContext = new RequestContext(source: this);
 
-            combatManager.EventBus.Publish<PlayerTurnEndRequested>(new PlayerTurnEndRequested(
+            eventBus.Publish<PlayerTurnEndRequested>(new PlayerTurnEndRequested(
                 context: eventContext,
                 request: requestContext
             ));

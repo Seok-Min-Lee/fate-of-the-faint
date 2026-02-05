@@ -57,13 +57,4 @@ public static class MapDataIO
             return false;
         }
     }
-
-    public static void DeleteFile(string filePath = null)
-    {
-        filePath ??= DefaultFilePath;
-        if (File.Exists(filePath)) 
-        {
-            File.Delete(filePath);
-        }
-    }
 }

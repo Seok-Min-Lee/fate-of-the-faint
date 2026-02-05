@@ -1,20 +1,22 @@
 ﻿using UnityEngine;
 public class RelicSystem : MonoBehaviour
 {
-    [SerializeField] private CombatManager combatManager;
-    [SerializeField] private Player player;
     public Relic relic;
-    private void OnEnable()
-    {
-        combatManager.EventBus.Subscribe<DamageRequested>(OnDamageRequested);
-    }
-    private void OnDisable()
-    {
-        combatManager.EventBus.Unsubscribe<DamageRequested>(OnDamageRequested);
-    }
 
-    private void OnDamageRequested(DamageRequested e)
+    private EventBus eventBus;
+    private PlayerView player;
+    public void Init(EventBus eventBus, PlayerView player)
     {
+        this.eventBus = eventBus;
+        this.player = player;
+    }
+    public void OnDamageRequested(DamageRequested e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
         if (e.Damage.Source == player)
         {
             e.Damage.Add(relic.strength, relic);
