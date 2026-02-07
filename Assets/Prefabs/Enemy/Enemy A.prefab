@@ -1054,7 +1054,7 @@ Animator:
   m_GameObject: {fileID: 2636298536444377488}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: b51ed164db424ea38696614fa639565a, type: 3}
-  m_Controller: {fileID: 9100000, guid: cb76a9889dd44316984379a119683768, type: 2}
+  m_Controller: {fileID: 9100000, guid: 84b3e525365941749b701232db061ecd, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1891,9 +1891,10 @@ MonoBehaviour:
   intentRenderer: {fileID: 467334653357051780}
   intentText: {fileID: 5954930927292420420}
   hpText: {fileID: 7067784864167507800}
+  animator: {fileID: 2197749908163672323}
   hp: 100
   strength: 0
-  shield: 0
+  block: 0
   intent: 0
   intentValue: 0
 --- !u!1 &6107790210114146773

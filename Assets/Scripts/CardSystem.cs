@@ -152,9 +152,9 @@ public class CardSystem : MonoBehaviour
                         amount: ce.value
                     ));
                 }
-                else if (ce.effectType == EffectType.Shield)
+                else if (ce.effectType == EffectType.Block)
                 {
-                    eventBus.Publish<ShieldDeclared>(new ShieldDeclared(
+                    eventBus.Publish<BlockDeclared>(new BlockDeclared(
                         context: context,
                         source: player,
                         target: player,

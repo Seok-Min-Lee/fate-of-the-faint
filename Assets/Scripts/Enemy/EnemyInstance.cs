@@ -3,41 +3,21 @@ using System.Collections.Generic;
 
 public sealed class EnemyInstance
 {
-    // ─────────────────────────────────────────────
     // Identity / Static Data
-    // ─────────────────────────────────────────────
     public int Id { get; }
     public EnemySO Data { get; }
-
-    // ─────────────────────────────────────────────
-    // Core Stats
-    // ─────────────────────────────────────────────
     public int MaxHp { get; }
     public int Hp { get; private set; }
     public int Block { get; private set; }
-
-    // ─────────────────────────────────────────────
-    // Status Flags
-    // ─────────────────────────────────────────────
     public bool IsDead => Hp <= 0;
-    public bool IsEscaping { get; private set; }
 
-    // ─────────────────────────────────────────────
-    // Buff / Debuff (간단 모델)
-    // ─────────────────────────────────────────────
     private readonly Dictionary<BuffType, int> buffs;
-
-    // ─────────────────────────────────────────────
-    // AI / Intent
-    // ─────────────────────────────────────────────
     public EnemyActionSO NextAction { get; private set; }
 
     private readonly Dictionary<string, int> actionCooldowns;
     private readonly Queue<string> recentActionKeys;
 
-    // ─────────────────────────────────────────────
     // ctor
-    // ─────────────────────────────────────────────
     public EnemyInstance(int id, EnemySO data, int maxHp)
     {
         Id = id;
@@ -53,9 +33,7 @@ public sealed class EnemyInstance
         recentActionKeys = new Queue<string>(8);
     }
 
-    // ─────────────────────────────────────────────
     // AI
-    // ─────────────────────────────────────────────
     public void DecideNextAction(Random rng)
     {
         if (rng == null)
@@ -79,9 +57,7 @@ public sealed class EnemyInstance
         RegisterAction(NextAction);
     }
 
-    // ─────────────────────────────────────────────
     // Combat API (CombatSystem에서 호출)
-    // ─────────────────────────────────────────────
     public void TakeDamage(int amount)
     {
         if (amount <= 0)
@@ -152,10 +128,6 @@ public sealed class EnemyInstance
         return value;
     }
 
-    public void Escape()
-    {
-        IsEscaping = true;
-    }
 
     // ─────────────────────────────────────────────
     // AI internals
@@ -169,8 +141,7 @@ public sealed class EnemyInstance
 
         List<string> keys = new List<string>(actionCooldowns.Keys);
 
-        int i = 0;
-        while (i < keys.Count)
+        for (int i = 0; i < keys.Count; i++)
         {
             string key = keys[i];
 
@@ -180,8 +151,6 @@ public sealed class EnemyInstance
             {
                 actionCooldowns.Remove(key);
             }
-
-            i++;
         }
     }
 
@@ -190,25 +159,21 @@ public sealed class EnemyInstance
         List<EnemyActionSO> list = new List<EnemyActionSO>();
 
         List<EnemyActionSO> actions = Data.aiPolicy.actions;
-        int i = 0;
-        while (i < actions.Count)
+        for (int i = 0; i < actions.Count; i++)
         {
             EnemyActionSO action = actions[i];
 
-            if (actionCooldowns.ContainsKey(action.key))
+            if (actionCooldowns.ContainsKey(action.Key))
             {
-                i++;
                 continue;
             }
 
-            if (IsOverRepeatLimit(action.key))
+            if (IsOverRepeatLimit(action.Key))
             {
-                i++;
                 continue;
             }
 
             list.Add(action);
-            i++;
         }
 
         return list;
@@ -243,16 +208,16 @@ public sealed class EnemyInstance
 
     private void RegisterAction(EnemyActionSO action)
     {
-        recentActionKeys.Enqueue(action.key);
+        recentActionKeys.Enqueue(action.Key);
 
         while (recentActionKeys.Count > 8)
         {
             recentActionKeys.Dequeue();
         }
 
-        if (action.cooldownTurns > 0)
+        if (action.CooldownTurns > 0)
         {
-            actionCooldowns[action.key] = action.cooldownTurns;
+            actionCooldowns[action.Key] = action.CooldownTurns;
         }
     }
 
@@ -264,7 +229,7 @@ public sealed class EnemyInstance
         while (i < actions.Count)
         {
             EnemyActionSO action = actions[i];
-            total += Math.Max(0, action.weight);
+            total += Math.Max(0, action.Weight);
             i++;
         }
 
@@ -281,7 +246,7 @@ public sealed class EnemyInstance
         {
             EnemyActionSO move = actions[j];
 
-            acc += Math.Max(0, move.weight);
+            acc += Math.Max(0, move.Weight);
             if (r < acc)
             {
                 return move;

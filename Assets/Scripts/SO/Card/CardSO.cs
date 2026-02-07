@@ -65,7 +65,7 @@ public enum TargetType
 public enum EffectType
 {
     Attack,
-    Shield,
+    Block,
 
     DrawCard,
     GainEnergy,

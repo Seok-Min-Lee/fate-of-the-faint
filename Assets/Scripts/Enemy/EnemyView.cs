@@ -1,20 +1,26 @@
-﻿using TMPro;
+﻿using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
-
+using static UnityEngine.GraphicsBuffer;
 public class EnemyView : Entity
 {
     [SerializeField] private SpriteRenderer intentRenderer;
     [SerializeField] private TextMeshPro intentText;
     [SerializeField] private TextMeshPro hpText;
 
+    [SerializeField] private Animator animator;
+
     public EnemyInstance Instance { get; private set; }
     private CombatManager combatManager;
     private ITargetable player;
 
+    private EnemyActionSO nextAction;
+
     public int hp = 100;
     public int strength;
-    public int shield;
-    public EnemyIntent intent;
+    public int block;
+    public IntentType intent;
     public int intentValue;
 
     public bool IsDeath => hp <= 0;
@@ -32,18 +38,11 @@ public class EnemyView : Entity
             return;
         }
 
-        if (Random.Range(0, 2) == 0)
-        {
-            intent = EnemyIntent.Attack;
-            intentValue = 33;
-            intentText.text = intentValue.ToString();
-        }
-        else
-        {
-            intent = EnemyIntent.Defend;
-            intentValue = 5;
-            intentText.text = intentValue.ToString();
-        }
+        nextAction = Instance.Data.aiPolicy.actions[Random.Range(0, Instance.Data.aiPolicy.actions.Count)];
+        intent = nextAction.IntentType;
+        intentRenderer.sprite = nextAction.IntentIcon;
+        intentValue = nextAction.Effects[0].value;
+        intentText.text = intentValue.ToString();
 
         intentRenderer.gameObject.SetActive(true);
         intentText.gameObject.SetActive(true);
@@ -68,41 +67,58 @@ public class EnemyView : Entity
 
         combatManager.CombatSystem.ActionSystem.ExcuteAction(actionContext, (eventContext) =>
         {
-            EventContext context = new EventContext(
-                source: this,
-                action: actionContext,
-                turn: e.Context.Turn,
-                combat: e.Context.Combat
-            );
-
-            switch (intent)
+            foreach (IntentEffect effect in nextAction.Effects)
             {
-                case EnemyIntent.Attack:
-                    combatManager.CombatSystem.EventBus.Publish<AttackDeclared>(new AttackDeclared(
-                        context: context,
-                        source: this,
-                        target: player,
-                        amount: intentValue
-                    ));
-                    intentRenderer.gameObject.SetActive(false);
-                    intentText.gameObject.SetActive(false);
-                    break;
+                List<ITargetable> targets = new List<ITargetable>();
+                switch (effect.targetType)
+                {
+                    case IntentTarget.Player:
+                        targets.Add(player);
+                        break;
+                    case IntentTarget.Self:
+                        targets.Add(this);
+                        break;
+                    case IntentTarget.Member:
+                        //targets.Add(target);
+                        break;
+                    case IntentTarget.MemberAll:
+                        //targets.AddRange(combatSystem.liveEnemies);
+                        break;
+                }
 
-                case EnemyIntent.Defend:
-                    combatManager.CombatSystem.EventBus.Publish<ShieldDeclared>(new ShieldDeclared(
-                        context: context,
-                        source: this,
-                        target: this,
-                        amount: intentValue
-                    ));
-                    intentRenderer.gameObject.SetActive(false);
-                    intentText.gameObject.SetActive(false);
-
-                    shield += intentValue;
-                    break;
-
-                default:
-                    break;
+                switch (effect.effectType)
+                {
+                    case EffectType.Attack:
+                        combatManager.CombatSystem.EventBus.Publish<AttackDeclared>(new AttackDeclared(
+                            context: eventContext,
+                            source: this,
+                            target: player,
+                            amount: intentValue
+                        ));
+                        intentRenderer.gameObject.SetActive(false);
+                        intentText.gameObject.SetActive(false);
+                        animator.SetTrigger(AnimatorTriggers.ENEMY_ATTACK);
+                        break;
+                    case EffectType.Block:
+                        combatManager.CombatSystem.EventBus.Publish<BlockDeclared>(new BlockDeclared(
+                            context: eventContext,
+                            source: this,
+                            target: this,
+                            amount: intentValue
+                        ));
+                        intentRenderer.gameObject.SetActive(false);
+                        intentText.gameObject.SetActive(false);
+                        animator.SetTrigger(AnimatorTriggers.ENEMY_SKILL);
+                        break;
+                    case EffectType.Strengthen:
+                        break;
+                    case EffectType.Weaken:
+                        break;
+                    case EffectType.Vulnerable:
+                        break;
+                    default:
+                        return;
+                }
             }
         });
     }
@@ -115,7 +131,7 @@ public class EnemyView : Entity
 
         if (e.Damage.Target == this as ITargetable)
         {
-            e.Damage.Subtract(shield, this);
+            e.Damage.Subtract(block, this);
         }
     }
     private void OnDamageResolved(DamageResolved e)
@@ -164,6 +180,10 @@ public class EnemyView : Entity
 
                 Destroy(gameObject);
             }
+            else
+            {
+                animator.SetTrigger(AnimatorTriggers.ENEMY_HIT);
+            }
         }
     }
     public void Init(EnemyInstance instance, ITargetable player, Vector3 position, CombatManager combat)
@@ -181,12 +201,4 @@ public class EnemyView : Entity
         hp = Instance.MaxHp;
         hpText.text = hp.ToString();
     }
-}
-public enum EnemyIntent
-{
-    Attack,
-    Defend,
-    Buff,
-    Debuff,
-    None
 }

@@ -5,16 +5,19 @@ using UnityEngine;
 public class PlayerView : Entity
 {
     [SerializeField] private TextMeshPro hpText;
+    [SerializeField] private Animator animator;
 
     public int hp;
     public int strength;
-    public int shield;
+    public int block;
 
     private CombatManager combatManager;
     private PlayerInstance instance;
     private void OnDisable()
     {
         combatManager.CombatSystem.EventBus.Unsubscribe<PlayerTurnEnded>(OnPlayerTurnEnded);
+        combatManager.CombatSystem.EventBus.Unsubscribe<AttackDeclared>(OnAttackDeclared);
+        combatManager.CombatSystem.EventBus.Unsubscribe<BlockDeclared>(OnBlockDeclared);
         combatManager.CombatSystem.EventBus.Unsubscribe<DamageRequested>(OnDamageRequested);
         combatManager.CombatSystem.EventBus.Unsubscribe<DamageResolved>(OnDamageResolved);
     }
@@ -26,6 +29,8 @@ public class PlayerView : Entity
         transform.position = position;
 
         combatManager.CombatSystem.EventBus.Subscribe<PlayerTurnEnded>(OnPlayerTurnEnded);
+        combatManager.CombatSystem.EventBus.Subscribe<AttackDeclared>(OnAttackDeclared);
+        combatManager.CombatSystem.EventBus.Subscribe<BlockDeclared>(OnBlockDeclared);
         combatManager.CombatSystem.EventBus.Subscribe<DamageRequested>(OnDamageRequested);
         combatManager.CombatSystem.EventBus.Subscribe<DamageResolved>(OnDamageResolved);
 
@@ -39,7 +44,23 @@ public class PlayerView : Entity
         {
             return;
         }
-
+    }
+    public void OnAttackDeclared(AttackDeclared e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat ||
+            e.Source != this)
+        {
+            return;
+        }
+        animator.SetTrigger(AnimatorTriggers.PLAYER_ATTACK);
+    }
+    public void OnBlockDeclared(BlockDeclared e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat ||
+            e.Target != this)
+        {
+            return;
+        }
     }
     private void OnDamageRequested(DamageRequested e)
     {
@@ -59,7 +80,7 @@ public class PlayerView : Entity
         }
         else if (e.Damage.Target == this as ITargetable)
         {
-            e.Damage.Subtract(shield, this);
+            e.Damage.Subtract(block, this);
         }
     }
     private void OnDamageResolved(DamageResolved e)
@@ -103,6 +124,11 @@ public class PlayerView : Entity
                     context: eventContext,
                     target: this
                 ));
+                animator.SetTrigger(AnimatorTriggers.PLAYER_DIE);
+            }
+            else
+            {
+                animator.SetTrigger(AnimatorTriggers.PLAYER_HIT);
             }
         }
     }

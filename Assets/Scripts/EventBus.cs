@@ -226,9 +226,9 @@ public struct AttackDeclared : ICombatEvent
     public int Amount { get; private set; }
     public EventMeta Meta => EventMetas.AttackDeclared;
 }
-public struct ShieldDeclared : ICombatEvent
+public struct BlockDeclared : ICombatEvent
 {
-    public ShieldDeclared(EventContext context, Entity source, Entity target, int amount)
+    public BlockDeclared(EventContext context, Entity source, Entity target, int amount)
     {
         Context = context;
         Source = source;
@@ -239,7 +239,7 @@ public struct ShieldDeclared : ICombatEvent
     public Entity Source { get; private set; }
     public Entity Target { get; private set; }
     public int Amount { get; private set; }
-    public EventMeta Meta => EventMetas.ShieldDeclared;
+    public EventMeta Meta => EventMetas.BlockDeclared;
 }
 public struct DrawCardDeclared : ICombatEvent
 {

@@ -15,12 +15,13 @@ MonoBehaviour:
   key: EnemyAction_A_Attack
   displayName: EnemyAction_A_Attack
   intentType: 0
-  intentIcon: {fileID: 0}
+  intentIcon: {fileID: 1603510916, guid: a169860f858f7644c82f92e9157da230, type: 3}
   intentDescription: EnemyAction_A_Attack
-  damage: 5
-  hits: 1
-  block: 0
-  statuses: []
+  effects:
+  - targetType: 1
+    effectType: 0
+    repeat: 1
+    value: 33
   weight: 10
   cooldownTurns: 0
   maxConsecutive: 0

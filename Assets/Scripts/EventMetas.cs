@@ -22,7 +22,7 @@
     public static readonly EventMeta CardCharged = new("CardCharged", EventCategory.Card);
     public static readonly EventMeta CardPlayDeclared = new("CardPlayDeclared", EventCategory.Card);
     public static readonly EventMeta AttackDeclared = new("AttackDeclared", EventCategory.Card);
-    public static readonly EventMeta ShieldDeclared = new("ShieldDeclared", EventCategory.Card);
+    public static readonly EventMeta BlockDeclared = new("BlockDeclared", EventCategory.Card);
     public static readonly EventMeta DrawCardDeclared = new("DrawCardDeclared", EventCategory.Card);
     public static readonly EventMeta GainEnergyDeclared = new("GainEnergyDeclared", EventCategory.Card);
     public static readonly EventMeta ModifyCostDeclared = new("ModifyCostDeclared", EventCategory.Card);
