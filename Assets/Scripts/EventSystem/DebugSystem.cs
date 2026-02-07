@@ -21,6 +21,7 @@ public class DebugSystem : MonoBehaviour
         combatManager.CombatSystem.EventBus.Subscribe<ActionEnded>(OnActionEnded);
         combatManager.CombatSystem.EventBus.Subscribe<EnemyTurnEnded>(OnEnemyTurnEnded);
         combatManager.CombatSystem.EventBus.Subscribe<CombatEnded>(OnCombatEnded);
+        combatManager.CombatSystem.EventBus.Subscribe<AnimationEnded>(OnAnimationEnded);
     }
     private void OnDisable()
     {
@@ -28,6 +29,7 @@ public class DebugSystem : MonoBehaviour
         combatManager.CombatSystem.EventBus.Unsubscribe<ActionEnded>(OnActionEnded);
         combatManager.CombatSystem.EventBus.Unsubscribe<EnemyTurnEnded>(OnEnemyTurnEnded);
         combatManager.CombatSystem.EventBus.Unsubscribe<CombatEnded>(OnCombatEnded);
+        combatManager.CombatSystem.EventBus.Unsubscribe<AnimationEnded>(OnAnimationEnded);
     }
     private void LateUpdate()
     {
@@ -38,6 +40,10 @@ public class DebugSystem : MonoBehaviour
 
         RebuildDebugText();
         bRebuild = false;
+    }
+    private void OnAnimationEnded(AnimationEnded e)
+    {
+        bRebuild = true;
     }
     private void OnActionEnded(ActionEnded e)
     {

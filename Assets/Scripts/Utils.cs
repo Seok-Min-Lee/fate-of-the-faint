@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using DG.Tweening;
+using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 
 public static class Utils
 {
@@ -17,5 +19,10 @@ public static class Utils
         }
 
         return shuffled;
+    }
+    public static void TMPDOText(TextMeshProUGUI text, float duration)
+    {
+        text.maxVisibleCharacters = 0;
+        DOTween.To(x => text.maxVisibleCharacters = (int)x, 0f, text.text.Length, duration);
     }
 }

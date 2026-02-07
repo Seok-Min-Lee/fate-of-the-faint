@@ -100,12 +100,14 @@ public class CardSystem : MonoBehaviour
             return;
         }
 
-        int count = cardViewPool.Actives.Count;
-        List<CardView> views = cardViewPool.Actives.ToList();
-        for (int i = 0; i < count; i++)
-        {
-            DiscardCard(views[i], e.Context);
-        }
+        EventContext eventContext = new EventContext(
+            source: this,
+            action: e.Context.Action,
+            turn: e.Context.Turn,
+            combat: e.Context.Combat
+        );
+
+        ClearCardHand(eventContext);
     }
     public void OnEnergyResolved(EnergyResolved e)
     {
@@ -198,6 +200,22 @@ public class CardSystem : MonoBehaviour
         }
 
     }
+    public void OnCombatEnded(CombatEnded e)
+    {
+        if (e.Result != CombatState.Victory)
+        {
+            return;
+        }
+
+        EventContext eventContext = new EventContext(
+            source: this,
+            action: e.Context.Action,
+            turn: e.Context.Turn,
+            combat: e.Context.Combat
+        );
+
+        ClearCardHand(eventContext);
+    }
     private void DrawCard(EventContext context)
     {
         if (hand.Count == 10)
@@ -269,6 +287,15 @@ public class CardSystem : MonoBehaviour
         eventBus.Publish<CardCharged>(new CardCharged(context: _context));
     }
 
+    private void ClearCardHand(EventContext context)
+    {
+        int count = cardViewPool.Actives.Count;
+        List<CardView> views = cardViewPool.Actives.ToList();
+        for (int i = 0; i < count; i++)
+        {
+            DiscardCard(views[i], context);
+        }
+    }
     public void UpdateUI()
     {
         drawPileText.text = drawPile.Count.ToString();

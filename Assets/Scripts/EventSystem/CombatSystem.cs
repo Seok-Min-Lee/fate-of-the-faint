@@ -64,6 +64,7 @@ public class CombatSystem
         EventBus.Subscribe<EnergyResolved>(cardSystem.OnEnergyResolved);
         EventBus.Subscribe<DamageResolved>(cardSystem.OnDamageResolved);
         EventBus.Subscribe<PlayerTurnEnded>(cardSystem.OnPlayerTurnEnded);
+        EventBus.Subscribe<CombatEnded>(cardSystem.OnCombatEnded);
 
         EventBus.Subscribe<CombatStarted>(uiSystem.OnCombatStarted);
         EventBus.Subscribe<CombatEnded>(uiSystem.OnCombatEnded);
@@ -91,6 +92,7 @@ public class CombatSystem
         EventBus.Unsubscribe<EnergyResolved>(cardSystem.OnEnergyResolved);
         EventBus.Unsubscribe<DamageResolved>(cardSystem.OnDamageResolved);
         EventBus.Unsubscribe<PlayerTurnEnded>(cardSystem.OnPlayerTurnEnded);
+        EventBus.Unsubscribe<CombatEnded>(cardSystem.OnCombatEnded);
 
         EventBus.Unsubscribe<PlayerTurnStarted>(uiSystem.OnPlayerTurnStarted);
         EventBus.Unsubscribe<PlayerTurnEnded>(uiSystem.OnPlayerTurnEnded);
