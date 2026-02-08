@@ -1,30 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public sealed class EnemyInstance
+public class EnemyInstance : EntityInstance
 {
     // Identity / Static Data
-    public int Id { get; }
     public EnemySO Data { get; }
-    public int MaxHp { get; }
-    public int Hp { get; private set; }
-    public int Block { get; private set; }
-    public bool IsDead => Hp <= 0;
-
-    private readonly Dictionary<BuffType, int> buffs;
     public EnemyActionSO NextAction { get; private set; }
 
     private readonly Dictionary<string, int> actionCooldowns;
     private readonly Queue<string> recentActionKeys;
 
     // ctor
-    public EnemyInstance(int id, EnemySO data, int maxHp)
+    public EnemyInstance(EnemySO data, int maxHp)
     {
-        Id = id;
+        Id = Guid.NewGuid();
         Data = data;
 
         MaxHp = maxHp;
-        Hp = maxHp;
+        CurrentHp = maxHp;
         Block = 0;
 
         buffs = new Dictionary<BuffType, int>();
@@ -57,30 +50,6 @@ public sealed class EnemyInstance
         RegisterAction(NextAction);
     }
 
-    // Combat API (CombatSystem에서 호출)
-    public void TakeDamage(int amount)
-    {
-        if (amount <= 0)
-        {
-            return;
-        }
-
-        if (IsDead)
-        {
-            return;
-        }
-
-        int dmgToBlock = Math.Min(Block, amount);
-        Block -= dmgToBlock;
-
-        int remaining = amount - dmgToBlock;
-        if (remaining <= 0)
-        {
-            return;
-        }
-
-        Hp = Math.Max(0, Hp - remaining);
-    }
 
     public void GainBlock(int amount)
     {

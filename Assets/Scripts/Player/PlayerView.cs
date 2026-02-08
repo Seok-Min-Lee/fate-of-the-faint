@@ -1,25 +1,27 @@
 ﻿using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class PlayerView : Entity
+public class PlayerView : MonoBehaviour, ITargetable
 {
+    [SerializeField] private Transform aimPoint;
+
     [SerializeField] private TextMeshPro hpText;
     [SerializeField] private Animator animator;
 
-    public int hp;
-    public int strength;
-    public int block;
-
     private CombatManager combatManager;
     private PlayerInstance instance;
+    public Transform AimPoint => aimPoint;
+    public EntityInstance Instance => instance;
     private void OnDisable()
     {
-        combatManager.CombatSystem.EventBus.Unsubscribe<PlayerTurnEnded>(OnPlayerTurnEnded);
         combatManager.CombatSystem.EventBus.Unsubscribe<AttackDeclared>(OnAttackDeclared);
         combatManager.CombatSystem.EventBus.Unsubscribe<BlockDeclared>(OnBlockDeclared);
-        combatManager.CombatSystem.EventBus.Unsubscribe<DamageRequested>(OnDamageRequested);
-        combatManager.CombatSystem.EventBus.Unsubscribe<DamageResolved>(OnDamageResolved);
+        combatManager.CombatSystem.EventBus.Unsubscribe<HpChanged>(OnHpChanged);
+        combatManager.CombatSystem.EventBus.Unsubscribe<DeathDeclared>(OnDeathDeclared);
+        combatManager.CombatSystem.EventBus.Unsubscribe<CombatStarted>(OnCombatStarted);
+        combatManager.CombatSystem.EventBus.Unsubscribe<CombatEnded>(OnCombatEnded);
     }
     public void Init(PlayerInstance instance, CombatManager combatManager, Vector3 position)
     {
@@ -28,108 +30,83 @@ public class PlayerView : Entity
 
         transform.position = position;
 
-        combatManager.CombatSystem.EventBus.Subscribe<PlayerTurnEnded>(OnPlayerTurnEnded);
         combatManager.CombatSystem.EventBus.Subscribe<AttackDeclared>(OnAttackDeclared);
         combatManager.CombatSystem.EventBus.Subscribe<BlockDeclared>(OnBlockDeclared);
-        combatManager.CombatSystem.EventBus.Subscribe<DamageRequested>(OnDamageRequested);
-        combatManager.CombatSystem.EventBus.Subscribe<DamageResolved>(OnDamageResolved);
+        combatManager.CombatSystem.EventBus.Subscribe<HpChanged>(OnHpChanged);
+        combatManager.CombatSystem.EventBus.Subscribe<DeathDeclared>(OnDeathDeclared);
+        combatManager.CombatSystem.EventBus.Subscribe<CombatStarted>(OnCombatStarted);
+        combatManager.CombatSystem.EventBus.Subscribe<CombatEnded>(OnCombatEnded);
 
-        //hp = instance.CurrentHp;
-        hp = 100;
-        hpText.text = hp.ToString();
-    }
-    public void OnPlayerTurnEnded(PlayerTurnEnded e)
-    {
-        if (e.Context.Combat.state != CombatState.Combat)
-        {
-            return;
-        }
+        hpText.text = instance.CurrentHp.ToString();
+        animator.SetBool(AnimationKeys.PLAYER_ENCOUNTER, true);
     }
     public void OnAttackDeclared(AttackDeclared e)
     {
         if (e.Context.Combat.state != CombatState.Combat ||
-            e.Source != this)
+            e.Source != instance)
         {
             return;
         }
-        animator.SetTrigger(AnimatorTriggers.PLAYER_ATTACK);
+        animator.SetTrigger(AnimationKeys.PLAYER_ATTACK);
     }
     public void OnBlockDeclared(BlockDeclared e)
     {
         if (e.Context.Combat.state != CombatState.Combat ||
-            e.Target != this)
+            e.Target != instance)
         {
             return;
         }
+        animator.SetTrigger(AnimationKeys.PLAYER_SKILL);
     }
-    private void OnDamageRequested(DamageRequested e)
+    public void OnHpChanged(HpChanged e)
     {
         if (e.Context.Combat.state != CombatState.Combat)
         {
             return;
         }
 
-        if (e.Context.Combat.state != CombatState.Combat)
+        if (e.Target.Id != instance.Id)
         {
             return;
         }
 
-        if (e.Damage.Source == this)
+        if (e.EndAmount < e.StartAmount)
         {
-            e.Damage.Add(strength, this);
+            animator.SetTrigger(AnimationKeys.PLAYER_HIT);
         }
-        else if (e.Damage.Target == this as ITargetable)
-        {
-            e.Damage.Subtract(block, this);
-        }
+
+        hpText.text = e.EndAmount.ToString();
     }
-    private void OnDamageResolved(DamageResolved e)
+    public void OnDeathDeclared(DeathDeclared e)
     {
         if (e.Context.Combat.state != CombatState.Combat)
         {
             return;
         }
 
-        if (e.Target == this as ITargetable)
+        if (e.Source.Id != instance.Id)
         {
-            int startAmount = hp;
-            hp = Mathf.Max(0, hp - e.Amount);
-
-            hpText.text = hp.ToString();
-
-            EventContext eventContext = new EventContext(
-                source: this,
-                action: e.Context.Action,
-                turn: e.Context.Turn,
-                combat: e.Context.Combat
-            );
-
-            combatManager.CombatSystem.EventBus.Publish<HpChanged>(new HpChanged(
-                context: eventContext, 
-                target: this, 
-                startAmount: startAmount,
-                endAmount: hp
-            ));
-
-            if (hp <= 0)
-            {
-                eventContext = new EventContext(
-                    source: this,
-                    action: e.Context.Action,
-                    turn: e.Context.Turn,
-                    combat: e.Context.Combat
-                );
-
-                combatManager.CombatSystem.EventBus.Publish<DeathDeclared>(new DeathDeclared(
-                    context: eventContext,
-                    target: this
-                ));
-                animator.SetTrigger(AnimatorTriggers.PLAYER_DIE);
-            }
-            else
-            {
-                animator.SetTrigger(AnimatorTriggers.PLAYER_HIT);
-            }
+            return;
         }
+
+        animator.SetTrigger(AnimationKeys.PLAYER_DIE);
+    }
+    public void OnCombatStarted(CombatStarted e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
+        animator.SetBool(AnimationKeys.PLAYER_ENCOUNTER, false);
+    }
+    public void OnCombatEnded(CombatEnded e)
+    {
+        if (e.Result != CombatState.Victory)
+        {
+            return;
+        }
+
+        animator.SetTrigger(AnimationKeys.PLAYER_VICTORY);
     }
 }

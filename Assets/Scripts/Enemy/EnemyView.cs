@@ -1,204 +1,111 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
-public class EnemyView : Entity
+public class EnemyView : MonoBehaviour, ITargetable
 {
+    [SerializeField] private Transform aimPoint;
+
     [SerializeField] private SpriteRenderer intentRenderer;
     [SerializeField] private TextMeshPro intentText;
     [SerializeField] private TextMeshPro hpText;
 
     [SerializeField] private Animator animator;
 
-    public EnemyInstance Instance { get; private set; }
+    private EnemyInstance instance;
     private CombatManager combatManager;
-    private ITargetable player;
 
-    private EnemyActionSO nextAction;
+    public Transform AimPoint => aimPoint;
+    public EntityInstance Instance => instance;
 
-    public int hp = 100;
-    public int strength;
-    public int block;
-    public IntentType intent;
-    public int intentValue;
-
-    public bool IsDeath => hp <= 0;
     private void OnDisable()
     {
-        combatManager.CombatSystem.EventBus.Unsubscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
-        combatManager.CombatSystem.EventBus.Unsubscribe<EnemyActionStartRequested>(OnEnemyActionStartRequested);
-        combatManager.CombatSystem.EventBus.Unsubscribe<DamageRequested>(OnDamageRequested);
-        combatManager.CombatSystem.EventBus.Unsubscribe<DamageResolved>(OnDamageResolved);
+        combatManager.CombatSystem.EventBus.Unsubscribe<CombatStarted>(OnCombatStarted);
+        combatManager.CombatSystem.EventBus.Unsubscribe<EnemyIntentDecided>(OnEnemyIntentDecided);
+        combatManager.CombatSystem.EventBus.Unsubscribe<HpChanged>(OnHpChanged);
+        combatManager.CombatSystem.EventBus.Unsubscribe<DeathDeclared>(OnDeathDeclared);
+        combatManager.CombatSystem.EventBus.Unsubscribe<AttackDeclared>(OnAttackDeclared);
+        combatManager.CombatSystem.EventBus.Unsubscribe<CombatEnded>(OnCombatEnded);
     }
-    public void OnPlayerTurnStarted(PlayerTurnStarted e)
+    public void Init(EnemyInstance instance, Vector3 position, CombatManager combat)
+    {
+        this.instance = instance;
+        transform.position = position;
+        combatManager = combat;
+
+        combatManager.CombatSystem.EventBus.Subscribe<CombatStarted>(OnCombatStarted);
+        combatManager.CombatSystem.EventBus.Subscribe<EnemyIntentDecided>(OnEnemyIntentDecided);
+        combatManager.CombatSystem.EventBus.Subscribe<HpChanged>(OnHpChanged);
+        combatManager.CombatSystem.EventBus.Subscribe<DeathDeclared>(OnDeathDeclared);
+        combatManager.CombatSystem.EventBus.Subscribe<AttackDeclared>(OnAttackDeclared);
+        combatManager.CombatSystem.EventBus.Subscribe<CombatEnded>(OnCombatEnded);
+    }
+    public void OnCombatStarted(CombatStarted e)
+    {
+        hpText.text = instance.CurrentHp.ToString();
+    }
+    public void OnEnemyIntentDecided(EnemyIntentDecided e)
     {
         if (e.Context.Combat.state != CombatState.Combat)
         {
             return;
         }
 
-        nextAction = Instance.Data.aiPolicy.actions[Random.Range(0, Instance.Data.aiPolicy.actions.Count)];
-        intent = nextAction.IntentType;
-        intentRenderer.sprite = nextAction.IntentIcon;
-        intentValue = nextAction.Effects[0].value;
-        intentText.text = intentValue.ToString();
+        intentRenderer.sprite = instance.NextAction.IntentIcon;
+        intentText.text = instance.NextAction.Effects[0].value.ToString();
 
         intentRenderer.gameObject.SetActive(true);
         intentText.gameObject.SetActive(true);
     }
-    public void OnEnemyActionStartRequested(EnemyActionStartRequested e)
+    public void OnAttackDeclared(AttackDeclared e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat ||
+            e.Source != instance)
+        {
+            return;
+        }
+        intentRenderer.gameObject.SetActive(false);
+        intentText.gameObject.SetActive(false);
+        animator.SetTrigger(AnimationKeys.ENEMY_ATTACK);
+    }
+    public void OnHpChanged(HpChanged e)
     {
         if (e.Context.Combat.state != CombatState.Combat)
         {
             return;
         }
 
-        if (e.Enemy != this)
+        if (e.Target.Id != instance.Id)
         {
             return;
         }
-        e.Request.isResult = true;
 
-        ActionContext actionContext = new ActionContext(
-            source: this,
-            type: ActionType.EnemyAct
-        );
-
-        combatManager.CombatSystem.ActionSystem.ExcuteAction(actionContext, (eventContext) =>
+        if (e.EndAmount < e.StartAmount)
         {
-            foreach (IntentEffect effect in nextAction.Effects)
-            {
-                List<ITargetable> targets = new List<ITargetable>();
-                switch (effect.targetType)
-                {
-                    case IntentTarget.Player:
-                        targets.Add(player);
-                        break;
-                    case IntentTarget.Self:
-                        targets.Add(this);
-                        break;
-                    case IntentTarget.Member:
-                        //targets.Add(target);
-                        break;
-                    case IntentTarget.MemberAll:
-                        //targets.AddRange(combatSystem.liveEnemies);
-                        break;
-                }
+            animator.SetTrigger(AnimationKeys.ENEMY_HIT);
+        }
 
-                switch (effect.effectType)
-                {
-                    case EffectType.Attack:
-                        combatManager.CombatSystem.EventBus.Publish<AttackDeclared>(new AttackDeclared(
-                            context: eventContext,
-                            source: this,
-                            target: player,
-                            amount: intentValue
-                        ));
-                        intentRenderer.gameObject.SetActive(false);
-                        intentText.gameObject.SetActive(false);
-                        animator.SetTrigger(AnimatorTriggers.ENEMY_ATTACK);
-                        break;
-                    case EffectType.Block:
-                        combatManager.CombatSystem.EventBus.Publish<BlockDeclared>(new BlockDeclared(
-                            context: eventContext,
-                            source: this,
-                            target: this,
-                            amount: intentValue
-                        ));
-                        intentRenderer.gameObject.SetActive(false);
-                        intentText.gameObject.SetActive(false);
-                        animator.SetTrigger(AnimatorTriggers.ENEMY_SKILL);
-                        break;
-                    case EffectType.Strengthen:
-                        break;
-                    case EffectType.Weaken:
-                        break;
-                    case EffectType.Vulnerable:
-                        break;
-                    default:
-                        return;
-                }
-            }
-        });
+        hpText.text = e.EndAmount.ToString();
     }
-    private void OnDamageRequested(DamageRequested e)
+    public void OnDeathDeclared(DeathDeclared e)
     {
         if (e.Context.Combat.state != CombatState.Combat)
         {
             return;
         }
 
-        if (e.Damage.Target == this as ITargetable)
-        {
-            e.Damage.Subtract(block, this);
-        }
-    }
-    private void OnDamageResolved(DamageResolved e)
-    {
-        if (e.Context.Combat.state != CombatState.Combat)
+        if (e.Source.Id != instance.Id)
         {
             return;
         }
 
-        if (e.Target == this as ITargetable)
-        {
-            int startAmount = hp;
-            hp -= e.Amount;
-
-            hpText.text = hp.ToString();
-
-            EventContext eventContext = new EventContext(
-                source: this, 
-                action: e.Context.Action,
-                turn: e.Context.Turn,
-                combat: e.Context.Combat
-            );
-
-            combatManager.CombatSystem.EventBus.Publish<HpChanged>(new HpChanged(
-                context: eventContext,
-                target: this,
-                startAmount: startAmount,
-                endAmount: hp
-            ));
-
-            if (hp <= 0)
-            {
-                hp = 0;
-
-                eventContext = new EventContext(
-                    source: this,
-                    action: e.Context.Action,
-                    turn: e.Context.Turn,
-                    combat: e.Context.Combat
-                );
-
-                combatManager.CombatSystem.EventBus.Publish<DeathDeclared>(new DeathDeclared(
-                    context: eventContext,
-                    target: this
-                ));
-
-                Destroy(gameObject);
-            }
-            else
-            {
-                animator.SetTrigger(AnimatorTriggers.ENEMY_HIT);
-            }
-        }
+        animator.SetTrigger(AnimationKeys.ENEMY_DIE);
     }
-    public void Init(EnemyInstance instance, ITargetable player, Vector3 position, CombatManager combat)
+    public void OnCombatEnded(CombatEnded e)
     {
-        Instance = instance;
-        this.player = player;
-        transform.position = position;
-        combatManager = combat;
+        if (e.Result != CombatState.Defeat)
+        {
+            return;
+        }
 
-        combatManager.CombatSystem.EventBus.Subscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
-        combatManager.CombatSystem.EventBus.Subscribe<EnemyActionStartRequested>(OnEnemyActionStartRequested);
-        combatManager.CombatSystem.EventBus.Subscribe<DamageRequested>(OnDamageRequested);
-        combatManager.CombatSystem.EventBus.Subscribe<DamageResolved>(OnDamageResolved);
-
-        hp = Instance.MaxHp;
-        hpText.text = hp.ToString();
+        animator.SetTrigger(AnimationKeys.ENEMY_VICTORY);
     }
 }

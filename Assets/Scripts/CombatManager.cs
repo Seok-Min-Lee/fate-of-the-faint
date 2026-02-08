@@ -23,6 +23,7 @@ public class CombatManager : MonoBehaviour
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.INIT);
         }
+
         CombatSystem = new CombatSystem();
         DamageSystem damageSystem = new DamageSystem(CombatSystem.EventBus);
         EnergySystem energySystem = new EnergySystem(CombatSystem.EventBus);
@@ -36,7 +37,7 @@ public class CombatManager : MonoBehaviour
         );
 
         List<EnemyInstance> enemyInstances = CreateEnemyInstances();
-        List<EnemyView> enemyViews = ConvertEnemyInstanceToView(enemyInstances, playerView);
+        List<EnemyView> enemyViews = ConvertEnemyInstanceToView(enemyInstances, playerInstance);
 
         List<CardInstance> cardInstance = CreateCardInstances(PlayManager.Instance.CurrentData.Cards.Select(x => x.Origin));
 
@@ -46,14 +47,14 @@ public class CombatManager : MonoBehaviour
         );
         relicSystem.Init(
             eventBus: CombatSystem.EventBus,
-            player: playerView
+            player: playerInstance
         );
         cardSystem.Init(
             eventBus: CombatSystem.EventBus, 
             combatSystem: CombatSystem,
             actionSystem: CombatSystem.ActionSystem,
             cardInstances: cardInstance, 
-            player: playerView
+            player: playerInstance
         );
         CombatSystem.Init(
             damageSystem: damageSystem, 
@@ -61,8 +62,8 @@ public class CombatManager : MonoBehaviour
             cardSystem: cardSystem, 
             uiSystem: uiSystem, 
             relicSystem: relicSystem,
-            player: playerView,
-            enemies: enemyViews
+            player: playerInstance,
+            enemies: enemyInstances
         );
     }
     private void OnEnable()
@@ -101,7 +102,6 @@ public class CombatManager : MonoBehaviour
 
         List<EnemyInstance> enemies = new List<EnemyInstance>();
 
-        int enemyId = 0;
         for (int i = 0; i < team.details.Length; i++)
         {
             EnemySpawnPlanDetail detail = team.details[i];
@@ -109,7 +109,6 @@ public class CombatManager : MonoBehaviour
             for (int j = 0; j < detail.count; j++)
             {
                 enemies.Add(new EnemyInstance(
-                    id: enemyId++,
                     data: detail.origin,
                     maxHp: detail.origin.maxHpRange.Roll()
                 ));
@@ -118,7 +117,7 @@ public class CombatManager : MonoBehaviour
 
         return enemies;
     }
-    private List<EnemyView> ConvertEnemyInstanceToView(IEnumerable<EnemyInstance> instances, ITargetable target)
+    private List<EnemyView> ConvertEnemyInstanceToView(IEnumerable<EnemyInstance> instances, EntityInstance target)
     {
         int instanceCount = instances.Count();
 
@@ -149,7 +148,6 @@ public class CombatManager : MonoBehaviour
             EnemyView view = go.GetComponent<EnemyView>();
             view.Init(
                 instance: _instance,
-                player: target,
                 position: positions[i],
                 combat: this
             );

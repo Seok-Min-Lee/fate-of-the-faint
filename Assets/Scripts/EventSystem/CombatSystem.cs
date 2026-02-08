@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.Rendering;
 
 public class CombatSystem
 {
@@ -15,9 +17,9 @@ public class CombatSystem
     private UISystem uiSystem;
     private RelicSystem relicSystem;
 
-    private PlayerView player;
-    private List<EnemyView> enemies;
-    public IReadOnlyList<EnemyView> liveEnemies => enemies.Where(e => !e.IsDeath).ToList();
+    private PlayerInstance player;
+    private Dictionary<Guid, EnemyInstance> enemies;
+    public IReadOnlyList<EnemyInstance> liveEnemies => enemies.Values.Where(e => !e.IsDead).ToList();
     public CombatSystem()
     {
         CombatContext = new CombatContext(combatId: 0, source: this);
@@ -31,12 +33,12 @@ public class CombatSystem
         CardSystem cardSystem, 
         UISystem uiSystem, 
         RelicSystem relicSystem,
-        PlayerView player,
-        IEnumerable<EnemyView> enemies
+        PlayerInstance player,
+        IEnumerable<EnemyInstance> enemies
     )
     {
         this.player = player;
-        this.enemies = new List<EnemyView>(enemies);
+        this.enemies = enemies.ToDictionary(key => key.Id, value => value);
 
         this.damageSystem = damageSystem;
         this.energySystem = energySystem;
@@ -49,6 +51,10 @@ public class CombatSystem
     public void OnEnable()
     {
         EventBus.Subscribe<DeathDeclared>(OnDeathDeclared);
+        EventBus.Subscribe<DamageRequested>(OnDamageRequested);
+        EventBus.Subscribe<DamageResolved>(OnDamageResolved);
+        EventBus.Subscribe<EnemyActionStartRequested>(OnEnemyActionStartRequested);
+        EventBus.Subscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
 
         EventBus.Subscribe<CombatStarted>(TurnSystem.OnCombatStarted);
         EventBus.Subscribe<ActionEnded>(TurnSystem.OnActionEnded);
@@ -77,6 +83,10 @@ public class CombatSystem
     public void OnDisable()
     {
         EventBus.Unsubscribe<DeathDeclared>(OnDeathDeclared);
+        EventBus.Unsubscribe<DamageRequested>(OnDamageRequested);
+        EventBus.Unsubscribe<DamageResolved>(OnDamageResolved);
+        EventBus.Unsubscribe<EnemyActionStartRequested>(OnEnemyActionStartRequested);
+        EventBus.Unsubscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
 
         EventBus.Unsubscribe<CombatStarted>(TurnSystem.OnCombatStarted);
         EventBus.Unsubscribe<ActionEnded>(TurnSystem.OnActionEnded);
@@ -99,6 +109,29 @@ public class CombatSystem
         EventBus.Unsubscribe<EnergyChanged>(uiSystem.OnEnergyChanged);
 
         EventBus.Unsubscribe<DamageRequested>(relicSystem.OnDamageRequested);
+    }
+    public void OnPlayerTurnStarted(PlayerTurnStarted e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
+        foreach (EnemyInstance ei in enemies.Values)
+        {
+            if (!ei.IsDead)
+            {
+                ei.DecideNextAction(new System.Random());
+            }
+        }
+
+        EventContext eventContext = new EventContext(
+            source: this,
+            action: e.Context.Action,
+            turn: e.Context.Turn,
+            combat: e.Context.Combat
+        );
+        EventBus.Publish<EnemyIntentDecided>(new EnemyIntentDecided(eventContext));
     }
     public void OnDeathDeclared(DeathDeclared e)
     {
@@ -125,21 +158,177 @@ public class CombatSystem
         }
         else
         {
-            for (int i = 0; i < enemies.Count; i++)
+            if (!enemies.Values.Any(enemy => !enemy.IsDead))
             {
-                if (!enemies[i].IsDeath)
-                {
-                    return;
-                }
+                CombatContext.state = CombatState.Victory;
+
+                EventBus.Publish<CombatEnded>(new CombatEnded(
+                    context: eventContext,
+                    result: CombatState.Victory
+                ));
             }
-
-            CombatContext.state = CombatState.Victory;
-
-            EventBus.Publish<CombatEnded>(new CombatEnded(
-                context: eventContext,
-                result: CombatState.Victory
-            ));
         }
+    }
+    private void OnDamageRequested(DamageRequested e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
+        if (e.Damage.Source.Id == player.Id)
+        {
+            if (player.Buffs.TryGetValue(key: BuffType.Strength, value: out int strength))
+            {
+                e.Damage.Add(strength, player);
+            }
+        }
+        else if (e.Damage.Target.Id == player.Id)
+        {
+            if (player.Block > 0)
+            {
+                e.Damage.Subtract(player.Block, player);
+            }
+        }
+        else if (enemies.TryGetValue(key: e.Damage.Target.Id, value: out EnemyInstance enemy))
+        {
+            if (enemy.Block > 0)
+            {
+                e.Damage.Subtract(enemy.Block, enemy);
+            }
+        }
+    }
+    private void OnDamageResolved(DamageResolved e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
+        EntityInstance instance = null;
+        int startAmount = 0;
+        int endAmount = 0;
+        if (e.Target == player)
+        {
+            instance = player;
+            startAmount = player.CurrentHp;
+            endAmount = Mathf.Max(0, startAmount - e.Amount);
+        }
+        else if (enemies.ContainsKey(e.Target.Id))
+        {
+            instance = enemies[e.Target.Id];
+            startAmount = enemies[e.Target.Id].CurrentHp;
+            endAmount = Mathf.Max(0, startAmount - e.Amount);
+        }
+        else
+        {
+            return;
+        }
+
+        Process(instance, startAmount, endAmount);
+
+        void Process(EntityInstance instance, int startAmount, int endAmount)
+        {
+            instance.SetCurrentHp(endAmount);
+
+            EventContext eventContext = new EventContext(
+                source: this,
+                action: e.Context.Action,
+                turn: e.Context.Turn,
+                combat: e.Context.Combat
+            );
+
+            EventBus.Publish<HpChanged>(new HpChanged(
+                context: eventContext,
+                target: instance,
+                startAmount: startAmount,
+                endAmount: endAmount
+            )); 
+
+            if (instance.CurrentHp <= 0)
+            {
+                EventBus.Publish<DeathDeclared>(new DeathDeclared(
+                    context: eventContext,
+                    target: instance
+                ));
+            }
+        }
+    }
+    public void OnEnemyActionStartRequested(EnemyActionStartRequested e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
+        if (!enemies.TryGetValue(key: e.Enemy.Id, value: out EnemyInstance enemy))
+        {
+            return;
+        }
+
+        e.Request.isResult = true;
+
+        ActionContext actionContext = new ActionContext(
+            source: enemy,
+            type: ActionType.EnemyAct
+        );
+
+        ActionSystem.ExcuteAction(actionContext, (eventContext) =>
+        {
+            foreach (IntentEffect effect in enemy.NextAction.Effects)
+            {
+                List<EntityInstance> targets = new List<EntityInstance>();
+                switch (effect.targetType)
+                {
+                    case IntentTarget.Player:
+                        targets.Add(player);
+                        break;
+                    case IntentTarget.Self:
+                        targets.Add(enemy);
+                        break;
+                    case IntentTarget.Member:
+                        //targets.Add(target);
+                        break;
+                    case IntentTarget.MemberAll:
+                        //targets.AddRange(combatSystem.liveEnemies);
+                        break;
+                }
+
+                for (int i = 0; i < targets.Count; i++)
+                {
+                    for (int j = 0; j < effect.repeat; j++)
+                    {
+                        switch (effect.effectType)
+                        {
+                            case EffectType.Attack:
+                                EventBus.Publish<AttackDeclared>(new AttackDeclared(
+                                    context: eventContext,
+                                    source: enemy,
+                                    target: targets[i],
+                                    amount: effect.value
+                                ));
+                                break;
+                            case EffectType.Block:
+                                EventBus.Publish<BlockDeclared>(new BlockDeclared(
+                                    context: eventContext,
+                                    source: enemy,
+                                    target: targets[i],
+                                    amount: effect.value
+                                ));
+                                break;
+                            case EffectType.Strengthen:
+                                break;
+                            case EffectType.Weaken:
+                                break;
+                            case EffectType.Vulnerable:
+                                break;
+                            default:
+                                return;
+                        }
+                    }
+                }                
+            }
+        });
     }
     public void CombatStart()
     {

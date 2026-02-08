@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Relic : Entity
+public class Relic : MonoBehaviour
 {
     public int strength;
 }

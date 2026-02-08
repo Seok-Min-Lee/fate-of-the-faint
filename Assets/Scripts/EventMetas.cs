@@ -35,7 +35,8 @@
     public static readonly EventMeta DeathDeclared = new("DeathDeclared", EventCategory.Status);
 
     public static readonly EventMeta AnimationStarted = new("AnimationStarted", EventCategory.UI);
-    public static readonly EventMeta AnimationEnded = new("AnimationEnded", EventCategory.UI);
+    public static readonly EventMeta AnimationEnded = new("AnimationEnded", EventCategory.UI); 
+    public static readonly EventMeta EnemyIntentDecided = new EventMeta("EnemyIntentDecided", EventCategory.Status);
 }
 public readonly struct EventMeta
 {
@@ -57,6 +58,6 @@ public enum EventCategory
     Damage,
     Card,
     Status,
-    UI
+    UI,
 }
 

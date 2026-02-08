@@ -12,18 +12,26 @@ public class TurnSystem
 
     public TurnContext TurnContext { get; private set; }
     private int turnId = 0;
-    private List<EnemyView> enemies;
+    private List<EnemyInstance> enemies;
     private Queue<Action> eventQueue = new Queue<Action>();
-    public void Init(IEnumerable<EnemyView> enemies)
+    public void Init(IEnumerable<EnemyInstance> enemies)
     {
-        this.enemies = new List<EnemyView>(enemies);
+        this.enemies = new List<EnemyInstance>(enemies);
     }
+    private int unit = 0;
     public void UpdateTick()
     {
+        if (++unit < 30)
+        {
+            return;
+        }
+
         if (eventQueue.Count > 0)
         {
             eventQueue.Dequeue().Invoke();
         }
+
+        unit = 0;
     }
     public void OnCombatStarted(CombatStarted e)
     {
@@ -93,7 +101,7 @@ public class TurnSystem
 
         for (int i = 0; i < enemies.Count; i++)
         {
-            if (!enemies[i].IsDeath)
+            if (!enemies[i].IsDead)
             {
                 TurnContext.EnemyQueue.Enqueue(enemies[i]);
             }
@@ -124,7 +132,7 @@ public class TurnSystem
 
         EventContext eventContext = new EventContext(
             source: this,
-            action: e.Context.Action,
+            action: null,
             turn: e.Context.Turn,
             combat: e.Context.Combat
         );
@@ -189,7 +197,7 @@ public class TurnContext
     public TurnPhase Phase { get; private set; }
     public object Source { get; private set; }
 
-    public Queue<EnemyView> EnemyQueue { get; private set; } = new Queue<EnemyView>();
+    public Queue<EnemyInstance> EnemyQueue { get; private set; } = new Queue<EnemyInstance>();
 }
 public enum TurnPhase
 {

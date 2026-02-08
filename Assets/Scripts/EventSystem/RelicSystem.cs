@@ -4,8 +4,8 @@ public class RelicSystem : MonoBehaviour
     public Relic relic;
 
     private EventBus eventBus;
-    private PlayerView player;
-    public void Init(EventBus eventBus, PlayerView player)
+    private PlayerInstance player;
+    public void Init(EventBus eventBus, PlayerInstance player)
     {
         this.eventBus = eventBus;
         this.player = player;

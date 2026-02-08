@@ -107,7 +107,7 @@ public struct EnemyTurnEnded : ICombatEvent
 }
 public struct EnemyActionStartRequested : ICombatEvent
 {
-    public EnemyActionStartRequested(EventContext context, RequestContext request, EnemyView enemy)
+    public EnemyActionStartRequested(EventContext context, RequestContext request, EnemyInstance enemy)
     {
         Context = context;
         Request = request;
@@ -115,7 +115,7 @@ public struct EnemyActionStartRequested : ICombatEvent
     }
     public EventContext Context { get; private set; }
     public RequestContext Request { get; private set; }
-    public EnemyView Enemy { get; private set; }
+    public EnemyInstance Enemy { get; private set; }
     public EventMeta Meta => EventMetas.EnemyActionStartRequested;
 }
 public struct ActionStarted : ICombatEvent
@@ -213,7 +213,7 @@ public struct CardPlayDeclared : ICombatEvent
 }
 public struct AttackDeclared : ICombatEvent
 {
-    public AttackDeclared(EventContext context, Entity source, ITargetable target, int amount)
+    public AttackDeclared(EventContext context, EntityInstance source, EntityInstance target, int amount)
     {
         Context = context;
         Source = source;
@@ -221,14 +221,14 @@ public struct AttackDeclared : ICombatEvent
         Amount = amount;
     }
     public EventContext Context { get; private set; }
-    public Entity Source { get; private set; }
-    public ITargetable Target { get; private set; }
+    public EntityInstance Source { get; private set; }
+    public EntityInstance Target { get; private set; }
     public int Amount { get; private set; }
     public EventMeta Meta => EventMetas.AttackDeclared;
 }
 public struct BlockDeclared : ICombatEvent
 {
-    public BlockDeclared(EventContext context, Entity source, Entity target, int amount)
+    public BlockDeclared(EventContext context, EntityInstance source, EntityInstance target, int amount)
     {
         Context = context;
         Source = source;
@@ -236,8 +236,8 @@ public struct BlockDeclared : ICombatEvent
         Amount = amount;
     }
     public EventContext Context { get; private set; }
-    public Entity Source { get; private set; }
-    public Entity Target { get; private set; }
+    public EntityInstance Source { get; private set; }
+    public EntityInstance Target { get; private set; }
     public int Amount { get; private set; }
     public EventMeta Meta => EventMetas.BlockDeclared;
 }
@@ -308,7 +308,7 @@ public struct DamageRequested : ICombatEvent
 }
 public struct DamageResolved : ICombatEvent
 {
-    public DamageResolved(EventContext context, Entity source, ITargetable target, int amount)
+    public DamageResolved(EventContext context, EntityInstance source, EntityInstance target, int amount)
     {
         Context = context;
         Source = source;
@@ -316,14 +316,14 @@ public struct DamageResolved : ICombatEvent
         Amount = amount;
     }
     public EventContext Context { get; private set; }
-    public Entity Source { get; private set; }
-    public ITargetable Target { get; private set; }
+    public EntityInstance Source { get; private set; }
+    public EntityInstance Target { get; private set; }
     public int Amount { get; private set; }
     public EventMeta Meta => EventMetas.DamageResolved;
 }
 public struct HpChanged : ICombatEvent
 {
-    public HpChanged(EventContext context, Entity target, int startAmount, int endAmount)
+    public HpChanged(EventContext context, EntityInstance target, int startAmount, int endAmount)
     {
         Context = context;
         Target = target;
@@ -331,20 +331,20 @@ public struct HpChanged : ICombatEvent
         EndAmount = endAmount;
     }
     public EventContext Context { get; private set; }
-    public Entity Target { get; private set; }
+    public EntityInstance Target { get; private set; }
     public int StartAmount { get; private set; }
     public int EndAmount { get; private set; }
     public EventMeta Meta => EventMetas.HpChanged;
 }
 public struct DeathDeclared : ICombatEvent
 {
-    public DeathDeclared(EventContext context, Entity target)
+    public DeathDeclared(EventContext context, EntityInstance target)
     {
         Context = context;
         Source = target;
     }
     public EventContext Context { get; private set; }
-    public Entity Source { get; private set; }
+    public EntityInstance Source { get; private set; }
     public EventMeta Meta => EventMetas.DeathDeclared;
 }
 public struct AnimationStarted : ICombatEvent
@@ -364,4 +364,13 @@ public struct AnimationEnded : ICombatEvent
     }
     public EventContext Context { get; private set; }
     public EventMeta Meta => EventMetas.AnimationEnded;
+}
+public struct EnemyIntentDecided : ICombatEvent
+{
+    public EnemyIntentDecided(EventContext context)
+    {
+        Context = context;
+    }
+    public EventContext Context { get; private set; }
+    public EventMeta Meta => EventMetas.EnemyIntentDecided;
 }

@@ -11,9 +11,9 @@ public static class SceneNames
     public const string MAP = "Map";
     public const string COMBAT = "Combat";
 }
-public static class AnimatorTriggers
+public static class AnimationKeys
 {
-    public const string PLAYER_START = "doStart";
+    public const string PLAYER_ENCOUNTER = "isRun";
     public const string PLAYER_ATTACK = "doAttack";
     public const string PLAYER_ATTACKALL = "doAttackAll";
     public const string PLAYER_SKILL = "doSkill";

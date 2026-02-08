@@ -48,7 +48,7 @@ public class DamageSystem
 }
 public class DamageContext
 {
-    public DamageContext(int amount, Entity source, ITargetable target)
+    public DamageContext(int amount, EntityInstance source, EntityInstance target)
     {
         Amount = amount;
         Source = source;
@@ -56,8 +56,8 @@ public class DamageContext
         Modifiers = new List<object>();
     }
     public int Amount { get; private set; }
-    public Entity Source { get; private set; }
-    public ITargetable Target { get; private set; }
+    public EntityInstance Source { get; private set; }
+    public EntityInstance Target { get; private set; }
     public List<object> Modifiers { get; private set; }
     public void Add(int value, object source)
     {
