@@ -21,29 +21,28 @@ public class DamageSystem
             target: e.Target
         );
 
-        EventContext eventContext = new EventContext(
-            source: this,
-            action: e.Context.Action,
-            turn: e.Context.Turn,
-            combat: e.Context.Combat
-        );
+        EventContext eventContext = CreateContext(e.Context);
         eventBus.Publish<DamageRequested>(new DamageRequested(
             context: eventContext,
             damage: damage
         ));
 
-        eventContext = new EventContext(
-            source: this,
-            action: e.Context.Action,
-            turn: e.Context.Turn,
-            combat: e.Context.Combat
-        );
+        eventContext = CreateContext(e.Context);
         eventBus.Publish<DamageResolved>(new DamageResolved(
             context: eventContext,
             source: damage.Source,
             target: damage.Target,
             amount: Mathf.Max(0, damage.Amount)
         ));
+    }
+    private EventContext CreateContext(EventContext context)
+    {
+        return new EventContext(
+            source: this,
+            action: context.Action,
+            turn: context.Turn,
+            combat: context.Combat
+        );
     }
 }
 public class DamageContext

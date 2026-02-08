@@ -36,15 +36,6 @@ public enum IntentType
     Special
 }
 
-public enum StatusType
-{
-    Strength,
-    Weak,
-    Vulnerable,
-    Frail,
-    Artifact
-}
-
 [Serializable]
 public struct IntRange
 {

@@ -5,11 +5,11 @@ public class EnergySystem
     private readonly EventBus eventBus;
     public int MaxEnergy;
     public int Energy;
-    public EnergySystem(EventBus eventBus)
+    public EnergySystem(EventBus eventBus, int max)
     {
         this.eventBus = eventBus;
 
-        MaxEnergy = 3;
+        MaxEnergy = max;
         Energy = MaxEnergy;
     }
     public void OnPlayerTurnStarted(PlayerTurnStarted e)
@@ -55,30 +55,29 @@ public class EnergySystem
             return;
         }
 
-        EventContext eventContext = new EventContext(
-            source: this,
-            action: e.Context.Action,
-            turn: e.Context.Turn,
-            combat: e.Context.Combat
-        );
-        eventBus.Publish(new EnergyResolved(context: e.Context, result: result));
+        EventContext eventContext = CreateContext(e.Context);
+        eventBus.Publish(new EnergyResolved(context: eventContext, result: result));
     }
     private void EnergyChanged(int amount, EventContext context)
     {
         int startAmount = Energy;
         Energy += amount;
 
-        EventContext eventContext = new EventContext(
-            source: this,
-            action: context.Action,
-            turn: context.Turn,
-            combat: context.Combat
-        );
+        EventContext eventContext = CreateContext(context);
 
         eventBus.Publish<EnergyChanged>(new EnergyChanged(
             context: eventContext,
             startAmount: startAmount, 
             endAmount: Energy
         ));
+    }
+    private EventContext CreateContext(EventContext context)
+    {
+        return new EventContext(
+            source: this,
+            action: context.Action,
+            turn: context.Turn,
+            combat: context.Combat
+        );
     }
 }

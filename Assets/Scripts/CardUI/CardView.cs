@@ -208,7 +208,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public ViewType Type => type;
 
     public CardInstance CardInstance { get; private set; }
-    public CardSystem CardSystem { get; private set; }
+    public CardMonoSystem CardSystem { get; private set; }
     public CardViewPool Pool { get; private set; }
 
     private bool targetingLatched;
@@ -217,7 +217,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         CardSystem.PlayCardStart(this, target);
     }
-    public void Init(CardInstance cardInstance, CardSystem cardSystem, CardViewPool pool)
+    public void Init(CardInstance cardInstance, CardMonoSystem cardSystem, CardViewPool pool)
     {
         CardInstance = cardInstance;
         CardSystem = cardSystem;

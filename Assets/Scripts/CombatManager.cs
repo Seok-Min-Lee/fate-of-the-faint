@@ -8,9 +8,9 @@ using UnityEngine;
 
 public class CombatManager : MonoBehaviour
 {
-    [SerializeField] CardSystem cardSystem;
-    [SerializeField] UISystem uiSystem;
-    [SerializeField] RelicSystem relicSystem;
+    [SerializeField] CardMonoSystem cardSystem;
+    [SerializeField] UIMonoSystem uiSystem;
+    [SerializeField] RelicMonoSystem relicSystem;
     [SerializeField] private PlayerView playerPrefab;
 
     [Header("Instance")]
@@ -25,8 +25,6 @@ public class CombatManager : MonoBehaviour
         }
 
         CombatSystem = new CombatSystem();
-        DamageSystem damageSystem = new DamageSystem(CombatSystem.EventBus);
-        EnergySystem energySystem = new EnergySystem(CombatSystem.EventBus);
 
         PlayerInstance playerInstance = CreatePlayerInstance(PlayManager.Instance.CurrentData);
         PlayerView playerView = GameObject.Instantiate<PlayerView>(playerPrefab);
@@ -41,6 +39,11 @@ public class CombatManager : MonoBehaviour
 
         List<CardInstance> cardInstance = CreateCardInstances(PlayManager.Instance.CurrentData.Cards.Select(x => x.Origin));
 
+        DamageSystem damageSystem = new DamageSystem(CombatSystem.EventBus);
+        EnergySystem energySystem = new EnergySystem(
+            eventBus: CombatSystem.EventBus, 
+            max: playerInstance.Energy
+        );
         uiSystem.Init(
             eventBus: CombatSystem.EventBus,
             actionSystem: CombatSystem.ActionSystem
