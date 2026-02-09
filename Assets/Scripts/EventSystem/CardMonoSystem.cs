@@ -92,7 +92,7 @@ public class CardMonoSystem : MonoBehaviour
             return;
         }
 
-        DG.Tweening.Sequence sequence = DOTween.Sequence();
+        Sequence sequence = DOTween.Sequence();
 
         for (int i = 0; i < 5; i++)
         {
@@ -233,7 +233,7 @@ public class CardMonoSystem : MonoBehaviour
         cardViewPool.Push(cardView);
 
         cardView.transform.parent = cardViewPool.transform;
-        cardView.gameObject.SetActive(false);
+        cardView.Discard();
 
         UpdateUI();
 

@@ -7,10 +7,6 @@ public class CardViewPool : MonoBehaviour
     [SerializeField] CardView skillViewPrefab;
     [SerializeField] CardView powerViewPrefab;
 
-    private Queue<CardView> AttackPool => attackQueue;
-    private Queue<CardView> SkillPool => skillQueue;
-    private Queue<CardView> PowerPool => powerQueue;
-
     public IReadOnlyList<CardView> Actives => actives;
 
     private Queue<CardView> attackQueue = new Queue<CardView>();
@@ -69,6 +65,7 @@ public class CardViewPool : MonoBehaviour
                 return null;
         }
 
+        cardView.gameObject.SetActive(false);
         actives.Add(cardView);
 
         return cardView;

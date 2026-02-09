@@ -589,6 +589,7 @@ GameObject:
   - component: {fileID: 796098039519068836}
   - component: {fileID: -6083649196487400915}
   - component: {fileID: 634705328638537620}
+  - component: {fileID: 6536418003956250986}
   m_Layer: 5
   m_Name: Skill Card
   m_TagString: Untagged
@@ -652,10 +653,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c12e20291b761c4bac3111684400ed4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardView
-  targetRotation: 0
-  targetPosition: {x: 0, y: 0}
-  targetVerticalDisplacement: 0
-  uiLayer: 0
   zoomConfig:
     zoomOnHover: 0
     multiplier: 1
@@ -664,12 +661,6 @@ MonoBehaviour:
     bringToFrontOnHover: 0
     zoomedSortOrder: 0
     resetRotationOnZoom: 0
-  animationSpeedConfig:
-    rotation: 60
-    position: 500
-    releasePosition: 2000
-    zoom: 0.3
-  container: {fileID: 0}
   eventsConfig:
     OnCardPlayed:
       m_PersistentCalls:
@@ -683,12 +674,40 @@ MonoBehaviour:
     OnCardDestroy:
       m_PersistentCalls:
         m_Calls: []
+  cardPlayConfig:
+    prepareArea: {fileID: 0}
+    playArea: {fileID: 0}
+    drawArea: {fileID: 0}
+    discardArea: {fileID: 0}
+  animationSpeedConfig:
+    rotation: 60
+    position: 500
+    releasePosition: 2000
+    zoom: 0.3
+  container: {fileID: 0}
   preventCardInteraction: 0
-  type: 2
+  type: 1
   cost: {fileID: 5611704556878957064}
   name: {fileID: 5278340118754781056}
   desc: {fileID: 5696761504090642716}
   image: {fileID: 1669874739332243628}
+--- !u!114 &6536418003956250986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7457746064626439576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &7660677524457846259
 GameObject:
   m_ObjectHideFlags: 0
