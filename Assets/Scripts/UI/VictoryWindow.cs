@@ -4,38 +4,37 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class VictoryWindow : UIWindow
+public class VictoryWindow : UIMotionWindow
 {
+    [SerializeField] CardRewardWindow cardRewardWindow;
+
     [SerializeField] private CanvasGroup dimmedCG;
     [SerializeField] private CanvasGroup contentCG;
     [SerializeField] Transform rewardParent;
     [SerializeField] RewardButton rewardButtonPrefab;
     [SerializeField] TextMeshProUGUI tipText;
 
-    [SerializeField] RewardPair[] rewardPairs;
+    [SerializeField] RewardPreset[] rewardPresets;
 
     private Queue<RewardButton> rewardButtonQueue = new Queue<RewardButton>();
 
     private void Awake()
     {
         _handler.Add(MotionKey.WindowShow, Show);
-        gameObject.SetActive(false);
     }
-    public void OnClickGoldButton()
+    public void OnClickGoldButton(RewardButton button)
     {
-        //PlayManager.Instance.CurrentData.AddGold();
+        button.PushToPool();
     }
-    public void OnClickRelicButton()
+    public void OnClickRelicButton(RewardButton button)
     {
-        //PlayManager.Instance.CurrentData.AddRelic();
+        button.PushToPool();
     }
-    public void OnClickCardButton()
+    public void OnClickCardButton(RewardButton button)
     {
-
-    }
-    public void OnClickRewardCard()
-    {
-        //PlayManager.Instance.CurrentData.AddCard();
+        cardRewardWindow.Init();
+        cardRewardWindow.Bind(button);
+        ChangeWindow(WindowType.CardRewards, WindowMode.Single);
     }
     public void OnClickNext()
     {
@@ -46,7 +45,7 @@ public class VictoryWindow : UIWindow
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() =>
         {
-            gameObject.SetActive(true);
+            ChangeWindow(WindowType.Victory, WindowMode.Single);
             dimmedCG.alpha = 0f;
             contentCG.alpha = 0f;
             tipText.text = string.Empty;
@@ -69,13 +68,33 @@ public class VictoryWindow : UIWindow
 
         for (int i = 0; i < num; i++)
         {
-            RewardButton rb = rewardButtonQueue.Count > 0 ?
-                            rewardButtonQueue.Dequeue() :
-                            GameObject.Instantiate(rewardButtonPrefab, rewardParent);
+            RewardButton button = rewardButtonQueue.Count > 0 ?
+                                rewardButtonQueue.Dequeue() :
+                                GameObject.Instantiate(rewardButtonPrefab, rewardParent);
 
-            RewardPair rp = rewardPairs[UnityEngine.Random.Range(1, rewardPairs.Length)];
+            //RewardPreset preset = rewardPresets[UnityEngine.Random.Range(0, rewardPresets.Length)];
+            RewardPreset preset = rewardPresets[1];
 
-            rb.Init(this, rp.image, rp.name);
+            Action<RewardButton> onClick = null;
+            switch (preset.type)
+            {
+                case RewardPreset.Type.Gold:
+                    onClick = (button) => OnClickGoldButton(button); 
+                    break;
+                case RewardPreset.Type.Card:
+                    onClick = (button) => OnClickCardButton(button);
+                    break;
+                case RewardPreset.Type.Relic:
+                    onClick = (button) => OnClickRelicButton(button);
+                    break;
+            }
+
+            button.Init(
+                pool: this, 
+                sprite: preset.image,
+                text: preset.name,
+                onClick: onClick
+            );
         }
     }
     public void Charge(RewardButton button)
@@ -84,8 +103,15 @@ public class VictoryWindow : UIWindow
     }
 }
 [Serializable]
-public struct RewardPair
+public struct RewardPreset
 {
+    public enum Type
+    {
+        Gold,
+        Card,
+        Relic
+    }
+    public Type type;
     public Sprite image;
     public string name;
 }

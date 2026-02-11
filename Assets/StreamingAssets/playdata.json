@@ -3,6 +3,7 @@
     "currentHp": 100,
     "maxHp": 100,
     "gold": 0,
+    "rewardCardOptionCount": 3,
     "rng": {
         "seed": 1234,
         "calls": 0
@@ -18,7 +19,8 @@
         "skl_defend",
         "skl_defend",
         "skl_defend",
-        "skl_defend"
+        "skl_defend",
+        "atk_double"
     ],
     "relicIds": [
         "Relic_A"

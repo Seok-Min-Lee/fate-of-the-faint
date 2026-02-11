@@ -21,6 +21,20 @@ public static class Utils
 
         return shuffled;
     }
+    public static List<T> PickRandom<T>(IEnumerable<T> source, int count)
+    {
+        List<T> pool = new List<T>(source);
+        List<T> result = new List<T>(count);
+
+        for (int i = 0; i < count; i++)
+        {
+            int index = Random.Range(0, pool.Count);
+            result.Add(pool[index]);
+            pool.RemoveAt(index);
+        }
+
+        return result;
+    }
     public static bool ExistPointInRect(Vector3 point, RectTransform rect)
     {
         Vector3[] corners = new Vector3[4];

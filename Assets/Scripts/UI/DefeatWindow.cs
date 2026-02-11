@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DefeatWindow : UIWindow
+public class DefeatWindow : UIMotionWindow
 {
     [SerializeField] private CanvasGroup dimmedCG;
     [SerializeField] private CanvasGroup contentCG;
@@ -14,7 +14,6 @@ public class DefeatWindow : UIWindow
     private void Awake()
     {
         _handler.Add(MotionKey.WindowShow, Show);
-        gameObject.SetActive(false);
         dimmedCG.alpha = 0f;
         contentCG.alpha = 0f;
     }
@@ -28,7 +27,7 @@ public class DefeatWindow : UIWindow
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() =>
         {
-            gameObject.SetActive(true);
+            ChangeWindow(WindowType.Defeat, WindowMode.Single);
             dimmedCG.alpha = 0f;
             contentCG.alpha = 0f;
             headText.text = string.Empty;

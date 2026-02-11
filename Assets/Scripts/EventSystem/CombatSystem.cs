@@ -66,18 +66,18 @@ public class CombatSystem
         EventBus.Subscribe<PlayerTurnStarted>(energySystem.OnPlayerTurnStarted);
         EventBus.Subscribe<EnergyChangeRequested>(energySystem.OnEnergyChangeRequested);
 
-        EventBus.Subscribe<CombatEnded>(cardSystem.OnCombatEnded);
-        EventBus.Subscribe<PlayerTurnStarted>(cardSystem.OnPlayerTurnStarted);
-        EventBus.Subscribe<PlayerTurnEnded>(cardSystem.OnPlayerTurnEnded);
-        EventBus.Subscribe<EnergyResolved>(cardSystem.OnEnergyResolved);
-        EventBus.Subscribe<DamageResolved>(cardSystem.OnDamageResolved);
-
         EventBus.Subscribe<CombatStarted>(uiSystem.OnCombatStarted);
         EventBus.Subscribe<CombatEnded>(uiSystem.OnCombatEnded);
         EventBus.Subscribe<PlayerTurnStarted>(uiSystem.OnPlayerTurnStarted);
         EventBus.Subscribe<PlayerTurnEnded>(uiSystem.OnPlayerTurnEnded);
         EventBus.Subscribe<EnemyTurnStarted>(uiSystem.OnEnemyTurnStarted);
         EventBus.Subscribe<EnergyChanged>(uiSystem.OnEnergyChanged);
+
+        EventBus.Subscribe<CombatEnded>(cardSystem.OnCombatEnded);
+        EventBus.Subscribe<PlayerTurnStarted>(cardSystem.OnPlayerTurnStarted);
+        EventBus.Subscribe<PlayerTurnEnded>(cardSystem.OnPlayerTurnEnded);
+        EventBus.Subscribe<EnergyResolved>(cardSystem.OnEnergyResolved);
+        EventBus.Subscribe<DamageResolved>(cardSystem.OnDamageResolved);
 
         EventBus.Subscribe<DamageRequested>(relicSystem.OnDamageRequested);
     }
@@ -99,18 +99,18 @@ public class CombatSystem
         EventBus.Unsubscribe<PlayerTurnStarted>(energySystem.OnPlayerTurnStarted);
         EventBus.Unsubscribe<EnergyChangeRequested>(energySystem.OnEnergyChangeRequested);
 
-        EventBus.Unsubscribe<CombatEnded>(cardSystem.OnCombatEnded);
-        EventBus.Unsubscribe<PlayerTurnStarted>(cardSystem.OnPlayerTurnStarted);
-        EventBus.Unsubscribe<PlayerTurnEnded>(cardSystem.OnPlayerTurnEnded);
-        EventBus.Unsubscribe<EnergyResolved>(cardSystem.OnEnergyResolved);
-        EventBus.Unsubscribe<DamageResolved>(cardSystem.OnDamageResolved);
-
         EventBus.Unsubscribe<CombatStarted>(uiSystem.OnCombatStarted);
         EventBus.Unsubscribe<CombatEnded>(uiSystem.OnCombatEnded);
         EventBus.Unsubscribe<PlayerTurnStarted>(uiSystem.OnPlayerTurnStarted);
         EventBus.Unsubscribe<PlayerTurnEnded>(uiSystem.OnPlayerTurnEnded);
         EventBus.Unsubscribe<EnemyTurnStarted>(uiSystem.OnEnemyTurnStarted);
         EventBus.Unsubscribe<EnergyChanged>(uiSystem.OnEnergyChanged);
+
+        EventBus.Unsubscribe<CombatEnded>(cardSystem.OnCombatEnded);
+        EventBus.Unsubscribe<PlayerTurnStarted>(cardSystem.OnPlayerTurnStarted);
+        EventBus.Unsubscribe<PlayerTurnEnded>(cardSystem.OnPlayerTurnEnded);
+        EventBus.Unsubscribe<EnergyResolved>(cardSystem.OnEnergyResolved);
+        EventBus.Unsubscribe<DamageResolved>(cardSystem.OnDamageResolved);
 
         EventBus.Unsubscribe<DamageRequested>(relicSystem.OnDamageRequested);
     }

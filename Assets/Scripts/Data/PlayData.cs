@@ -10,6 +10,7 @@ public class PlayData
         int currentHp,
         int maxHp,
         int gold,
+        int rewardCardOptionCount,
         RunRngState rngState,
         IEnumerable<int> nodes,
         IEnumerable<CardEntry> cards,
@@ -21,6 +22,7 @@ public class PlayData
         CurrentHp = currentHp;
         MaxHp = maxHp;
         Gold = gold;
+        RewardCardOptionCount = rewardCardOptionCount;
         RngState = rngState;
         Nodes = new List<int>(nodes);
         Cards = new List<CardEntry>(cards);
@@ -34,6 +36,7 @@ public class PlayData
     public int CurrentHp { get; private set; }
     public int MaxHp { get; private set; }
     public int Gold { get; private set; }
+    public int RewardCardOptionCount { get; private set; }
 
     // RNG (재현/리플레이를 원하면 필수)
     public RunRngState RngState { get; private set; }
@@ -94,6 +97,7 @@ public class PlayData
             maxHp: player.MaxHp,
             currentHp: player.MaxHp,
             gold: 0,
+            rewardCardOptionCount: 3,
             rngState: new RunRngState(seed),
             nodes: new List<int>(),
             cards: cards,
@@ -176,6 +180,7 @@ public class PlayData
             currentHp: Clamp(save.currentHp, 0, save.maxHp),
             maxHp: save.maxHp,
             gold: Math.Max(0, save.gold),
+            rewardCardOptionCount: Math.Max(0, save.rewardCardOptionCount),
             nodes: save.nodes,
             rngState: new RunRngState(save.rng.seed, save.rng.calls),
             cards: cardIds,
@@ -192,6 +197,7 @@ public class PlayData
             currentHp: -1,
             maxHp: -1,
             gold: -1,
+            rewardCardOptionCount: -1,
             nodes: null,
             rngState: null,
             cards: null,
@@ -214,6 +220,7 @@ public class PlayData
         save.currentHp = CurrentHp;
         save.maxHp = MaxHp;
         save.gold = Gold;
+        save.rewardCardOptionCount = RewardCardOptionCount;
 
         save.rng = new RunRngStateSaveData();
         save.rng.seed = RngState.Seed;

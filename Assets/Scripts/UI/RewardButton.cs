@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -18,11 +19,13 @@ public class RewardButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     [SerializeField] private Color textColorDefault;
 
     private VictoryWindow pool;
-    public void Init(VictoryWindow pool, Sprite image, string text)
+    private Action<RewardButton> onClick;
+    public void Init(VictoryWindow pool, Sprite sprite, string text, Action<RewardButton> onClick)
     {
         this.pool = pool;
+        this.onClick = onClick;
 
-        icon.sprite = image;
+        icon.sprite = sprite;
         name.text = text;
 
         backgrond.color = backgroundColorDefault;
@@ -43,6 +46,10 @@ public class RewardButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         name.color = textColorDefault;
     }
     public void OnClick()
+    {
+        onClick?.Invoke(this);
+    }
+    public void PushToPool()
     {
         gameObject.SetActive(false);
         pool.Charge(this);

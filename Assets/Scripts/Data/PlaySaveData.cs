@@ -9,6 +9,7 @@ public class PlaySaveData
     public int currentHp;
     public int maxHp;
     public int gold;
+    public int rewardCardOptionCount;
 
     public RunRngStateSaveData rng;
     public List<int> nodes;

@@ -1,7 +1,7 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 
-public class CombatWindow : UIWindow
+public class CombatWindow : UIMotionWindow
 {
     [SerializeField] private CombatAnnouncer combatAnnouncer;
     [SerializeField] private TurnAnnouncer turnAnnouncer;

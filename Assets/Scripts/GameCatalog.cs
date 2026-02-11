@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 public class GameCatalog
 {
+    public IReadOnlyList<CardSO> CardList => cardDictionary.Values.ToList();
+
     private Dictionary<string, PlayerSO> playerDictionary;
     private Dictionary<string, CardSO> cardDictionary;
     private Dictionary<string, RelicSO> relicDictionary;
