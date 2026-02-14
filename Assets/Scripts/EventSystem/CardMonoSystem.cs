@@ -5,7 +5,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class CardMonoSystem : MonoBehaviour
+public class CardMonoSystem : BaseMonoSystem
 {
     private EventBus eventBus;
     private CombatSystem combatSystem;
@@ -296,14 +296,5 @@ public class CardMonoSystem : MonoBehaviour
     {
         drawPileText.text = drawPile.Count.ToString();
         discardPileText.text = discardPile.Count.ToString();
-    }
-    private EventContext CreateContext(EventContext context)
-    {
-        return new EventContext(
-            source: this,
-            action: context.Action,
-            turn: context.Turn,
-            combat: context.Combat
-        );
     }
 }

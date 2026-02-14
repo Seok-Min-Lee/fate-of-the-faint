@@ -296,33 +296,6 @@ public struct BuffDeclared : ICombatEvent
     public int Amount { get ; private set; }
     public EventMeta Meta => EventMetas.BuffDeclared;
 }
-//public struct StrengthenDeclared : ICombatEvent
-//{
-//    public StrengthenDeclared(EventContext context)
-//    {
-//        Context = context;
-//    }
-//    public EventContext Context { get; private set; }
-//    public EventMeta Meta => EventMetas.StrengthenDeclared;
-//}
-//public struct WeakenDeclared : ICombatEvent
-//{
-//    public WeakenDeclared(EventContext context)
-//    {
-//        Context = context;
-//    }
-//    public EventContext Context { get; private set; }
-//    public EventMeta Meta => EventMetas.WeakenDeclared;
-//}
-//public struct VulnerableDeclared : ICombatEvent
-//{
-//    public VulnerableDeclared(EventContext context)
-//    {
-//        Context = context;
-//    }
-//    public EventContext Context { get; private set; }
-//    public EventMeta Meta => EventMetas.VulnerableDeclared;
-//}
 public struct DamageRequested : ICombatEvent
 {
     public DamageRequested(EventContext context, DamageContext damage)

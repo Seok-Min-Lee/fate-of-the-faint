@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class ActionSystem
+public class ActionSystem : BaseSystem
 {
     private readonly CombatSystem combatSystem;
     private readonly EventBus eventBus;

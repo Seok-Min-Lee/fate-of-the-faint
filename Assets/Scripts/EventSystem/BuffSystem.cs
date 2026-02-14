@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class BuffSystem
+public class BuffSystem : BaseSystem
 {
     private readonly EventBus eventBus;
     public BuffSystem(EventBus eventBus)
@@ -36,15 +36,6 @@ public class BuffSystem
             type: buff.Type,
             amount: Mathf.Max(0, buff.Amount)
         ));
-    }
-    private EventContext CreateContext(EventContext context)
-    {
-        return new EventContext(
-            source: this,
-            action: context.Action,
-            turn: context.Turn,
-            combat: context.Combat
-        );
     }
 }
 public class BuffContext

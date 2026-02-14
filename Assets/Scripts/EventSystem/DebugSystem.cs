@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DebugSystem : MonoBehaviour
+public class DebugSystem : BaseMonoSystem
 {
     [SerializeField] private CombatManager combatManager;
     private readonly List<EventTrace> traces = new();

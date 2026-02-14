@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-public class RelicMonoSystem : MonoBehaviour
+public class RelicMonoSystem : BaseMonoSystem
 {
     public Relic relic;
 

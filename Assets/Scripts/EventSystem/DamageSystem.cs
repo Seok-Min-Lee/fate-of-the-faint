@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering;
 
-public class DamageSystem
+public class DamageSystem : BaseSystem
 {
     private readonly EventBus eventBus;
     public DamageSystem(EventBus eventBus)
@@ -23,7 +22,7 @@ public class DamageSystem
             target: e.Target
         );
 
-        EventContext eventContext = CreateContext(e.Context);
+        EventContext eventContext = base.CreateContext(e.Context);
         eventBus.Publish<DamageRequested>(new DamageRequested(
             context: eventContext,
             damage: damage
@@ -31,22 +30,13 @@ public class DamageSystem
 
         int sum = damage.Calculate();
 
-        eventContext = CreateContext(e.Context);
+        eventContext = base.CreateContext(e.Context);
         eventBus.Publish<DamageResolved>(new DamageResolved(
             context: eventContext,
             source: damage.Source,
             target: damage.Target,
             amount: Mathf.Max(0, sum)
         ));
-    }
-    private EventContext CreateContext(EventContext context)
-    {
-        return new EventContext(
-            source: this,
-            action: context.Action,
-            turn: context.Turn,
-            combat: context.Combat
-        );
     }
 }
 public class DamageContext

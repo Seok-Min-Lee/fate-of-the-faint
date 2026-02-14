@@ -6,10 +6,10 @@ using UnityEngine;
 
 public class CombatManager : MonoBehaviour
 {
-    [SerializeField] CardMonoSystem cardSystem;
-    [SerializeField] UIMonoSystem uiSystem;
-    [SerializeField] RelicMonoSystem relicSystem;
-    [SerializeField] AnimationMonoSystem animationSystem;
+    [SerializeField] private CardMonoSystem cardSystem;
+    [SerializeField] private UIMonoSystem uiSystem;
+    [SerializeField] private RelicMonoSystem relicSystem;
+    [SerializeField] private AnimationMonoSystem animationSystem;
     [SerializeField] private PlayerView playerPrefab;
     [SerializeField] private EntityBuffViewPool entityBuffPool;
 

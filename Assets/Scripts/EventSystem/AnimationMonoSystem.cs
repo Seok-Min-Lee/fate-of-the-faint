@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimationMonoSystem : MonoBehaviour
+public class AnimationMonoSystem : BaseMonoSystem
 {
     private EventBus eventBus;
     private readonly Queue<Func<IEnumerator>> queue = new Queue<Func<IEnumerator>>();
@@ -44,14 +44,5 @@ public class AnimationMonoSystem : MonoBehaviour
 
         eventBus.Publish<AnimationEnded>(new AnimationEnded(CreateContext(context)));
         IsPlaying = false;
-    }
-    private EventContext CreateContext(EventContext context)
-    {
-        return new EventContext(
-            source: this,
-            action: context.Action,
-            turn: context.Turn,
-            combat: context.Combat
-        );
     }
 }

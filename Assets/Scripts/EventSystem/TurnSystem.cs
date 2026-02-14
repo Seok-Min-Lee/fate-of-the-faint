@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class TurnSystem
+public class TurnSystem : BaseSystem
 {
     private readonly EventBus eventBus;
     public TurnSystem(EventBus eventBus)
@@ -75,13 +75,7 @@ public class TurnSystem
 
         e.Request.isResult = true;
 
-        EventContext eventContext = new EventContext(
-            source: this,
-            action: e.Context.Action,
-            turn: e.Context.Turn,
-            combat: e.Context.Combat
-        );
-        eventBus.Publish<PlayerTurnEnded>(new PlayerTurnEnded(context: eventContext));
+        eventBus.Publish<PlayerTurnEnded>(new PlayerTurnEnded(CreateContext(e.Context)));
     }
     private void PublishPlayerTurnStarted(ICombatEvent e)
     {
