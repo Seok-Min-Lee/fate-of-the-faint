@@ -35,6 +35,7 @@
     public static readonly EventMeta BuffRequested = new("BuffRequested", EventCategory.Status);
     public static readonly EventMeta BuffResolved = new("BuffResolved", EventCategory.Status);
     public static readonly EventMeta HpChanged = new("HpChanged", EventCategory.Status);
+    public static readonly EventMeta BlockChanged = new("BlockChanged", EventCategory.Status);
     public static readonly EventMeta BuffChanged = new("BuffChanged", EventCategory.Status);
     public static readonly EventMeta DeathDeclared = new("DeathDeclared", EventCategory.Status);
 

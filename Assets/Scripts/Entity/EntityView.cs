@@ -8,6 +8,8 @@ public class EntityView : MonoBehaviour
     [SerializeField] protected TextMeshProUGUI hpText;
     [SerializeField] protected Animator animator;
 
+    [SerializeField] protected EntityBlockView blockView;
+
     [SerializeField] protected EntityBuffPreset[] buffPresets;
     [SerializeField] protected Transform buffParent;
 

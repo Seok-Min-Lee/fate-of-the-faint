@@ -392,6 +392,21 @@ public struct HpChanged : ICombatEvent
     public int EndAmount { get; private set; }
     public EventMeta Meta => EventMetas.HpChanged;
 }
+public struct BlockChanged : ICombatEvent
+{
+    public BlockChanged(EventContext context, EntityInstance target, int startAmount, int endAmount)
+    {
+        Context = context;
+        Target = target;
+        StartAmount = startAmount;
+        EndAmount = endAmount;
+    }
+    public EventContext Context { get; private set; }
+    public EntityInstance Target { get; private set; }
+    public int StartAmount { get; private set; }
+    public int EndAmount { get; private set; }
+    public EventMeta Meta => EventMetas.BlockChanged;
+}
 public struct BuffChanged : ICombatEvent
 {
     public BuffChanged(EventContext context, EntityInstance target, BuffType type, int startAmount, int endAmount)

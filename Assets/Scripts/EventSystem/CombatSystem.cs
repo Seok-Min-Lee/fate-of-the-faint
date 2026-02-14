@@ -79,6 +79,7 @@ public class CombatSystem
         EventBus.Subscribe<DamageRequested>(OnDamageRequested);
         EventBus.Subscribe<DamageResolved>(OnDamageResolved);
         EventBus.Subscribe<BuffResolved>(OnBuffResolved);
+        EventBus.Subscribe<BlockDeclared>(OnBlockDeclared);
 
         EventBus.Subscribe<PlayerTurnStartRequested>(TurnSystem.OnPlayerTurnStartRequested);
         EventBus.Subscribe<PlayerTurnEndRequested>(TurnSystem.OnPlayerTurnEndRequested);
@@ -115,6 +116,7 @@ public class CombatSystem
         EventBus.Unsubscribe<DamageRequested>(OnDamageRequested);
         EventBus.Unsubscribe<DamageResolved>(OnDamageResolved);
         EventBus.Unsubscribe<BuffResolved>(OnBuffResolved);
+        EventBus.Unsubscribe<BlockDeclared>(OnBlockDeclared);
 
         EventBus.Unsubscribe<PlayerTurnStartRequested>(TurnSystem.OnPlayerTurnStartRequested);
         EventBus.Unsubscribe<PlayerTurnEndRequested>(TurnSystem.OnPlayerTurnEndRequested);
@@ -165,6 +167,19 @@ public class CombatSystem
             ));
         }
 
+        if (player.Block > 0)
+        {
+            int beforeBlock = player.Block;
+            player.SetBlock(0);
+
+            EventBus.Publish<BlockChanged>(new BlockChanged(
+                context: CreateContext(e.Context),
+                target: player,
+                startAmount: beforeBlock,
+                endAmount: player.Block
+            ));
+        }
+
         foreach (EnemyInstance ei in enemies.Values.Where(enemy => !enemy.IsDead))
         {
             ei.DecideNextAction(new System.Random());
@@ -182,6 +197,7 @@ public class CombatSystem
         {
             return;
         }
+
         foreach (EnemyInstance enemy in enemies.Values.Where(enemy => !enemy.IsDead))
         {
             List<BuffType> types = new List<BuffType>(enemy.Buffs.Keys);
@@ -330,25 +346,41 @@ public class CombatSystem
             return;
         }
 
+        EnemyInstance enemy;
         if (e.Damage.Source.Id == player.Id)
         {
             if (player.Buffs.TryGetValue(key: BuffType.Strength, value: out int strength))
             {
                 e.Damage.Add(strength, player);
             }
+            if (player.Buffs.ContainsKey(BuffType.Weak))
+            {
+                e.Damage.Multiply(0.5f, player);
+            }
+        }
+        else if (enemies.TryGetValue(key: e.Damage.Source.Id, value: out enemy))
+        {
+            if (enemy.Buffs.TryGetValue(key: BuffType.Strength, value: out int strength))
+            {
+                e.Damage.Add(strength, enemy);
+            }
+            if (enemy.Buffs.ContainsKey(BuffType.Weak))
+            {
+                e.Damage.Multiply(0.5f, enemy);
+            }
         }
         else if (e.Damage.Target.Id == player.Id)
         {
-            if (player.Block > 0)
+            if (player.Buffs.ContainsKey(BuffType.Vulnerable))
             {
-                e.Damage.Subtract(player.Block, player);
+                e.Damage.Multiply(1.5f, player);
             }
         }
-        else if (enemies.TryGetValue(key: e.Damage.Target.Id, value: out EnemyInstance enemy))
+        else if (enemies.TryGetValue(key: e.Damage.Target.Id, value: out enemy))
         {
-            if (enemy.Block > 0)
+            if (enemy.Buffs.ContainsKey(BuffType.Vulnerable))
             {
-                e.Damage.Subtract(enemy.Block, enemy);
+                e.Damage.Multiply(1.5f, player);
             }
         }
     }
@@ -360,45 +392,53 @@ public class CombatSystem
         }
 
         EntityInstance instance = null;
-        int startAmount = 0;
-        int endAmount = 0;
         if (e.Target == player)
         {
             instance = player;
-            startAmount = player.CurrentHp;
-            endAmount = Mathf.Max(0, startAmount - e.Amount);
         }
         else if (enemies.ContainsKey(e.Target.Id))
         {
             instance = enemies[e.Target.Id];
-            startAmount = enemies[e.Target.Id].CurrentHp;
-            endAmount = Mathf.Max(0, startAmount - e.Amount);
         }
         else
         {
             return;
         }
 
-        instance.SetCurrentHp(endAmount);
+        int damage = e.Amount;
 
-        EventContext eventContext = new EventContext(
-            source: this,
-            action: e.Context.Action,
-            turn: e.Context.Turn,
-            combat: e.Context.Combat
-        );
+        if (instance.Block > 0)
+        {
+            damage -= instance.Block;
 
-        EventBus.Publish<HpChanged>(new HpChanged(
-            context: eventContext,
-            target: instance,
-            startAmount: startAmount,
-            endAmount: endAmount
-        ));
+            int beforeBlock = instance.Block;
+            instance.SetBlock(Mathf.Max(0, instance.Block - e.Amount));
+
+            EventBus.Publish<BlockChanged>(new BlockChanged(
+                context: CreateContext(e.Context),
+                target: instance,
+                startAmount: beforeBlock,
+                endAmount: instance.Block
+            ));
+        }
+
+        if (damage > 0)
+        {
+            int beforeHp = instance.CurrentHp;
+            instance.SetCurrentHp(Mathf.Max(0, instance.CurrentHp - damage));
+
+            EventBus.Publish<HpChanged>(new HpChanged(
+                context: CreateContext(e.Context),
+                target: instance,
+                startAmount: beforeHp,
+                endAmount: instance.CurrentHp
+            ));
+        }
 
         if (instance.CurrentHp <= 0)
         {
             EventBus.Publish<DeathDeclared>(new DeathDeclared(
-                context: eventContext,
+                context: CreateContext(e.Context),
                 target: instance
             ));
         }
@@ -443,6 +483,37 @@ public class CombatSystem
             type: e.Type,
             startAmount: startAmount,
             endAmount: endAmount
+        ));
+    }
+    private void OnBlockDeclared(BlockDeclared e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat) 
+        {
+            return;
+        }
+
+        EntityInstance instance;
+        if (e.Source == player)
+        {
+            instance = player;
+        }
+        else if (enemies.TryGetValue(e.Source.Id, out EnemyInstance enemy) && !enemy.IsDead)
+        {
+            instance = enemy;
+        }
+        else
+        {
+            return;
+        }
+
+        int beforeBlock = instance.Block;
+        instance.AddBlock(e.Amount);
+
+        EventBus.Publish<BlockChanged>(new BlockChanged(
+            context: CreateContext(e.Context),
+            target: instance,
+            startAmount: beforeBlock,
+            endAmount: instance.Block
         ));
     }
     public void CombatStart()

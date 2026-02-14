@@ -23,13 +23,15 @@ public class EnemyView : EntityView, ITargetable
 
         transform.position = position;
 
-        this.combatManager.CombatSystem.EventBus.Subscribe<CombatStarted>(OnCombatStarted);
-        this.combatManager.CombatSystem.EventBus.Subscribe<CombatEnded>(OnCombatEnded);
-        this.combatManager.CombatSystem.EventBus.Subscribe<DeathDeclared>(OnDeathDeclared);
-        this.combatManager.CombatSystem.EventBus.Subscribe<AttackDeclared>(OnAttackDeclared);
-        this.combatManager.CombatSystem.EventBus.Subscribe<EnemyIntentDecided>(OnEnemyIntentDecided);
-        this.combatManager.CombatSystem.EventBus.Subscribe<HpChanged>(OnHpChanged);
-        this.combatManager.CombatSystem.EventBus.Subscribe<BuffChanged>(OnBuffChanged);
+        combatManager.CombatSystem.EventBus.Subscribe<CombatStarted>(OnCombatStarted);
+        combatManager.CombatSystem.EventBus.Subscribe<CombatEnded>(OnCombatEnded);
+        combatManager.CombatSystem.EventBus.Subscribe<DeathDeclared>(OnDeathDeclared);
+        combatManager.CombatSystem.EventBus.Subscribe<AttackDeclared>(OnAttackDeclared);
+        combatManager.CombatSystem.EventBus.Subscribe<BlockDeclared>(OnBlockDeclared);
+        combatManager.CombatSystem.EventBus.Subscribe<EnemyIntentDecided>(OnEnemyIntentDecided);
+        combatManager.CombatSystem.EventBus.Subscribe<HpChanged>(OnHpChanged);
+        combatManager.CombatSystem.EventBus.Subscribe<BlockChanged>(OnBlockChanged);
+        combatManager.CombatSystem.EventBus.Subscribe<BuffChanged>(OnBuffChanged);
     }
     private void OnDisable()
     {
@@ -37,9 +39,15 @@ public class EnemyView : EntityView, ITargetable
         combatManager.CombatSystem.EventBus.Unsubscribe<CombatEnded>(OnCombatEnded);
         combatManager.CombatSystem.EventBus.Unsubscribe<DeathDeclared>(OnDeathDeclared);
         combatManager.CombatSystem.EventBus.Unsubscribe<AttackDeclared>(OnAttackDeclared);
+        combatManager.CombatSystem.EventBus.Unsubscribe<BlockDeclared>(OnBlockDeclared);
         combatManager.CombatSystem.EventBus.Unsubscribe<EnemyIntentDecided>(OnEnemyIntentDecided);
         combatManager.CombatSystem.EventBus.Unsubscribe<HpChanged>(OnHpChanged);
+        combatManager.CombatSystem.EventBus.Unsubscribe<BlockChanged>(OnBlockChanged);
         combatManager.CombatSystem.EventBus.Unsubscribe<BuffChanged>(OnBuffChanged);
+    }
+    public void OnCombatStarted(CombatStarted e)
+    {
+        hpText.text = instance.CurrentHp.ToString();
     }
     public void OnCombatEnded(CombatEnded e)
     {
@@ -49,10 +57,6 @@ public class EnemyView : EntityView, ITargetable
         }
 
         animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_VICTORY, 0f));
-    }
-    public void OnCombatStarted(CombatStarted e)
-    {
-        hpText.text = instance.CurrentHp.ToString();
     }
     public void OnDeathDeclared(DeathDeclared e)
     {
@@ -78,6 +82,16 @@ public class EnemyView : EntityView, ITargetable
         intentRenderer.gameObject.SetActive(false);
         intentText.gameObject.SetActive(false);
         animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_ATTACK, 1f));
+    }
+    public void OnBlockDeclared(BlockDeclared e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat ||
+            e.Target != instance)
+        {
+            return;
+        }
+
+        animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_SKILL, 1f));
     }
     public void OnEnemyIntentDecided(EnemyIntentDecided e)
     {
@@ -110,6 +124,32 @@ public class EnemyView : EntityView, ITargetable
         }
 
         hpText.text = e.EndAmount.ToString();
+    }
+    public void OnBlockChanged(BlockChanged e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
+        if (e.Target.Id != instance.Id)
+        {
+            return;
+        }
+
+        if (e.EndAmount > e.StartAmount)
+        {
+            animationSystem.Enqueue(() => ShowBlockCor());
+        }
+        else
+        {
+            animationSystem.Enqueue(() => ChagneBlockCor());
+
+            if (instance.Block <= 0)
+            {
+                animationSystem.Enqueue(() => HideBlockCor());
+            }
+        }
     }
     public void OnBuffChanged(BuffChanged e)
     {
@@ -163,5 +203,17 @@ public class EnemyView : EntityView, ITargetable
     {
         animator.SetTrigger(key);
         yield return new WaitForSeconds(duration);
+    }
+    private IEnumerator ShowBlockCor()
+    {
+        yield return blockView.Show(instance.Block.ToString()).WaitForCompletion();
+    }
+    private IEnumerator HideBlockCor()
+    {
+        yield return blockView.Hide().WaitForCompletion();
+    }
+    private IEnumerator ChagneBlockCor()
+    {
+        yield return blockView.Change(instance.Block.ToString()).WaitForCompletion();
     }
 }

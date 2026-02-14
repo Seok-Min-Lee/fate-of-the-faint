@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class DamageSystem
 {
@@ -27,12 +29,14 @@ public class DamageSystem
             damage: damage
         ));
 
+        int sum = damage.Calculate();
+
         eventContext = CreateContext(e.Context);
         eventBus.Publish<DamageResolved>(new DamageResolved(
             context: eventContext,
             source: damage.Source,
             target: damage.Target,
-            amount: Mathf.Max(0, damage.Amount)
+            amount: Mathf.Max(0, sum)
         ));
     }
     private EventContext CreateContext(EventContext context)
@@ -52,25 +56,76 @@ public class DamageContext
         Amount = amount;
         Source = source;
         Target = target;
-        Modifiers = new List<object>();
+        Modifications = new List<DamageModification>();
     }
-    public int Amount { get; private set; }
+    private int Amount;
     public EntityInstance Source { get; private set; }
     public EntityInstance Target { get; private set; }
-    public List<object> Modifiers { get; private set; }
+
+    private List<DamageModification> Modifications;
     public void Add(int value, object source)
     {
-        Amount += value;
-        Modifiers.Add(source);
+        Modifications.Add(new DamageModification(
+            type: DamageModificationType.Add, 
+            value: value, 
+            source: source
+        ));
     }
     public void Subtract(int value, object source)
     {
-        Amount -= value;
-        Modifiers.Add(source);
+        Modifications.Add(new DamageModification(
+            type: DamageModificationType.Subtract,
+            value: value,
+            source: source
+        ));
     }
     public void Multiply(float value, object source)
     {
-        Amount = (int)(Amount * value);
-        Modifiers.Add(source);
+        Modifications.Add(new DamageModification(
+            type: DamageModificationType.Multiply,
+            value: value,
+            source: source
+        ));
     }
+    public int Calculate()
+    {
+        int sum = Amount;
+
+        List<DamageModification> ordered = Modifications.OrderBy(m => m.Type).ToList();
+        foreach (DamageModification dm in ordered)
+        {
+            switch (dm.Type)
+            {
+                case DamageModificationType.Add:
+                    sum += (int)dm.Value;
+                    break;
+                case DamageModificationType.Subtract:
+                    sum -= (int)dm.Value;
+                    break;
+                case DamageModificationType.Multiply:
+                    sum = (int)(sum * dm.Value);
+                    break;
+            }
+        }
+
+        return sum;
+    }
+}
+public struct DamageModification
+{
+    public DamageModification(DamageModificationType type, float value, object source)
+    {
+        Type = type;
+        Value = value;
+        Source = source;
+    }
+    public DamageModificationType Type;
+    public float Value;
+    public object Source;
+}
+public enum DamageModificationType
+{
+    Add = 1,
+    Subtract = 3,
+    Multiply = 2,
 }

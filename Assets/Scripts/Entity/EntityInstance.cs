@@ -12,9 +12,17 @@ public class EntityInstance
 
     protected Dictionary<BuffType, int> buffs;
 
-    public void SetCurrentHp(int amount)
+    public void SetCurrentHp(int value)
     {
-        CurrentHp = amount;
+        CurrentHp = value;
+    }
+    public void SetBlock(int value)
+    {
+        Block = value;
+    }
+    public void AddBlock(int amount)
+    {
+        Block += amount;
     }
     public void ApplyBuff(BuffType type, int delta)
     {

@@ -25,6 +25,7 @@ public class PlayerView : EntityView, ITargetable
         combatManager.CombatSystem.EventBus.Subscribe<AttackDeclared>(OnAttackDeclared);
         combatManager.CombatSystem.EventBus.Subscribe<BlockDeclared>(OnBlockDeclared);
         combatManager.CombatSystem.EventBus.Subscribe<HpChanged>(OnHpChanged);
+        combatManager.CombatSystem.EventBus.Subscribe<BlockChanged>(OnBlockChanged);
         combatManager.CombatSystem.EventBus.Subscribe<BuffChanged>(OnBuffChanged);
 
         hpText.text = instance.CurrentHp.ToString();
@@ -38,6 +39,7 @@ public class PlayerView : EntityView, ITargetable
         combatManager.CombatSystem.EventBus.Unsubscribe<AttackDeclared>(OnAttackDeclared);
         combatManager.CombatSystem.EventBus.Unsubscribe<BlockDeclared>(OnBlockDeclared);
         combatManager.CombatSystem.EventBus.Unsubscribe<HpChanged>(OnHpChanged);
+        combatManager.CombatSystem.EventBus.Unsubscribe<BlockChanged>(OnBlockChanged);
         combatManager.CombatSystem.EventBus.Unsubscribe<BuffChanged>(OnBuffChanged);
     }
     public void OnCombatStarted(CombatStarted e)
@@ -89,6 +91,7 @@ public class PlayerView : EntityView, ITargetable
         {
             return;
         }
+
         animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_SKILL, 1f));
     }
     public void OnHpChanged(HpChanged e)
@@ -109,6 +112,32 @@ public class PlayerView : EntityView, ITargetable
         }
 
         hpText.text = e.EndAmount.ToString();
+    }
+    public void OnBlockChanged(BlockChanged e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
+        if (e.Target.Id != instance.Id)
+        {
+            return;
+        }
+
+        if (e.EndAmount > e.StartAmount)
+        {
+            animationSystem.Enqueue(() => ShowBlockCor());
+        }
+        else
+        {
+            animationSystem.Enqueue(() => ChagneBlockCor());
+
+            if (instance.Block <= 0)
+            {
+                animationSystem.Enqueue(() => HideBlockCor());
+            }
+        }
     }
     public void OnBuffChanged(BuffChanged e)
     {
@@ -167,5 +196,17 @@ public class PlayerView : EntityView, ITargetable
     {
         animator.SetBool(AnimationKeys.PLAYER_ENCOUNTER, value);
         yield return null;
+    }
+    private IEnumerator ShowBlockCor()
+    {
+        yield return blockView.Show(instance.Block.ToString()).WaitForCompletion();
+    }
+    private IEnumerator HideBlockCor()
+    {
+        yield return blockView.Hide().WaitForCompletion();
+    }
+    private IEnumerator ChagneBlockCor()
+    {
+        yield return blockView.Change(instance.Block.ToString()).WaitForCompletion();
     }
 }
