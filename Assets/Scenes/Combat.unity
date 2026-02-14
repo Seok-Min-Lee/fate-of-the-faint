@@ -12852,9 +12852,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 153ceb2afb7399a4e87353e41d73d05e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardViewPool
-  attackViewPrefab: {fileID: 7139560910230700095, guid: e7626193956874348a8bb74cf2d1c090, type: 3}
-  skillViewPrefab: {fileID: 634705328638537620, guid: 8a4117763fa2de643a3729bc813e2b8f, type: 3}
-  powerViewPrefab: {fileID: 5262719684372597521, guid: 6d1f1b47eee33f24daaa2d73a92fe4a0, type: 3}
+  prefab: {fileID: 7139560910230700095, guid: 9598e57ea68a3c44884ccbe3351786b4, type: 3}
 --- !u!1 &1955751715
 GameObject:
   m_ObjectHideFlags: 0

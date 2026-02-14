@@ -279,7 +279,7 @@ public class CardMonoSystem : BaseMonoSystem
     }
     IEnumerator DrawCardCor(CardInstance cardInstance)
     {
-        CardView cardView = cardViewPool.Pop(cardInstance.Origin.Type);
+        CardView cardView = cardViewPool.Pop();
         cardView.Init(
             cardInstance: cardInstance,
             cardSystem: this,

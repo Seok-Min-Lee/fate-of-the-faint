@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEngine.UI.Image;
 
 public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
@@ -240,7 +241,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField] private TextMeshProUGUI cost;
     [SerializeField] private TextMeshProUGUI name;
     [SerializeField] private TextMeshProUGUI desc;
-    [SerializeField] private Image image;
+    [SerializeField] private CardArt[] arts;
 
     public ViewType Type => type;
 
@@ -272,7 +273,18 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         cost.text = cardInstance.Origin.Cost.ToString();
         name.text = cardInstance.Origin.Name;
         desc.text = cardInstance.Origin.Description;
-        image.sprite = cardInstance.Origin.Image;
+
+        for (int i = 0; i < arts.Length; i++)
+        {
+            if (i == (int)cardInstance.Origin.Type)
+            {
+                arts[i].Activate(cardInstance.Origin.Image);
+            }
+            else
+            {
+                arts[i].Deactivate();
+            }
+        }
 
         canvas.overrideSorting = true;
     }
