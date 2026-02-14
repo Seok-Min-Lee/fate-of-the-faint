@@ -58,6 +58,17 @@ public struct CombatEnded : ICombatEvent
     public EventMeta Meta => EventMetas.CombatEnded;
     public CombatState Result;
 }
+public struct PlayerTurnStartRequested : ICombatEvent
+{
+    public PlayerTurnStartRequested(EventContext context, RequestContext request)
+    {
+        Context = context;
+        Request = request;
+    }
+    public EventContext Context { get; private set; }
+    public RequestContext Request { get; private set; }
+    public EventMeta Meta => EventMetas.PlayerTurnStartRequested;
+}
 public struct PlayerTurnStarted : ICombatEvent
 {
     public PlayerTurnStarted(EventContext context)

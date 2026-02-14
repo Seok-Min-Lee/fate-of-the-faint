@@ -1,9 +1,6 @@
 ﻿using DG.Tweening;
-using System;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class DefeatWindow : UIMotionWindow
 {
@@ -14,8 +11,6 @@ public class DefeatWindow : UIMotionWindow
     private void Awake()
     {
         _handler.Add(MotionKey.WindowShow, Show);
-        dimmedCG.alpha = 0f;
-        contentCG.alpha = 0f;
     }
     public void OnClickBack()
     {

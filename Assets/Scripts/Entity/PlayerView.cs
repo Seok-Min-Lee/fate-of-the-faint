@@ -1,8 +1,12 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class PlayerView : EntityView, ITargetable
 {
     private CombatManager combatManager;
+    private AnimationMonoSystem animationSystem;
     private PlayerInstance instance;
     public Transform AimPoint => aimPoint;
     public EntityInstance Instance => instance;
@@ -15,9 +19,10 @@ public class PlayerView : EntityView, ITargetable
         combatManager.CombatSystem.EventBus.Unsubscribe<BlockDeclared>(OnBlockDeclared);
         combatManager.CombatSystem.EventBus.Unsubscribe<HpChanged>(OnHpChanged);
     }
-    public void Init(PlayerInstance instance, CombatManager combatManager, Vector3 position)
+    public void Init(PlayerInstance instance, CombatManager combatManager, AnimationMonoSystem animationSystem, Vector3 position)
     {
         this.combatManager = combatManager;
+        this.animationSystem = animationSystem;
         this.instance = instance;
 
         transform.position = position;
@@ -39,7 +44,7 @@ public class PlayerView : EntityView, ITargetable
             return;
         }
 
-        animator.SetBool(AnimationKeys.PLAYER_ENCOUNTER, false);
+        animationSystem.Enqueue(() => PlayAnimatorBoolCor(AnimationKeys.PLAYER_ENCOUNTER, false));
     }
     public void OnCombatEnded(CombatEnded e)
     {
@@ -48,7 +53,7 @@ public class PlayerView : EntityView, ITargetable
             return;
         }
 
-        animator.SetTrigger(AnimationKeys.PLAYER_VICTORY);
+        animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_VICTORY, 1f));
     }
     public void OnDeathDeclared(DeathDeclared e)
     {
@@ -62,7 +67,7 @@ public class PlayerView : EntityView, ITargetable
             return;
         }
 
-        animator.SetTrigger(AnimationKeys.PLAYER_DIE);
+        animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_DIE, 1f));
     }
     public void OnAttackDeclared(AttackDeclared e)
     {
@@ -71,7 +76,8 @@ public class PlayerView : EntityView, ITargetable
         {
             return;
         }
-        animator.SetTrigger(AnimationKeys.PLAYER_ATTACK);
+
+        animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_ATTACK, 1f));
     }
     public void OnBlockDeclared(BlockDeclared e)
     {
@@ -80,7 +86,7 @@ public class PlayerView : EntityView, ITargetable
         {
             return;
         }
-        animator.SetTrigger(AnimationKeys.PLAYER_SKILL);
+        animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_SKILL, 1f));
     }
     public void OnHpChanged(HpChanged e)
     {
@@ -96,9 +102,19 @@ public class PlayerView : EntityView, ITargetable
 
         if (e.EndAmount < e.StartAmount)
         {
-            animator.SetTrigger(AnimationKeys.PLAYER_HIT);
+            animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_HIT, 1f));
         }
 
         hpText.text = e.EndAmount.ToString();
+    }
+    private IEnumerator PlayAnimatorTriggerCor(string key, float duration)
+    {
+        animator.SetTrigger(key);
+        yield return new WaitForSeconds(duration);
+    }
+    private IEnumerator PlayAnimatorBoolCor(string key, bool value)
+    {
+        animator.SetBool(AnimationKeys.PLAYER_ENCOUNTER, value);
+        yield return null;
     }
 }

@@ -3,7 +3,7 @@
     public static readonly EventMeta CombatStarted = new("CombatStarted", EventCategory.Combat);
     public static readonly EventMeta CombatEndRequested = new("CombatEndRequested", EventCategory.Combat);
     public static readonly EventMeta CombatEnded = new("CombatEnded", EventCategory.Combat);
-    //public static readonly EventMeta PlayerTurnStartRequested = new("PlayerTurnStartRequested", EventCategory.Turn);
+    public static readonly EventMeta PlayerTurnStartRequested = new("PlayerTurnStartRequested", EventCategory.Turn);
     public static readonly EventMeta PlayerTurnStarted = new("PlayerTurnStarted", EventCategory.Turn);
     public static readonly EventMeta PlayerTurnEndRequested = new("PlayerTurnEndRequested", EventCategory.Turn);
     public static readonly EventMeta PlayerTurnEnded = new("PlayerTurnEnded", EventCategory.Turn);

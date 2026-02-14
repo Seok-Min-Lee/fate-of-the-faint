@@ -235,24 +235,6 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             rectTransform.position = eventData.position;
         }
     }
-    public void Bind(
-        ZoomConfig zoomConfig,
-        EventsConfig eventsConfig,
-        CardPlayConfig cardPlayConfig,
-        AnimationSpeedConfig animationSpeedConfig,
-        bool preventCardInteraction,
-        CardContainer container
-    )
-    {
-        this.zoomConfig = zoomConfig;
-        this.eventsConfig = eventsConfig;
-        this.cardPlayConfig = cardPlayConfig;
-        this.animationSpeedConfig = animationSpeedConfig;
-        this.preventCardInteraction = preventCardInteraction;
-        this.container = container;
-
-        canvas.overrideSorting = true;
-    }
     [Header("Custom")]
     [SerializeField] private ViewType type;
     [SerializeField] private TextMeshProUGUI cost;
@@ -272,32 +254,35 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         CardSystem.PlayCardStart(cardView: this, target: target);
     }
-    public void Init(CardInstance cardInstance, CardMonoSystem cardSystem, CardViewPool pool)
+    public void Init(CardInstance cardInstance, CardMonoSystem cardSystem, CardViewPool pool, CardContainer cardContainer)
     {
         CardInstance = cardInstance;
         CardSystem = cardSystem;
         Pool = pool;
+
+        container = cardContainer;
+        zoomConfig = cardContainer.ZoomConfig;
+        eventsConfig = cardContainer.EventsConfig;
+        cardPlayConfig = cardContainer.CardPlayConfig;
+        animationSpeedConfig = cardContainer.AnimationSpeedConfig;
+        preventCardInteraction = cardContainer.PreventCardInteraction;
+
+        transform.parent = cardContainer.transform;
 
         cost.text = cardInstance.Origin.Cost.ToString();
         name.text = cardInstance.Origin.Name;
         desc.text = cardInstance.Origin.Description;
         image.sprite = cardInstance.Origin.Image;
 
-        Draw();
+        canvas.overrideSorting = true;
     }
-    private Sequence sequence = null;
-    public void Draw()
+    public Sequence Draw()
     {
-        isUsable = false;
-
-        if (sequence != null)
-        {
-            sequence.Kill();
-        }
-        sequence = DOTween.Sequence();
+        Sequence sequence = DOTween.Sequence();
 
         sequence.AppendCallback(() =>
         {
+            isUsable = false;
             transform.position = cardPlayConfig.DrawArea.transform.position;
             transform.rotation = Quaternion.Euler(0, 0, -90);
             transform.localScale = Vector3.zero;
@@ -312,17 +297,17 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             isUsable = true;
         });
+
+        return sequence;
     }
-    public void Discard()
+    public Sequence Discard()
     {
-        isUsable = false;
+        Sequence sequence = DOTween.Sequence();
 
-        if (sequence != null)
+        sequence.AppendCallback(() => 
         {
-            sequence.Kill();
-        }
-        sequence = DOTween.Sequence();
-
+            isUsable = false;
+        });
         sequence.Append(transform.DOMove(cardPlayConfig.DiscardArea.position, 0.3333f).SetEase(Ease.OutSine));
         sequence.Join(transform.DOScale(Vector3.zero, 0.3333f).SetEase(Ease.OutSine));
         sequence.Join(transform.DORotate(new Vector3(0, 0, -90), 0.3333f).SetEase(Ease.OutSine));
@@ -331,6 +316,8 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             isUsable = true;
             gameObject.SetActive(false);
         });
+
+        return sequence;
     }
     public enum ViewType
     {

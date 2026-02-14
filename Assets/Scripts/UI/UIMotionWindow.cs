@@ -25,6 +25,8 @@ public enum MotionKey
     WindowShow,
     CombatAnnounce,
     PlayerTurnAnnounce,
+    FadeOut,
+    FadeIn,
 }
 public class UIWindow : MonoBehaviour
 {

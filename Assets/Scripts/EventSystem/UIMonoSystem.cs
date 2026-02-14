@@ -1,20 +1,16 @@
 ﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using TMPro;
 using UnityEngine;
 public class UIMonoSystem : MonoBehaviour
 {
-    private ActionSystem actionSystem;
     private EventBus eventBus;
+    private ActionSystem actionSystem;
+    private AnimationMonoSystem animationSystem;
 
     [Header("Canvas")]
     [SerializeField] private Transform windowParent;
-    //[SerializeField] private CombatWindow combatWindow;
-    //[SerializeField] private DefeatWindow defeatWindow;
-    //[SerializeField] private VictoryWindow victoryWindow;
-    //[SerializeField] private CardRewardWindow cardRewardWindow;
-    //[SerializeField] private CardDisplayWindow cardDisplayWindow;
 
     [SerializeField] private TextMeshProUGUI energy;
     [SerializeField] private TextMeshProUGUI drawPile;
@@ -80,10 +76,11 @@ public class UIMonoSystem : MonoBehaviour
             }
         }
     }
-    public void Init(EventBus eventBus, ActionSystem actionSystem)
+    public void Init(EventBus eventBus, ActionSystem actionSystem, AnimationMonoSystem animationSystem)
     {
         this.eventBus = eventBus;
         this.actionSystem = actionSystem;
+        this.animationSystem = animationSystem;
     }
     public void OnCombatStarted(CombatStarted e)
     {
@@ -93,48 +90,28 @@ public class UIMonoSystem : MonoBehaviour
         }
         CombatWindow combatWindow = window as CombatWindow;
 
-        if (sequence != null)
-        {
-            sequence.Kill();
-        }
-        sequence = DOTween.Sequence();
-
-        sequence.AppendCallback(() => ChangeWindow(WindowType.Combat, WindowMode.Single));
-        sequence.AppendCallback(() => eventBus.Publish(new AnimationStarted(CreateContext(e.Context))));
-        sequence.Append(combatWindow.AnnounceCombat());
-        sequence.AppendCallback(() => eventBus.Publish(new AnimationEnded(CreateContext(e.Context))));
+        animationSystem.Enqueue(() => CombatStartedAnimationCor(combatWindow));
     }
     public void OnCombatEnded(CombatEnded e)
     {
         UIWindow window;
-        Sequence mainProcess = null;
+
         if (e.Context.Combat.state == CombatState.Victory && 
             windowDictionary.TryGetValue(WindowType.Victory, out window))
         {
             VictoryWindow victoryWindow = window as VictoryWindow;
-            mainProcess = victoryWindow.GetMotion(MotionKey.WindowShow);
+            animationSystem.Enqueue(() => CombatEndedVictoryAnimationCor(victoryWindow));
         }
         else if (e.Context.Combat.state == CombatState.Defeat &&
                  windowDictionary.TryGetValue(WindowType.Defeat, out window))
         {
             DefeatWindow defeatWindow = window as DefeatWindow;
-            mainProcess = defeatWindow.GetMotion(MotionKey.WindowShow);
+            animationSystem.Enqueue(() => CombatEndedDefeatWindowAnimationCor(defeatWindow));
         }
         else
         {
             return;
         }
-
-
-        if (sequence != null)
-        {
-            sequence.Kill();
-        }
-        sequence = DOTween.Sequence();
-
-        sequence.AppendCallback(() => eventBus.Publish(new AnimationStarted(CreateContext(e.Context))));
-        sequence.Append(mainProcess);
-        sequence.AppendCallback(() => eventBus.Publish(new AnimationEnded(CreateContext(e.Context))));
     }
     public void OnPlayerTurnStarted(PlayerTurnStarted e)
     {
@@ -149,15 +126,7 @@ public class UIMonoSystem : MonoBehaviour
         }
         CombatWindow combatWindow = window as CombatWindow;
 
-        if (sequence != null)
-        {
-            sequence.Kill();
-        }
-        sequence = DOTween.Sequence();
-
-        sequence.AppendCallback(() => eventBus.Publish(new AnimationStarted(CreateContext(e.Context))));
-        sequence.Append(combatWindow.PlayerTurnAnnounce());
-        sequence.AppendCallback(() => eventBus.Publish(new AnimationEnded(CreateContext(e.Context))));
+        animationSystem.Enqueue(() => PlayerTurnStartedMotionCor(combatWindow));
     }
     public void OnEnemyTurnStarted(EnemyTurnStarted e)
     {
@@ -172,15 +141,7 @@ public class UIMonoSystem : MonoBehaviour
         }
         CombatWindow combatWindow = window as CombatWindow;
 
-        if (sequence != null)
-        {
-            sequence.Kill();
-        }
-        sequence = DOTween.Sequence();
-
-        sequence.AppendCallback(() => eventBus.Publish(new AnimationStarted(CreateContext(e.Context))));
-        sequence.Append(combatWindow.EnemyTurnAnnounce());
-        sequence.AppendCallback(() => eventBus.Publish(new AnimationEnded(CreateContext(e.Context))));
+        animationSystem.Enqueue(() => EnemyTurnStartedAnimationCor(combatWindow));
     }
     public void OnPlayerTurnEnded(PlayerTurnEnded e)
     {
@@ -188,7 +149,6 @@ public class UIMonoSystem : MonoBehaviour
         {
             return;
         }
-
     }
     public void OnEnergyChanged(EnergyChanged e)
     {
@@ -240,6 +200,69 @@ public class UIMonoSystem : MonoBehaviour
                 request: requestContext
             ));
         });
+    }
+    IEnumerator CombatStartedAnimationCor(CombatWindow combatWindow)
+    {
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+
+        sequence.AppendCallback(() => ChangeWindow(WindowType.Combat, WindowMode.Single));
+        sequence.Append(combatWindow.AnnounceCombat());
+
+        yield return sequence.WaitForCompletion();
+    }
+    IEnumerator CombatEndedVictoryAnimationCor(VictoryWindow victoryWindow)
+    {
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+
+        sequence.Append(victoryWindow.GetMotion(MotionKey.WindowShow));
+
+        yield return sequence.WaitForCompletion();
+    }
+    IEnumerator CombatEndedDefeatWindowAnimationCor(DefeatWindow defeatWindow)
+    {
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+
+        sequence.Append(defeatWindow.GetMotion(MotionKey.WindowShow));
+
+        yield return sequence.WaitForCompletion();
+    }
+    IEnumerator PlayerTurnStartedMotionCor(CombatWindow combatWindow)
+    {
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+
+        sequence.Append(combatWindow.PlayerTurnAnnounce());
+        sequence.Append(combatWindow.FadeIn());
+
+        yield return sequence.WaitForCompletion();
+    }
+    IEnumerator EnemyTurnStartedAnimationCor(CombatWindow combatWindow)
+    {
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+
+        sequence.Append(combatWindow.FadeOut());
+        sequence.Append(combatWindow.EnemyTurnAnnounce());
+
+        yield return sequence.WaitForCompletion();
     }
     private EventContext CreateContext(EventContext context)
     {

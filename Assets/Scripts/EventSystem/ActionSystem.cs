@@ -11,18 +11,22 @@ public class ActionSystem
     }
     public void ExcuteAction(ActionContext action, Action<EventContext> declared)
     {
-        EventContext eventContext = new EventContext(
+        eventBus.Publish<ActionStarted>(new ActionStarted(CreateContext(action)));
+
+        declared?.Invoke(CreateContext(action));
+
+        eventBus.Publish<ActionEnded>(new ActionEnded(CreateContext(action)));
+
+        combatSystem.AnimationSystem.PlayQueue(CreateContext(action));
+    }
+    private EventContext CreateContext(ActionContext action)
+    {
+        return new EventContext(
             source: action.Source,
             action: action,
             turn: combatSystem.TurnSystem.TurnContext,
             combat: combatSystem.CombatContext
         );
-
-        eventBus.Publish<ActionStarted>(new ActionStarted(eventContext));
-
-        declared?.Invoke(eventContext);
-
-        eventBus.Publish<ActionEnded>(new ActionEnded(eventContext));
     }
 }
 public class ActionContext

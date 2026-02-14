@@ -1,4 +1,6 @@
-﻿using TMPro;
+﻿using DG.Tweening;
+using System.Collections;
+using TMPro;
 using UnityEngine;
 public class EnemyView : EntityView, ITargetable
 {
@@ -10,6 +12,7 @@ public class EnemyView : EntityView, ITargetable
 
     private EnemyInstance instance;
     private CombatManager combatManager;
+    private AnimationMonoSystem animationSystem;
 
     private void OnDisable()
     {
@@ -20,18 +23,19 @@ public class EnemyView : EntityView, ITargetable
         combatManager.CombatSystem.EventBus.Unsubscribe<EnemyIntentDecided>(OnEnemyIntentDecided);
         combatManager.CombatSystem.EventBus.Unsubscribe<HpChanged>(OnHpChanged);
     }
-    public void Init(EnemyInstance instance, Vector3 position, CombatManager combat)
+    public void Init(EnemyInstance instance, CombatManager combatManager, AnimationMonoSystem animationSystem, Vector3 position)
     {
         this.instance = instance;
+        this.combatManager = combatManager;
+        this.animationSystem = animationSystem;
         transform.position = position;
-        combatManager = combat;
 
-        combatManager.CombatSystem.EventBus.Subscribe<CombatStarted>(OnCombatStarted);
-        combatManager.CombatSystem.EventBus.Subscribe<CombatEnded>(OnCombatEnded);
-        combatManager.CombatSystem.EventBus.Subscribe<DeathDeclared>(OnDeathDeclared);
-        combatManager.CombatSystem.EventBus.Subscribe<AttackDeclared>(OnAttackDeclared);
-        combatManager.CombatSystem.EventBus.Subscribe<EnemyIntentDecided>(OnEnemyIntentDecided);
-        combatManager.CombatSystem.EventBus.Subscribe<HpChanged>(OnHpChanged);
+        this.combatManager.CombatSystem.EventBus.Subscribe<CombatStarted>(OnCombatStarted);
+        this.combatManager.CombatSystem.EventBus.Subscribe<CombatEnded>(OnCombatEnded);
+        this.combatManager.CombatSystem.EventBus.Subscribe<DeathDeclared>(OnDeathDeclared);
+        this.combatManager.CombatSystem.EventBus.Subscribe<AttackDeclared>(OnAttackDeclared);
+        this.combatManager.CombatSystem.EventBus.Subscribe<EnemyIntentDecided>(OnEnemyIntentDecided);
+        this.combatManager.CombatSystem.EventBus.Subscribe<HpChanged>(OnHpChanged);
     }
     public void OnCombatEnded(CombatEnded e)
     {
@@ -40,7 +44,7 @@ public class EnemyView : EntityView, ITargetable
             return;
         }
 
-        animator.SetTrigger(AnimationKeys.ENEMY_VICTORY);
+        animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_VICTORY, 0f));
     }
     public void OnCombatStarted(CombatStarted e)
     {
@@ -58,7 +62,7 @@ public class EnemyView : EntityView, ITargetable
             return;
         }
 
-        animator.SetTrigger(AnimationKeys.ENEMY_DIE);
+        animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_DIE, 1f));
     }
     public void OnAttackDeclared(AttackDeclared e)
     {
@@ -69,7 +73,7 @@ public class EnemyView : EntityView, ITargetable
         }
         intentRenderer.gameObject.SetActive(false);
         intentText.gameObject.SetActive(false);
-        animator.SetTrigger(AnimationKeys.ENEMY_ATTACK);
+        animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_ATTACK, 1f));
     }
     public void OnEnemyIntentDecided(EnemyIntentDecided e)
     {
@@ -96,11 +100,16 @@ public class EnemyView : EntityView, ITargetable
             return;
         }
 
-        if (e.EndAmount < e.StartAmount)
+        if (e.EndAmount > 0 && e.EndAmount < e.StartAmount)
         {
-            animator.SetTrigger(AnimationKeys.ENEMY_HIT);
+            animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_HIT, 1f));
         }
 
         hpText.text = e.EndAmount.ToString();
+    }
+    private IEnumerator PlayAnimatorTriggerCor(string key, float duration)
+    {
+        animator.SetTrigger(key);
+        yield return new WaitForSeconds(duration);
     }
 }

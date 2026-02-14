@@ -216,7 +216,7 @@ RectTransform:
   - {fileID: 530797743}
   - {fileID: 448517919}
   - {fileID: 693441248}
-  m_Father: {fileID: 1536520253}
+  m_Father: {fileID: 645893547}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -2983,7 +2983,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 970048015}
-  m_Father: {fileID: 1536520253}
+  m_Father: {fileID: 645893547}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -3188,7 +3188,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 488916957}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -4331,6 +4331,7 @@ GameObject:
   - component: {fileID: 606307823}
   - component: {fileID: 606307825}
   - component: {fileID: 606307826}
+  - component: {fileID: 606307827}
   m_Layer: 0
   m_Name: Combat Ctrl
   m_TagString: Untagged
@@ -4368,6 +4369,7 @@ MonoBehaviour:
   cardSystem: {fileID: 28270240}
   uiSystem: {fileID: 606307826}
   relicSystem: {fileID: 3108958426846968672}
+  animationSystem: {fileID: 606307827}
   playerPrefab: {fileID: 3590264590922241840, guid: 341ee4c7cdddb6146b15246fa7025fa8, type: 3}
   normalPlans:
   - details:
@@ -4413,6 +4415,18 @@ MonoBehaviour:
   energy: {fileID: 531170355}
   drawPile: {fileID: 1685359260}
   discardPile: {fileID: 1657250199}
+--- !u!114 &606307827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606307817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08cd9b207571da4408637828798fe93f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimationMonoSystem
 --- !u!1 &610720184
 GameObject:
   m_ObjectHideFlags: 0
@@ -4438,7 +4452,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 610720184}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -4728,6 +4742,59 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 638565219}
   m_CullTransparentMesh: 1
+--- !u!1 &645893546
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 645893547}
+  - component: {fileID: 645893548}
+  m_Layer: 5
+  m_Name: Combat UI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &645893547
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 645893546}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1476239352}
+  - {fileID: 470464596}
+  - {fileID: 1854831582}
+  - {fileID: 1896205624}
+  - {fileID: 28270239}
+  m_Father: {fileID: 1536520253}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &645893548
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 645893546}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &658335626
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9884,7 +9951,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 41406868}
-  m_Father: {fileID: 1536520253}
+  m_Father: {fileID: 645893547}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -10271,11 +10338,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1476239352}
-  - {fileID: 470464596}
-  - {fileID: 1854831582}
-  - {fileID: 1896205624}
-  - {fileID: 28270239}
+  - {fileID: 645893547}
   - {fileID: 1533486967}
   - {fileID: 789697521}
   m_Father: {fileID: 2052917263}
@@ -10310,6 +10373,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CombatWindow
   type: 0
+  combatUICG: {fileID: 645893548}
   combatAnnouncer: {fileID: 1533486968}
   turnAnnouncer: {fileID: 789697522}
 --- !u!1 &1540660975
@@ -12197,7 +12261,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 531170354}
-  m_Father: {fileID: 1536520253}
+  m_Father: {fileID: 645893547}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -12472,7 +12536,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 708939479}
-  m_Father: {fileID: 1536520253}
+  m_Father: {fileID: 645893547}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -12906,7 +12970,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1980508301
 RectTransform:
   m_ObjectHideFlags: 0

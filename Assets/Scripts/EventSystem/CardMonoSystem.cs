@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -9,6 +10,7 @@ public class CardMonoSystem : MonoBehaviour
     private EventBus eventBus;
     private CombatSystem combatSystem;
     private ActionSystem actionSystem;
+    private AnimationMonoSystem animationSystem;
     private EntityInstance player;
 
     [SerializeField] private CardContainer cardHand;
@@ -28,6 +30,7 @@ public class CardMonoSystem : MonoBehaviour
         EventBus eventBus,
         CombatSystem combatSystem,
         ActionSystem actionSystem,
+        AnimationMonoSystem animationSystem,
         IEnumerable<CardInstance> cardInstances,
         EntityInstance player
     )
@@ -35,6 +38,7 @@ public class CardMonoSystem : MonoBehaviour
         this.eventBus = eventBus;
         this.combatSystem = combatSystem;
         this.actionSystem = actionSystem;
+        this.animationSystem = animationSystem;
         this.player = player;
 
         drawPile.AddRange(Utils.Shuffle(cardInstances));
@@ -82,8 +86,8 @@ public class CardMonoSystem : MonoBehaviour
             return;
         }
 
-        EventContext eventContext = CreateContext(e.Context);
-        ClearCardHand(eventContext);
+        //EventContext eventContext = CreateContext(e.Context);
+        //ClearCardHand(eventContext);
     }
     public void OnPlayerTurnStarted(PlayerTurnStarted e) 
     {
@@ -92,12 +96,9 @@ public class CardMonoSystem : MonoBehaviour
             return;
         }
 
-        Sequence sequence = DOTween.Sequence();
-
         for (int i = 0; i < 5; i++)
         {
-            sequence.AppendCallback(() => DrawCard(e.Context));
-            sequence.AppendInterval(0.1f);
+            DrawCard(e.Context);
         }
     }
     public void OnPlayerTurnEnded(PlayerTurnEnded e)
@@ -192,14 +193,6 @@ public class CardMonoSystem : MonoBehaviour
             }
         }
     }
-    public void OnDamageResolved(DamageResolved e)
-    {
-        if (e.Context.Combat.state != CombatState.Combat)
-        {
-            return;
-        }
-
-    }
     private void DrawCard(EventContext context)
     {
         if (hand.Count == 10)
@@ -209,16 +202,15 @@ public class CardMonoSystem : MonoBehaviour
 
         ChargeCard(context: context);
 
+        // Instance 
         CardInstance cardInstance = drawPile.FirstOrDefault();
         drawPile.Remove(cardInstance);
         hand.Add(cardInstance);
 
-        CardView cardView = cardViewPool.Pop(cardInstance.Origin.Type);
-        cardView.Init(cardInstance, this, cardViewPool);
-        cardView.transform.parent = cardHand.transform;
+        // Animation
+        animationSystem.Enqueue(() => DrawCardCor(cardInstance));
 
-        UpdateUI();
-
+        // Event
         EventContext _context = CreateContext(context);
         eventBus.Publish<CardDrawed>(new CardDrawed(context: _context));
     }
@@ -232,11 +224,13 @@ public class CardMonoSystem : MonoBehaviour
         cardHand.DestroyCard(cardView);
         cardViewPool.Push(cardView);
 
+        // Animation
         cardView.transform.parent = cardViewPool.transform;
         cardView.Discard();
 
         UpdateUI();
 
+        // Event
         EventContext _context = CreateContext(context);
         eventBus.Publish<CardDiscarded>(new CardDiscarded(context: _context));
     }
@@ -264,6 +258,21 @@ public class CardMonoSystem : MonoBehaviour
         {
             DiscardCard(views[i], context);
         }
+    }
+    IEnumerator DrawCardCor(CardInstance cardInstance)
+    {
+        CardView cardView = cardViewPool.Pop(cardInstance.Origin.Type);
+        cardView.Init(
+            cardInstance: cardInstance,
+            cardSystem: this,
+            pool: cardViewPool,
+            cardContainer: cardHand
+        );
+
+        //yield return cardView.Draw().WaitForCompletion();
+        cardView.Draw();
+        yield return new WaitForSeconds(0.1f);
+        UpdateUI();
     }
     public void UpdateUI()
     {

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CombatSystem
@@ -17,6 +18,7 @@ public class CombatSystem
     public TurnSystem TurnSystem { get; }
     public ActionSystem ActionSystem { get; }
     public CombatContext CombatContext { get; private set; }
+    public AnimationMonoSystem AnimationSystem { get; private set; }
 
     private DamageSystem damageSystem;
     private EnergySystem energySystem;
@@ -27,11 +29,14 @@ public class CombatSystem
     private PlayerInstance player;
     private Dictionary<Guid, EnemyInstance> enemies;
     public IReadOnlyList<EnemyInstance> liveEnemies => enemies.Values.Where(e => !e.IsDead).ToList();
+
+    private Queue<Action> actionRequestQueue = new Queue<Action>();
     public void Init(
         DamageSystem damageSystem, 
         EnergySystem energySystem, 
         CardMonoSystem cardSystem, 
-        UIMonoSystem uiSystem, 
+        UIMonoSystem uiSystem,
+        AnimationMonoSystem animationSystem,
         RelicMonoSystem relicSystem,
         PlayerInstance player,
         IEnumerable<EnemyInstance> enemies
@@ -45,20 +50,33 @@ public class CombatSystem
         this.cardSystem = cardSystem;
         this.uiSystem = uiSystem;
         this.relicSystem = relicSystem;
+        this.AnimationSystem = animationSystem;
 
         TurnSystem.Init(enemies);
     }
+    public void UpdateTick()
+    {
+        TurnSystem.UpdateTick();
+
+        if (AnimationSystem.IsPlaying)
+        {
+            return;
+        }
+
+        if (actionRequestQueue.Count > 0)
+        {
+            actionRequestQueue.Dequeue().Invoke();
+        }
+    }
     public void OnEnable()
     {
-        EventBus.Subscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
         EventBus.Subscribe<EnemyActionStartRequested>(OnEnemyActionStartRequested);
         EventBus.Subscribe<DeathDeclared>(OnDeathDeclared);
         EventBus.Subscribe<DamageRequested>(OnDamageRequested);
         EventBus.Subscribe<DamageResolved>(OnDamageResolved);
 
-        EventBus.Subscribe<CombatStarted>(TurnSystem.OnCombatStarted);
+        EventBus.Subscribe<PlayerTurnStartRequested>(TurnSystem.OnPlayerTurnStartRequested);
         EventBus.Subscribe<PlayerTurnEndRequested>(TurnSystem.OnPlayerTurnEndRequested);
-        EventBus.Subscribe<EnemyTurnStarted>(TurnSystem.OnEnemyTurnStarted);
         EventBus.Subscribe<ActionEnded>(TurnSystem.OnActionEnded);
 
         EventBus.Subscribe<AttackDeclared>(damageSystem.OnAttackDeclared);
@@ -77,21 +95,21 @@ public class CombatSystem
         EventBus.Subscribe<PlayerTurnStarted>(cardSystem.OnPlayerTurnStarted);
         EventBus.Subscribe<PlayerTurnEnded>(cardSystem.OnPlayerTurnEnded);
         EventBus.Subscribe<EnergyResolved>(cardSystem.OnEnergyResolved);
-        EventBus.Subscribe<DamageResolved>(cardSystem.OnDamageResolved);
 
         EventBus.Subscribe<DamageRequested>(relicSystem.OnDamageRequested);
+
+        EventBus.Subscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
+        EventBus.Subscribe<EnemyTurnStarted>(OnEnemyTurnStarted);
     }
     public void OnDisable()
     {
-        EventBus.Unsubscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
         EventBus.Unsubscribe<EnemyActionStartRequested>(OnEnemyActionStartRequested);
         EventBus.Unsubscribe<DeathDeclared>(OnDeathDeclared);
         EventBus.Unsubscribe<DamageRequested>(OnDamageRequested);
         EventBus.Unsubscribe<DamageResolved>(OnDamageResolved);
 
-        EventBus.Unsubscribe<CombatStarted>(TurnSystem.OnCombatStarted);
+        EventBus.Unsubscribe<PlayerTurnStartRequested>(TurnSystem.OnPlayerTurnStartRequested);
         EventBus.Unsubscribe<PlayerTurnEndRequested>(TurnSystem.OnPlayerTurnEndRequested);
-        EventBus.Unsubscribe<EnemyTurnStarted>(TurnSystem.OnEnemyTurnStarted);
         EventBus.Unsubscribe<ActionEnded>(TurnSystem.OnActionEnded);
 
         EventBus.Unsubscribe<AttackDeclared>(damageSystem.OnAttackDeclared);
@@ -110,9 +128,10 @@ public class CombatSystem
         EventBus.Unsubscribe<PlayerTurnStarted>(cardSystem.OnPlayerTurnStarted);
         EventBus.Unsubscribe<PlayerTurnEnded>(cardSystem.OnPlayerTurnEnded);
         EventBus.Unsubscribe<EnergyResolved>(cardSystem.OnEnergyResolved);
-        EventBus.Unsubscribe<DamageResolved>(cardSystem.OnDamageResolved);
 
         EventBus.Unsubscribe<DamageRequested>(relicSystem.OnDamageRequested);
+
+        EventBus.Unsubscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
     }
     public void OnPlayerTurnStarted(PlayerTurnStarted e)
     {
@@ -129,27 +148,39 @@ public class CombatSystem
             }
         }
 
-        EventContext eventContext = new EventContext(
-            source: this,
-            action: e.Context.Action,
-            turn: e.Context.Turn,
-            combat: e.Context.Combat
-        );
-        EventBus.Publish<EnemyIntentDecided>(new EnemyIntentDecided(eventContext));
+        AnimationSystem.PlayQueue(e.Context);
+        actionRequestQueue.Enqueue(() =>
+        {
+            EventContext eventContext = new EventContext(
+                source: this,
+                action: e.Context.Action,
+                turn: e.Context.Turn,
+                combat: e.Context.Combat
+            );
+
+            EventBus.Publish<EnemyIntentDecided>(new EnemyIntentDecided(eventContext));
+        });
     }
-    public void OnEnemyActionStartRequested(EnemyActionStartRequested e)
+    public void OnEnemyTurnStarted(EnemyTurnStarted e)
     {
         if (e.Context.Combat.state != CombatState.Combat)
         {
             return;
         }
 
-        if (!enemies.TryGetValue(key: e.Enemy.Id, value: out EnemyInstance enemy))
+        AnimationSystem.PlayQueue(e.Context);
+        actionRequestQueue.Enqueue(() => EnemyActionStart(e.Context.Turn.EnemyQueue.Dequeue().Id));
+    }
+    private void EnemyActionStart(Guid enemyId)
+    {
+        if (CombatContext.state != CombatState.Combat)
         {
             return;
         }
-
-        e.Request.isResult = true;
+        if (!enemies.TryGetValue(key: enemyId, value: out EnemyInstance enemy))
+        {
+            return;
+        }
 
         ActionContext actionContext = new ActionContext(
             source: enemy,
@@ -213,6 +244,16 @@ public class CombatSystem
             }
         });
     }
+    public void OnEnemyActionStartRequested(EnemyActionStartRequested e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
+        AnimationSystem.PlayQueue(e.Context);
+        actionRequestQueue.Enqueue(() => EnemyActionStart(e.Enemy.Id));
+    }
     public void OnDeathDeclared(DeathDeclared e)
     {
         if (e.Context.Combat.state != CombatState.Combat)
@@ -235,6 +276,7 @@ public class CombatSystem
                 context: eventContext, 
                 result: CombatState.Defeat
             ));
+            AnimationSystem.PlayQueue(e.Context);
         }
         else
         {
@@ -246,6 +288,7 @@ public class CombatSystem
                     context: eventContext,
                     result: CombatState.Victory
                 ));
+                AnimationSystem.PlayQueue(e.Context);
             }
         }
     }
@@ -336,7 +379,7 @@ public class CombatSystem
     }
     public void CombatStart()
     {
-        CombatContext = new CombatContext(combatId: 999, source: this);
+        CombatContext = new CombatContext(combatId: 0, source: this);
 
         EventContext eventContext = new EventContext(
             source: this,
@@ -347,6 +390,24 @@ public class CombatSystem
 
         CombatContext.state = CombatState.Combat;
         EventBus.Publish<CombatStarted>(new CombatStarted(eventContext));
+
+        AnimationSystem.PlayQueue(eventContext);
+        actionRequestQueue.Enqueue(() =>
+        {
+            RequestContext requestContext = new RequestContext(this);
+
+            eventContext = new EventContext(
+                source: this,
+                action: null,
+                turn: null,
+                combat: CombatContext
+            );
+
+            EventBus.Publish<PlayerTurnStartRequested>(new PlayerTurnStartRequested(
+                context: eventContext,
+                request: requestContext
+            ));
+        });
     }
 }
 

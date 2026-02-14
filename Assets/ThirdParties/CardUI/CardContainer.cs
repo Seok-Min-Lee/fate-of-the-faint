@@ -8,6 +8,11 @@ using UnityEngine.UI;
 
 public class CardContainer : MonoBehaviour
 {
+    public ZoomConfig ZoomConfig => zoomConfig;
+    public AnimationSpeedConfig AnimationSpeedConfig => animationSpeedConfig;
+    public CardPlayConfig CardPlayConfig => cardPlayConfig;
+    public EventsConfig EventsConfig => eventsConfig;
+    public bool PreventCardInteraction => preventCardInteraction;
     [Header("Constraints")]
     [SerializeField] private bool forceFitContainer;
     [SerializeField] private bool preventCardInteraction;
@@ -108,14 +113,14 @@ public class CardContainer : MonoBehaviour
             //AddOtherComponentsIfNeeded(wrapper);
 
             // Pass child card any extra config it should be aware of
-            wrapper.Bind(
-                zoomConfig: zoomConfig,
-                eventsConfig: eventsConfig,
-                cardPlayConfig: cardPlayConfig,
-                animationSpeedConfig: animationSpeedConfig,
-                preventCardInteraction: preventCardInteraction,
-                container: this
-            );
+            //wrapper.Bind(
+            //    zoomConfig: zoomConfig,
+            //    eventsConfig: eventsConfig,
+            //    cardPlayConfig: cardPlayConfig,
+            //    animationSpeedConfig: animationSpeedConfig,
+            //    preventCardInteraction: preventCardInteraction,
+            //    container: this
+            //);
         }
     }
 

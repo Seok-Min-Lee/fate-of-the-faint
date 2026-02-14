@@ -17,22 +17,14 @@ public class TurnSystem
     {
         this.enemies = new List<EnemyInstance>(enemies);
     }
-    private int unit = 0;
     public void UpdateTick()
     {
-        if (++unit < 30)
-        {
-            return;
-        }
-
         if (eventQueue.Count > 0)
         {
             eventQueue.Dequeue().Invoke();
         }
-
-        unit = 0;
     }
-    public void OnCombatStarted(CombatStarted e)
+    public void OnPlayerTurnStartRequested(PlayerTurnStartRequested e)
     {
         if (e.Context.Combat.state != CombatState.Combat)
         {
@@ -91,36 +83,6 @@ public class TurnSystem
         );
         eventBus.Publish<PlayerTurnEnded>(new PlayerTurnEnded(context: eventContext));
     }
-    public void OnEnemyTurnStarted(EnemyTurnStarted e)
-    {
-        if (e.Context.Combat.state != CombatState.Combat)
-        {
-            return;
-        }
-
-        for (int i = 0; i < enemies.Count; i++)
-        {
-            if (!enemies[i].IsDead)
-            {
-                TurnContext.EnemyQueue.Enqueue(enemies[i]);
-            }
-        }
-
-        EventContext eventContext = new EventContext(
-            source: this,
-            action: e.Context.Action,
-            turn: e.Context.Turn,
-            combat: e.Context.Combat
-        );
-
-        RequestContext request = new RequestContext(source: this);
-
-        eventBus.Publish<EnemyActionStartRequested>(new EnemyActionStartRequested(
-            context: eventContext,
-            request: request,
-            enemy: TurnContext.EnemyQueue.Dequeue()
-        ));
-    }
     private void PublishPlayerTurnStarted(ICombatEvent e)
     {
         TurnContext = new TurnContext(
@@ -144,6 +106,14 @@ public class TurnSystem
             phase: TurnPhase.Enemy,
             source: this
         );
+
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            if (!enemies[i].IsDead)
+            {
+                TurnContext.EnemyQueue.Enqueue(enemies[i]);
+            }
+        }
 
         EventContext eventContext = new EventContext(
             source: this,

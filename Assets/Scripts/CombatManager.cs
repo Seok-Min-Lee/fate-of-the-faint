@@ -1,9 +1,7 @@
-﻿using JetBrains.Annotations;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CombatManager : MonoBehaviour
@@ -11,6 +9,7 @@ public class CombatManager : MonoBehaviour
     [SerializeField] CardMonoSystem cardSystem;
     [SerializeField] UIMonoSystem uiSystem;
     [SerializeField] RelicMonoSystem relicSystem;
+    [SerializeField] AnimationMonoSystem animationSystem;
     [SerializeField] private PlayerView playerPrefab;
 
     [Header("Instance")]
@@ -31,6 +30,7 @@ public class CombatManager : MonoBehaviour
         playerView.Init(
             instance: playerInstance,
             combatManager: this,
+            animationSystem: animationSystem,
             position: new Vector3(-0.71f, 0f, -0.71f)
         );
 
@@ -44,9 +44,11 @@ public class CombatManager : MonoBehaviour
             eventBus: CombatSystem.EventBus, 
             max: playerInstance.Energy
         );
+        animationSystem.Init(CombatSystem.EventBus);
         uiSystem.Init(
             eventBus: CombatSystem.EventBus,
-            actionSystem: CombatSystem.ActionSystem
+            actionSystem: CombatSystem.ActionSystem,
+            animationSystem: animationSystem
         );
         relicSystem.Init(
             eventBus: CombatSystem.EventBus,
@@ -56,6 +58,7 @@ public class CombatManager : MonoBehaviour
             eventBus: CombatSystem.EventBus, 
             combatSystem: CombatSystem,
             actionSystem: CombatSystem.ActionSystem,
+            animationSystem: animationSystem,
             cardInstances: cardInstance, 
             player: playerInstance
         );
@@ -65,6 +68,7 @@ public class CombatManager : MonoBehaviour
             cardSystem: cardSystem, 
             uiSystem: uiSystem, 
             relicSystem: relicSystem,
+            animationSystem: animationSystem,
             player: playerInstance,
             enemies: enemyInstances
         );
@@ -84,7 +88,7 @@ public class CombatManager : MonoBehaviour
     }
     private void Update()
     {
-        CombatSystem.TurnSystem.UpdateTick();
+        CombatSystem.UpdateTick();
     }
     private PlayerInstance CreatePlayerInstance(PlayData run)
     {
@@ -151,8 +155,9 @@ public class CombatManager : MonoBehaviour
             EnemyView view = go.GetComponent<EnemyView>();
             view.Init(
                 instance: _instance,
-                position: positions[i],
-                combat: this
+                combatManager: this,
+                animationSystem: animationSystem,
+                position: positions[i]
             );
 
             enemies.Add(view);
