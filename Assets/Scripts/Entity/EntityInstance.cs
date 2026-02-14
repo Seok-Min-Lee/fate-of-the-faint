@@ -16,6 +16,31 @@ public class EntityInstance
     {
         CurrentHp = amount;
     }
+    public void ApplyBuff(BuffType type, int delta)
+    {
+        if (!buffs.ContainsKey(type))
+        {
+            buffs.Add(type, delta);
+        }
+        else
+        {
+            buffs[type] += delta;
+
+            if (buffs[type] <= 0)
+            {
+                buffs.Remove(type);
+            }
+        }
+    }
+    public int Getbuff(BuffType type)
+    {
+        if (!buffs.TryGetValue(type, out int value))
+        {
+            return -1;
+        }
+
+        return value;
+    }
 }
 public enum BuffType
 {

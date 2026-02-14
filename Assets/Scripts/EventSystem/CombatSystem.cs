@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class CombatSystem
 {
@@ -21,6 +22,7 @@ public class CombatSystem
     public AnimationMonoSystem AnimationSystem { get; private set; }
 
     private DamageSystem damageSystem;
+    private BuffSystem buffSystem;
     private EnergySystem energySystem;
     private CardMonoSystem cardSystem;
     private UIMonoSystem uiSystem;
@@ -32,7 +34,8 @@ public class CombatSystem
 
     private Queue<Action> actionRequestQueue = new Queue<Action>();
     public void Init(
-        DamageSystem damageSystem, 
+        DamageSystem damageSystem,
+        BuffSystem buffSystem,
         EnergySystem energySystem, 
         CardMonoSystem cardSystem, 
         UIMonoSystem uiSystem,
@@ -46,6 +49,7 @@ public class CombatSystem
         this.enemies = enemies.ToDictionary(key => key.Id, value => value);
 
         this.damageSystem = damageSystem;
+        this.buffSystem = buffSystem;
         this.energySystem = energySystem;
         this.cardSystem = cardSystem;
         this.uiSystem = uiSystem;
@@ -74,12 +78,15 @@ public class CombatSystem
         EventBus.Subscribe<DeathDeclared>(OnDeathDeclared);
         EventBus.Subscribe<DamageRequested>(OnDamageRequested);
         EventBus.Subscribe<DamageResolved>(OnDamageResolved);
+        EventBus.Subscribe<BuffResolved>(OnBuffResolved);
 
         EventBus.Subscribe<PlayerTurnStartRequested>(TurnSystem.OnPlayerTurnStartRequested);
         EventBus.Subscribe<PlayerTurnEndRequested>(TurnSystem.OnPlayerTurnEndRequested);
         EventBus.Subscribe<ActionEnded>(TurnSystem.OnActionEnded);
 
         EventBus.Subscribe<AttackDeclared>(damageSystem.OnAttackDeclared);
+
+        EventBus.Subscribe<BuffDeclared>(buffSystem.OnBuffDeclared);
 
         EventBus.Subscribe<PlayerTurnStarted>(energySystem.OnPlayerTurnStarted);
         EventBus.Subscribe<EnergyChangeRequested>(energySystem.OnEnergyChangeRequested);
@@ -107,12 +114,15 @@ public class CombatSystem
         EventBus.Unsubscribe<DeathDeclared>(OnDeathDeclared);
         EventBus.Unsubscribe<DamageRequested>(OnDamageRequested);
         EventBus.Unsubscribe<DamageResolved>(OnDamageResolved);
+        EventBus.Unsubscribe<BuffResolved>(OnBuffResolved);
 
         EventBus.Unsubscribe<PlayerTurnStartRequested>(TurnSystem.OnPlayerTurnStartRequested);
         EventBus.Unsubscribe<PlayerTurnEndRequested>(TurnSystem.OnPlayerTurnEndRequested);
         EventBus.Unsubscribe<ActionEnded>(TurnSystem.OnActionEnded);
 
         EventBus.Unsubscribe<AttackDeclared>(damageSystem.OnAttackDeclared);
+
+        EventBus.Unsubscribe<BuffDeclared>(buffSystem.OnBuffDeclared);
 
         EventBus.Unsubscribe<PlayerTurnStarted>(energySystem.OnPlayerTurnStarted);
         EventBus.Unsubscribe<EnergyChangeRequested>(energySystem.OnEnergyChangeRequested);
@@ -132,6 +142,7 @@ public class CombatSystem
         EventBus.Unsubscribe<DamageRequested>(relicSystem.OnDamageRequested);
 
         EventBus.Unsubscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
+        EventBus.Unsubscribe<EnemyTurnStarted>(OnEnemyTurnStarted);
     }
     public void OnPlayerTurnStarted(PlayerTurnStarted e)
     {
@@ -140,25 +151,29 @@ public class CombatSystem
             return;
         }
 
-        foreach (EnemyInstance ei in enemies.Values)
+        List<BuffType> types = new List<BuffType>(player.Buffs.Keys);
+        foreach (BuffType type in types)
         {
-            if (!ei.IsDead)
-            {
-                ei.DecideNextAction(new System.Random());
-            }
+            int startAmount = player.Getbuff(type);
+            player.ApplyBuff(type, -1);
+            EventBus.Publish<BuffChanged>(new BuffChanged(
+                context: CreateContext(e.Context),
+                target: player,
+                type: type,
+                startAmount: startAmount,
+                endAmount: startAmount - 1
+            ));
+        }
+
+        foreach (EnemyInstance ei in enemies.Values.Where(enemy => !enemy.IsDead))
+        {
+            ei.DecideNextAction(new System.Random());
         }
 
         AnimationSystem.PlayQueue(e.Context);
         actionRequestQueue.Enqueue(() =>
         {
-            EventContext eventContext = new EventContext(
-                source: this,
-                action: e.Context.Action,
-                turn: e.Context.Turn,
-                combat: e.Context.Combat
-            );
-
-            EventBus.Publish<EnemyIntentDecided>(new EnemyIntentDecided(eventContext));
+            EventBus.Publish<EnemyIntentDecided>(new EnemyIntentDecided(CreateContext(e.Context)));
         });
     }
     public void OnEnemyTurnStarted(EnemyTurnStarted e)
@@ -166,6 +181,22 @@ public class CombatSystem
         if (e.Context.Combat.state != CombatState.Combat)
         {
             return;
+        }
+        foreach (EnemyInstance enemy in enemies.Values.Where(enemy => !enemy.IsDead))
+        {
+            List<BuffType> types = new List<BuffType>(enemy.Buffs.Keys);
+            foreach (BuffType type in types)
+            {
+                int startAmount = enemy.Getbuff(type);
+                enemy.ApplyBuff(type, -1);
+                EventBus.Publish<BuffChanged>(new BuffChanged(
+                    context: CreateContext(e.Context),
+                    target: enemy,
+                    type: type,
+                    startAmount: startAmount,
+                    endAmount: startAmount - 1
+                ));
+            }
         }
 
         AnimationSystem.PlayQueue(e.Context);
@@ -348,34 +379,71 @@ public class CombatSystem
             return;
         }
 
-        Process(instance, startAmount, endAmount);
+        instance.SetCurrentHp(endAmount);
 
-        void Process(EntityInstance instance, int startAmount, int endAmount)
+        EventContext eventContext = new EventContext(
+            source: this,
+            action: e.Context.Action,
+            turn: e.Context.Turn,
+            combat: e.Context.Combat
+        );
+
+        EventBus.Publish<HpChanged>(new HpChanged(
+            context: eventContext,
+            target: instance,
+            startAmount: startAmount,
+            endAmount: endAmount
+        ));
+
+        if (instance.CurrentHp <= 0)
         {
-            instance.SetCurrentHp(endAmount);
-
-            EventContext eventContext = new EventContext(
-                source: this,
-                action: e.Context.Action,
-                turn: e.Context.Turn,
-                combat: e.Context.Combat
-            );
-
-            EventBus.Publish<HpChanged>(new HpChanged(
+            EventBus.Publish<DeathDeclared>(new DeathDeclared(
                 context: eventContext,
-                target: instance,
-                startAmount: startAmount,
-                endAmount: endAmount
-            )); 
-
-            if (instance.CurrentHp <= 0)
-            {
-                EventBus.Publish<DeathDeclared>(new DeathDeclared(
-                    context: eventContext,
-                    target: instance
-                ));
-            }
+                target: instance
+            ));
         }
+    }
+
+    private void OnBuffResolved(BuffResolved e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
+        EntityInstance instance = null;
+        if (e.Target == player)
+        {
+            instance = player;
+        }
+        else if (enemies.ContainsKey(e.Target.Id))
+        {
+            instance = enemies[e.Target.Id];
+        }
+        else
+        {
+            return;
+        }
+
+        int startAmount = instance.Buffs.TryGetValue(e.Type, out int value) ? value : 0;
+        int endAmount = Mathf.Max(0, startAmount + e.Amount);
+
+        instance.ApplyBuff(type: e.Type, delta: e.Amount);
+
+        EventContext eventContext = new EventContext(
+            source: this,
+            action: e.Context.Action,
+            turn: e.Context.Turn,
+            combat: e.Context.Combat
+        );
+
+        EventBus.Publish<BuffChanged>(new BuffChanged(
+            context: eventContext,
+            target: instance,
+            type: e.Type,
+            startAmount: startAmount,
+            endAmount: endAmount
+        ));
     }
     public void CombatStart()
     {
@@ -408,6 +476,15 @@ public class CombatSystem
                 request: requestContext
             ));
         });
+    }
+    private EventContext CreateContext(EventContext context)
+    {
+        return new EventContext(
+            source: this,
+            action: context.Action,
+            turn: context.Turn,
+            combat: context.Combat
+        );
     }
 }
 

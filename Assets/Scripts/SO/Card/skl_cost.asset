@@ -22,8 +22,8 @@ MonoBehaviour:
   target: 0
   cost: 0
   effects:
-  - target: 0
+  - targetType: 0
     effectType: 4
-    repeat: 0
+    repeat: 1
     value: 0
   upgradeCard: {fileID: 0}

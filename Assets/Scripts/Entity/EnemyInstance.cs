@@ -66,36 +66,6 @@ public class EnemyInstance : EntityInstance
         Block = 0;
     }
 
-    public void ApplyBuff(BuffType type, int delta)
-    {
-        if (delta == 0)
-        {
-            return;
-        }
-
-        if (!buffs.ContainsKey(type))
-        {
-            buffs[type] = 0;
-        }
-
-        buffs[type] += delta;
-
-        if (buffs[type] <= 0)
-        {
-            buffs.Remove(type);
-        }
-    }
-
-    public int GetBuff(BuffType type)
-    {
-        int value;
-        if (!buffs.TryGetValue(type, out value))
-        {
-            return 0;
-        }
-
-        return value;
-    }
 
 
     // ─────────────────────────────────────────────

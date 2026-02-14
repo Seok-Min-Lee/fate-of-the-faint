@@ -11,6 +11,7 @@ public class CombatManager : MonoBehaviour
     [SerializeField] RelicMonoSystem relicSystem;
     [SerializeField] AnimationMonoSystem animationSystem;
     [SerializeField] private PlayerView playerPrefab;
+    [SerializeField] private EntityBuffViewPool entityBuffPool;
 
     [Header("Instance")]
     [SerializeField] private EnemySpawnPlan[] normalPlans;
@@ -31,7 +32,8 @@ public class CombatManager : MonoBehaviour
             instance: playerInstance,
             combatManager: this,
             animationSystem: animationSystem,
-            position: new Vector3(-0.71f, 0f, -0.71f)
+            position: new Vector3(-0.71f, 0f, -0.71f),
+            buffViewPool: entityBuffPool
         );
 
         List<EnemyInstance> enemyInstances = CreateEnemyInstances();
@@ -40,6 +42,7 @@ public class CombatManager : MonoBehaviour
         List<CardInstance> cardInstance = CreateCardInstances(PlayManager.Instance.CurrentData.Cards.Select(x => x.Origin));
 
         DamageSystem damageSystem = new DamageSystem(CombatSystem.EventBus);
+        BuffSystem buffSystem = new BuffSystem(CombatSystem.EventBus);
         EnergySystem energySystem = new EnergySystem(
             eventBus: CombatSystem.EventBus, 
             max: playerInstance.Energy
@@ -64,6 +67,7 @@ public class CombatManager : MonoBehaviour
         );
         CombatSystem.Init(
             damageSystem: damageSystem, 
+            buffSystem: buffSystem,
             energySystem: energySystem, 
             cardSystem: cardSystem, 
             uiSystem: uiSystem, 
@@ -157,7 +161,8 @@ public class CombatManager : MonoBehaviour
                 instance: _instance,
                 combatManager: this,
                 animationSystem: animationSystem,
-                position: positions[i]
+                position: positions[i],
+                buffViewPool: entityBuffPool
             );
 
             enemies.Add(view);

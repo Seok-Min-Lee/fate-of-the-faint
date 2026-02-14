@@ -23,6 +23,6 @@ MonoBehaviour:
   effects:
   - targetType: 1
     effectType: 6
-    repeat: 0
+    repeat: 1
     value: 3
   upgradeCard: {fileID: 0}

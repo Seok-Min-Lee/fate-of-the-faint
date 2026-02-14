@@ -279,33 +279,50 @@ public struct ModifyCostDeclared : ICombatEvent
     public EventContext Context { get; private set; }
     public EventMeta Meta => EventMetas.ModifyCostDeclared;
 }
-public struct StrengthenDeclared : ICombatEvent
+public struct BuffDeclared : ICombatEvent
 {
-    public StrengthenDeclared(EventContext context)
+    public BuffDeclared(EventContext context, EntityInstance source, EntityInstance target, BuffType type, int amount)
     {
         Context = context;
+        Source = source;
+        Target = target;
+        Type = type;
+        Amount = amount;
     }
     public EventContext Context { get; private set; }
-    public EventMeta Meta => EventMetas.StrengthenDeclared;
+    public EntityInstance Source { get; private set; }
+    public EntityInstance Target { get; private set; }
+    public BuffType Type { get; private set; }
+    public int Amount { get ; private set; }
+    public EventMeta Meta => EventMetas.BuffDeclared;
 }
-public struct WeakenDeclared : ICombatEvent
-{
-    public WeakenDeclared(EventContext context)
-    {
-        Context = context;
-    }
-    public EventContext Context { get; private set; }
-    public EventMeta Meta => EventMetas.WeakenDeclared;
-}
-public struct VulnerableDeclared : ICombatEvent
-{
-    public VulnerableDeclared(EventContext context)
-    {
-        Context = context;
-    }
-    public EventContext Context { get; private set; }
-    public EventMeta Meta => EventMetas.VulnerableDeclared;
-}
+//public struct StrengthenDeclared : ICombatEvent
+//{
+//    public StrengthenDeclared(EventContext context)
+//    {
+//        Context = context;
+//    }
+//    public EventContext Context { get; private set; }
+//    public EventMeta Meta => EventMetas.StrengthenDeclared;
+//}
+//public struct WeakenDeclared : ICombatEvent
+//{
+//    public WeakenDeclared(EventContext context)
+//    {
+//        Context = context;
+//    }
+//    public EventContext Context { get; private set; }
+//    public EventMeta Meta => EventMetas.WeakenDeclared;
+//}
+//public struct VulnerableDeclared : ICombatEvent
+//{
+//    public VulnerableDeclared(EventContext context)
+//    {
+//        Context = context;
+//    }
+//    public EventContext Context { get; private set; }
+//    public EventMeta Meta => EventMetas.VulnerableDeclared;
+//}
 public struct DamageRequested : ICombatEvent
 {
     public DamageRequested(EventContext context, DamageContext damage)
@@ -332,6 +349,34 @@ public struct DamageResolved : ICombatEvent
     public int Amount { get; private set; }
     public EventMeta Meta => EventMetas.DamageResolved;
 }
+public struct BuffRequested : ICombatEvent
+{
+    public BuffRequested(EventContext context, BuffContext buff)
+    {
+        Context = context;
+        Buff = buff;
+    }
+    public EventContext Context { get; private set; }
+    public BuffContext Buff { get; private set; }
+    public EventMeta Meta => EventMetas.BuffRequested;
+}
+public struct BuffResolved : ICombatEvent
+{
+    public BuffResolved(EventContext context, EntityInstance source, EntityInstance target, BuffType type, int amount)
+    {
+        Context = context;
+        Source = source;
+        Target = target;
+        Type = type;
+        Amount = amount;
+    }
+    public EventContext Context { get; private set; }
+    public EntityInstance Source { get; private set; }
+    public EntityInstance Target { get; private set; }
+    public BuffType Type { get; private set; }
+    public int Amount { get; private set; }
+    public EventMeta Meta => EventMetas.BuffResolved;
+}
 public struct HpChanged : ICombatEvent
 {
     public HpChanged(EventContext context, EntityInstance target, int startAmount, int endAmount)
@@ -346,6 +391,23 @@ public struct HpChanged : ICombatEvent
     public int StartAmount { get; private set; }
     public int EndAmount { get; private set; }
     public EventMeta Meta => EventMetas.HpChanged;
+}
+public struct BuffChanged : ICombatEvent
+{
+    public BuffChanged(EventContext context, EntityInstance target, BuffType type, int startAmount, int endAmount)
+    {
+        Context = context;
+        Target = target;
+        Type = type;
+        StartAmount = startAmount;
+        EndAmount = endAmount;
+    }
+    public EventContext Context { get; private set; }
+    public EntityInstance Target { get; private set; }
+    public BuffType Type { get; private set; }
+    public int StartAmount { get; private set; }
+    public int EndAmount { get; private set; }
+    public EventMeta Meta => EventMetas.BuffChanged;
 }
 public struct DeathDeclared : ICombatEvent
 {

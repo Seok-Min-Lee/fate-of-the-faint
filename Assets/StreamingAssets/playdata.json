@@ -12,15 +12,12 @@
     "cardIds": [
         "atk_strike",
         "atk_strike",
-        "atk_strike",
-        "atk_strike",
-        "atk_strike",
         "skl_defend",
         "skl_defend",
-        "skl_defend",
-        "skl_defend",
-        "skl_defend",
-        "atk_double"
+        "atk_double",
+        "skl_weak",
+        "atk_vuln",
+        "pwr_strength"
     ],
     "relicIds": [
         "Relic_A"

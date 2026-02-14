@@ -158,7 +158,7 @@ public class CardMonoSystem : MonoBehaviour
                             context: context,
                             source: player,
                             target: player,
-                            amount: -1
+                            amount: ce.value
                         ));
                     }
                     else if (ce.effectType == EffectType.DrawCard)
@@ -175,15 +175,33 @@ public class CardMonoSystem : MonoBehaviour
                     }
                     else if (ce.effectType == EffectType.Strengthen)
                     {
-                        eventBus.Publish<StrengthenDeclared>(new StrengthenDeclared(context: context));
+                        eventBus.Publish<BuffDeclared>(new BuffDeclared(
+                            context: context,
+                            source: player,
+                            target: target,
+                            type: BuffType.Strength,
+                            amount: ce.value
+                        ));
                     }
                     else if (ce.effectType == EffectType.Weaken)
                     {
-                        eventBus.Publish<WeakenDeclared>(new WeakenDeclared(context: context));
+                        eventBus.Publish<BuffDeclared>(new BuffDeclared(
+                            context: context,
+                            source: player,
+                            target: target,
+                            type: BuffType.Weak,
+                            amount: ce.value
+                        ));
                     }
                     else if (ce.effectType == EffectType.Vulnerable)
                     {
-                        eventBus.Publish<VulnerableDeclared>(new VulnerableDeclared(context: context));
+                        eventBus.Publish<BuffDeclared>(new BuffDeclared(
+                            context: context,
+                            source: player,
+                            target: target,
+                            type: BuffType.Vulnerable,
+                            amount: ce.value
+                        ));
                     }
                     else
                     {

@@ -26,12 +26,16 @@
     public static readonly EventMeta DrawCardDeclared = new("DrawCardDeclared", EventCategory.Card);
     public static readonly EventMeta GainEnergyDeclared = new("GainEnergyDeclared", EventCategory.Card);
     public static readonly EventMeta ModifyCostDeclared = new("ModifyCostDeclared", EventCategory.Card);
-    public static readonly EventMeta StrengthenDeclared = new("StrengthenDeclared", EventCategory.Card);
-    public static readonly EventMeta WeakenDeclared = new("WeakenDeclared", EventCategory.Card);
-    public static readonly EventMeta VulnerableDeclared = new("VulnerableDeclared", EventCategory.Card);
+    public static readonly EventMeta BuffDeclared = new("BuffDeclared", EventCategory.Status);
+    //public static readonly EventMeta StrengthenDeclared = new("StrengthenDeclared", EventCategory.Card);
+    //public static readonly EventMeta WeakenDeclared = new("WeakenDeclared", EventCategory.Card);
+    //public static readonly EventMeta VulnerableDeclared = new("VulnerableDeclared", EventCategory.Card);
     public static readonly EventMeta DamageRequested = new("DamageRequested", EventCategory.Damage);
     public static readonly EventMeta DamageResolved = new("DamageResolved", EventCategory.Damage);
+    public static readonly EventMeta BuffRequested = new("BuffRequested", EventCategory.Status);
+    public static readonly EventMeta BuffResolved = new("BuffResolved", EventCategory.Status);
     public static readonly EventMeta HpChanged = new("HpChanged", EventCategory.Status);
+    public static readonly EventMeta BuffChanged = new("BuffChanged", EventCategory.Status);
     public static readonly EventMeta DeathDeclared = new("DeathDeclared", EventCategory.Status);
 
     public static readonly EventMeta AnimationStarted = new("AnimationStarted", EventCategory.UI);
