@@ -11201,6 +11201,7 @@ GameObject:
   - component: {fileID: 1659876132}
   - component: {fileID: 1659876134}
   - component: {fileID: 1659876135}
+  - component: {fileID: 1659876136}
   m_Layer: 5
   m_Name: Victory Window
   m_TagString: Untagged
@@ -11253,8 +11254,8 @@ MonoBehaviour:
   cardRewardWindow: {fileID: 719357629}
   dimmedCG: {fileID: 517863240}
   contentCG: {fileID: 1461438553}
+  rewardButtonPool: {fileID: 1659876136}
   rewardParent: {fileID: 1694862948}
-  rewardButtonPrefab: {fileID: 6948000198981665947, guid: 23bd658c320d85541bf347ddc8d64d41, type: 3}
   tipText: {fileID: 1555104402}
   rewardPresets:
   - type: 0
@@ -11266,6 +11267,19 @@ MonoBehaviour:
   - type: 2
     image: {fileID: 430145150, guid: a250e1163a1ff494c92ea1a9ac12e285, type: 3}
     name: Not Potion Yes Relic
+--- !u!114 &1659876136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1659876131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09558201d6b41714cb0bad1da6c0c822, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RewardButtonPool
+  prefab: {fileID: 6948000198981665947, guid: 23bd658c320d85541bf347ddc8d64d41, type: 3}
 --- !u!1001 &1675737743
 PrefabInstance:
   m_ObjectHideFlags: 0

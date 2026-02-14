@@ -6,34 +6,41 @@ using UnityEngine;
 
 public class VictoryWindow : UIMotionWindow
 {
-    [SerializeField] CardRewardWindow cardRewardWindow;
+    [SerializeField] private CardRewardWindow cardRewardWindow;
 
     [SerializeField] private CanvasGroup dimmedCG;
     [SerializeField] private CanvasGroup contentCG;
-    [SerializeField] Transform rewardParent;
-    [SerializeField] RewardButton rewardButtonPrefab;
-    [SerializeField] TextMeshProUGUI tipText;
+    [SerializeField] private RewardButtonPool rewardButtonPool;
+    [SerializeField] private Transform rewardParent;
+    [SerializeField] private TextMeshProUGUI tipText;
 
-    [SerializeField] RewardPreset[] rewardPresets;
-
-    private Queue<RewardButton> rewardButtonQueue = new Queue<RewardButton>();
+    [SerializeField] private RewardPreset[] rewardPresets;
 
     private void Awake()
     {
         _handler.Add(MotionKey.WindowShow, Show);
     }
+    private RewardButton latestButton;
+    private void OnEnable()
+    {
+        if (latestButton != null && cardRewardWindow.IsSelected)
+        {
+            rewardButtonPool.Push(latestButton);
+            latestButton = null;
+        }
+    }
     public void OnClickGoldButton(RewardButton button)
     {
-        button.PushToPool();
+        rewardButtonPool.Push(button);
     }
     public void OnClickRelicButton(RewardButton button)
     {
-        button.PushToPool();
+        rewardButtonPool.Push(button);
     }
     public void OnClickCardButton(RewardButton button)
     {
+        latestButton = button;
         cardRewardWindow.Init();
-        cardRewardWindow.Bind(button);
         ChangeWindow(WindowType.CardRewards, WindowMode.Single);
     }
     public void OnClickNext()
@@ -68,9 +75,7 @@ public class VictoryWindow : UIMotionWindow
 
         for (int i = 0; i < num; i++)
         {
-            RewardButton button = rewardButtonQueue.Count > 0 ?
-                                rewardButtonQueue.Dequeue() :
-                                GameObject.Instantiate(rewardButtonPrefab, rewardParent);
+            RewardButton button = rewardButtonPool.Pop();
 
             //RewardPreset preset = rewardPresets[UnityEngine.Random.Range(0, rewardPresets.Length)];
             RewardPreset preset = rewardPresets[1];
@@ -90,7 +95,7 @@ public class VictoryWindow : UIMotionWindow
             }
 
             button.Init(
-                pool: this, 
+                parent: rewardParent,
                 sprite: preset.image,
                 text: preset.name,
                 onClick: onClick
@@ -99,7 +104,7 @@ public class VictoryWindow : UIMotionWindow
     }
     public void Charge(RewardButton button)
     {
-        rewardButtonQueue.Enqueue(button);
+        rewardButtonPool.Push(button);
     }
 }
 [Serializable]

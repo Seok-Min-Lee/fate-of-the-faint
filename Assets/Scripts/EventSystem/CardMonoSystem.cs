@@ -243,7 +243,6 @@ public class CardMonoSystem : BaseMonoSystem
         cardViewPool.Push(cardView);
 
         // Animation
-        cardView.transform.parent = cardViewPool.transform;
         cardView.Discard();
 
         UpdateUI();
@@ -279,11 +278,10 @@ public class CardMonoSystem : BaseMonoSystem
     }
     IEnumerator DrawCardCor(CardInstance cardInstance)
     {
-        CardView cardView = cardViewPool.Pop();
+        CardView cardView = cardViewPool.Pop(false);
         cardView.Init(
             cardInstance: cardInstance,
             cardSystem: this,
-            pool: cardViewPool,
             cardContainer: cardHand
         );
 

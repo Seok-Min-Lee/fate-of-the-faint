@@ -247,7 +247,6 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public CardInstance CardInstance { get; private set; }
     public CardMonoSystem CardSystem { get; private set; }
-    public CardViewPool Pool { get; private set; }
 
     private bool targetingLatched;
     private Vector2 lockedPosition;
@@ -255,11 +254,10 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         CardSystem.PlayCardStart(cardView: this, target: target);
     }
-    public void Init(CardInstance cardInstance, CardMonoSystem cardSystem, CardViewPool pool, CardContainer cardContainer)
+    public void Init(CardInstance cardInstance, CardMonoSystem cardSystem, CardContainer cardContainer)
     {
         CardInstance = cardInstance;
         CardSystem = cardSystem;
-        Pool = pool;
 
         container = cardContainer;
         zoomConfig = cardContainer.ZoomConfig;

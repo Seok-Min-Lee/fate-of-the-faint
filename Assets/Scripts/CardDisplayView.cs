@@ -18,11 +18,12 @@ public class CardDisplayView : MonoBehaviour, IPointerEnterHandler, IPointerExit
     {
         Button = GetComponent<Button>();
     }
-    public void Init(int id, float hoverScale, CardSO origin, bool isButton = false)
+    public void Init(int id, float hoverScale, CardSO origin, Transform parent, bool isButton = false)
     {
         Id = id;
+        Origin = origin;
         this.hoverScale = hoverScale;
-        this.Origin = origin;
+        transform.parent = parent;
 
         cost.text = origin.Cost.ToString();
         name.text = origin.Name;
@@ -41,6 +42,9 @@ public class CardDisplayView : MonoBehaviour, IPointerEnterHandler, IPointerExit
         }
 
         Button.enabled = isButton;
+
+        transform.localScale = Vector3.one;
+        IsIgnorePointer = false;
     }
     public void OnPointerEnter(PointerEventData eventData)
     {

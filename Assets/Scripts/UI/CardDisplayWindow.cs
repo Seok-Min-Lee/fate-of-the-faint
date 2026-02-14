@@ -19,10 +19,10 @@ public class CardDisplayWindow : UIWindow
             view.Init(
                 id: id++,
                 origin: origin,
-                hoverScale: 1.1f
+                hoverScale: 1.1f,
+                parent: parent
             );
 
-            view.transform.parent = parent;
             views.Add(view);
         }
     }

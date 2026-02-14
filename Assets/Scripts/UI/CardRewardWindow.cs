@@ -13,42 +13,34 @@ public class CardRewardWindow : UIWindow
     [SerializeField] private Transform icon;
 
     private List<CardDisplayView> views = new List<CardDisplayView>();
-    private List<CardSO> rewards = new List<CardSO>();
+    private List<CardSO> candidates = new List<CardSO>();
     private CardDisplayView selectedView;
-    private bool isSelected = true;
+    public bool IsSelected { get; private set; } = true;
 
-    private RewardButton declarator;
-    public void Bind(RewardButton declarator)
-    {
-        this.declarator = declarator;
-    }
     public void Init()
     {
-        if (!isSelected)
+        if (!IsSelected)
         {
             return;
         }
-        isSelected = false;
+        IsSelected = false;
 
         int count = PlayManager.Instance.CurrentData.RewardCardOptionCount;
-        rewards = Utils.PickRandom<CardSO>(PlayManager.Instance.Catalog.CardList, count);
-    }
-    private void OnEnable()
-    {
-        for (int i = 0; i < rewards.Count; i++)
+        candidates = Utils.PickRandom<CardSO>(PlayManager.Instance.Catalog.CardList, count);
+
+        for (int i = 0; i < candidates.Count; i++)
         {
             CardDisplayView view = pool.Pop();
 
             view.Init(
                 id: i,
                 hoverScale: 1.25f,
-                origin: rewards[i],
+                origin: candidates[i],
+                parent: rewardGroupLayout.transform,
                 isButton: true
             );
 
             view.Button.onClick.AddListener(() => OnCardSelected(view));
-
-            view.transform.parent = rewardGroupLayout.transform;
 
             views.Add(view);
         }
@@ -58,19 +50,6 @@ public class CardRewardWindow : UIWindow
         skipButton.SetActive(true);
         selectButton.gameObject.SetActive(true);
         selectButton.anchoredPosition = new Vector2(450, 150);
-    }
-    private void OnDisable()
-    {
-        for (int i = 0; i < views.Count; i++)
-        {
-            views[i].Button.onClick.RemoveAllListeners();
-            pool.Push(views[i]);
-        }
-
-        views.Clear();
-
-        selectedView = null;
-        declarator = null;
     }
     public void OnClickSelect()
     {
@@ -87,8 +66,10 @@ public class CardRewardWindow : UIWindow
         sequence.Join(selectedView.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InSine));
         sequence.AppendCallback(() =>
         {
-            selectedView.Button.onClick.RemoveAllListeners();
             pool.Push(selectedView);
+            selectedView.Button.onClick.RemoveAllListeners();
+
+            candidates.Remove(selectedView.Origin);
             views.Remove(selectedView);
             selectedView = null;
 
@@ -116,10 +97,16 @@ public class CardRewardWindow : UIWindow
     }
     public void OnClickNext()
     {
-        isSelected = true;
+        IsSelected = true;
 
-        declarator.PushToPool();
-        declarator = null;
+        for (int i = 0; i < views.Count; i++)
+        {
+            pool.Push(views[i]);
+            views[i].Button.onClick.RemoveAllListeners();
+        }
+        views.Clear();
+
+        selectedView = null;
 
         ChangeWindow?.Invoke(WindowType.Victory, WindowMode.Single);
     }

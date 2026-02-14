@@ -178,7 +178,6 @@ public class PlayerView : EntityView, ITargetable
                             text: e.EndAmount.ToString(),
                             parent: buffParent
                         );
-                        view.gameObject.SetActive(true);
 
                         buffViewDictionary.Add(view.Type, view);
                         break;

@@ -18,12 +18,11 @@ public class RewardButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     [SerializeField] private Color backgroundColorDefault;
     [SerializeField] private Color textColorDefault;
 
-    private VictoryWindow pool;
     private Action<RewardButton> onClick;
-    public void Init(VictoryWindow pool, Sprite sprite, string text, Action<RewardButton> onClick)
+    public void Init(Transform parent, Sprite sprite, string text, Action<RewardButton> onClick)
     {
-        this.pool = pool;
         this.onClick = onClick;
+        transform.parent = parent;
 
         icon.sprite = sprite;
         name.text = text;
@@ -48,10 +47,5 @@ public class RewardButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     public void OnClick()
     {
         onClick?.Invoke(this);
-    }
-    public void PushToPool()
-    {
-        gameObject.SetActive(false);
-        pool.Charge(this);
     }
 }
