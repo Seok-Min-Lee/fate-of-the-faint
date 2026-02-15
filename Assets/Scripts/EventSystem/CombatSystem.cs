@@ -150,6 +150,21 @@ public class CombatSystem : BaseSystem
             return;
         }
 
+        // Block Clear
+        if (player.Block > 0)
+        {
+            int beforeBlock = player.Block;
+            player.SetBlock(0);
+
+            EventBus.Publish<BlockChanged>(new BlockChanged(
+                context: CreateContext(e.Context),
+                target: player,
+                startAmount: beforeBlock,
+                endAmount: player.Block
+            ));
+        }
+
+        // Buff Update
         List<BuffType> types = new List<BuffType>(player.Buffs.Keys);
         foreach (BuffType type in types)
         {
@@ -164,29 +179,18 @@ public class CombatSystem : BaseSystem
             ));
         }
 
-        if (player.Block > 0)
+        // Enemy Intent Update
+        foreach (EnemyInstance enemy in enemies.Values.Where(enemy => !enemy.IsDead))
         {
-            int beforeBlock = player.Block;
-            player.SetBlock(0);
+            enemy.DecideNextAction(new System.Random());
 
-            EventBus.Publish<BlockChanged>(new BlockChanged(
+            EventBus.Publish<EnemyIntentDecided>(new EnemyIntentDecided(
                 context: CreateContext(e.Context),
-                target: player,
-                startAmount: beforeBlock,
-                endAmount: player.Block
+                source: enemy
             ));
         }
 
-        foreach (EnemyInstance ei in enemies.Values.Where(enemy => !enemy.IsDead))
-        {
-            ei.DecideNextAction(new System.Random());
-        }
-
         AnimationSystem.PlayQueue(e.Context);
-        actionRequestQueue.Enqueue(() =>
-        {
-            EventBus.Publish<EnemyIntentDecided>(new EnemyIntentDecided(CreateContext(e.Context)));
-        });
     }
     public void OnEnemyTurnStarted(EnemyTurnStarted e)
     {
@@ -197,6 +201,21 @@ public class CombatSystem : BaseSystem
 
         foreach (EnemyInstance enemy in enemies.Values.Where(enemy => !enemy.IsDead))
         {
+            // Block Clear
+            if (enemy.Block > 0)
+            {
+                int beforeBlock = enemy.Block;
+                enemy.SetBlock(0);
+
+                EventBus.Publish<BlockChanged>(new BlockChanged(
+                    context: CreateContext(e.Context),
+                    target: enemy,
+                    startAmount: beforeBlock,
+                    endAmount: enemy.Block
+                ));
+            }
+
+            // Buff Update
             List<BuffType> types = new List<BuffType>(enemy.Buffs.Keys);
             foreach (BuffType type in types)
             {

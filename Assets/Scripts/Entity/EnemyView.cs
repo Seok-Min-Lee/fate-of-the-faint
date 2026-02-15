@@ -4,11 +4,9 @@ using TMPro;
 using UnityEngine;
 public class EnemyView : EntityView, ITargetable
 {
+    [SerializeField] private IntentView intentView;
     public Transform AimPoint => aimPoint;
     public EntityInstance Instance => instance;
-
-    [SerializeField] private SpriteRenderer intentRenderer;
-    [SerializeField] private TextMeshPro intentText;
 
     private EnemyInstance instance;
     private CombatManager combatManager;
@@ -79,9 +77,9 @@ public class EnemyView : EntityView, ITargetable
         {
             return;
         }
-        intentRenderer.gameObject.SetActive(false);
-        intentText.gameObject.SetActive(false);
+
         animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_ATTACK, 1f));
+        animationSystem.Enqueue(() => HideIntentCor());
     }
     public void OnBlockDeclared(BlockDeclared e)
     {
@@ -100,11 +98,15 @@ public class EnemyView : EntityView, ITargetable
             return;
         }
 
-        intentRenderer.sprite = instance.NextAction.IntentIcon;
-        intentText.text = instance.NextAction.Effects[0].value.ToString();
+        if (e.Source.Id != instance.Id)
+        {
+            return;
+        }
 
-        intentRenderer.gameObject.SetActive(true);
-        intentText.gameObject.SetActive(true);
+        animationSystem.Enqueue(() => ShowIntentCor(
+            sprite: instance.NextAction.IntentIcon,
+            text: instance.NextAction.Effects[0].value.ToString()
+        ));
     }
     public void OnHpChanged(HpChanged e)
     {
@@ -214,5 +216,13 @@ public class EnemyView : EntityView, ITargetable
     private IEnumerator ChagneBlockCor()
     {
         yield return blockView.Change(instance.Block.ToString()).WaitForCompletion();
+    }
+    private IEnumerator ShowIntentCor(Sprite sprite, string text)
+    {
+        yield return intentView.Show(sprite, text).WaitForCompletion();
+    }
+    private IEnumerator HideIntentCor()
+    {
+        yield return intentView.Hide().WaitForCompletion();
     }
 }

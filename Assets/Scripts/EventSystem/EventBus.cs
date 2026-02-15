@@ -428,10 +428,12 @@ public struct AnimationEnded : ICombatEvent
 }
 public struct EnemyIntentDecided : ICombatEvent
 {
-    public EnemyIntentDecided(EventContext context)
+    public EnemyIntentDecided(EventContext context, EnemyInstance source)
     {
         Context = context;
+        Source = source;
     }
     public EventContext Context { get; private set; }
+    public EnemyInstance Source { get; private set; }
     public EventMeta Meta => EventMetas.EnemyIntentDecided;
 }
