@@ -12,12 +12,20 @@ public class EnemyView : EntityView, ITargetable
     private CombatManager combatManager;
     private AnimationMonoSystem animationSystem;
 
-    public void Init(EnemyInstance instance, CombatManager combatManager, AnimationMonoSystem animationSystem, Vector3 position, EntityBuffViewPool buffViewPool)
+    public void Init(
+        EnemyInstance instance,
+        CombatManager combatManager, 
+        AnimationMonoSystem animationSystem, 
+        Vector3 position, 
+        EntityBuffViewPool buffViewPool,
+        DamageTextPool damageTextPool
+    )
     {
         this.instance = instance;
         this.combatManager = combatManager;
         this.animationSystem = animationSystem;
         base.buffViewPool = buffViewPool;
+        base.damageTextPool = damageTextPool;
 
         transform.position = position;
 
@@ -127,9 +135,19 @@ public class EnemyView : EntityView, ITargetable
             return;
         }
 
-        if (e.EndAmount > 0 && e.EndAmount < e.StartAmount)
+        if (e.EndAmount < e.StartAmount)
         {
-            animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_HIT, 1f));
+            if (e.EndAmount > 0)
+            {
+                animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_HIT, 1f));
+            }
+
+            DamageText damageText = damageTextPool.Pop();
+            damageText.Spawn(
+                text: (e.StartAmount - e.EndAmount).ToString(),
+                parent: statusCG.transform,
+                pool: damageTextPool
+            );
         }
 
         animationSystem.Enqueue(() => ChangeHpCor(instance.CurrentHp, instance.MaxHp));

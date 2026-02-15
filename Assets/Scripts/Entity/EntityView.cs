@@ -17,6 +17,7 @@ public class EntityView : MonoBehaviour
 
     protected Dictionary<BuffType, EntityBuffView> buffViewDictionary = new Dictionary<BuffType, EntityBuffView>();
     protected EntityBuffViewPool buffViewPool;
+    protected DamageTextPool damageTextPool;
 
     protected IEnumerator ShowStatusCor()
     {

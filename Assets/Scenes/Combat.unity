@@ -4333,6 +4333,7 @@ GameObject:
   - component: {fileID: 606307826}
   - component: {fileID: 606307827}
   - component: {fileID: 606307828}
+  - component: {fileID: 606307829}
   m_Layer: 0
   m_Name: Combat Ctrl
   m_TagString: Untagged
@@ -4373,6 +4374,7 @@ MonoBehaviour:
   animationSystem: {fileID: 606307827}
   playerPrefab: {fileID: 3590264590922241840, guid: 341ee4c7cdddb6146b15246fa7025fa8, type: 3}
   entityBuffPool: {fileID: 606307828}
+  damageTextPool: {fileID: 606307829}
   normalPlans:
   - details:
     - origin: {fileID: 11400000, guid: ae1d8f43b40e1174d87a29fd36b53e6f, type: 2}
@@ -4442,6 +4444,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityBuffViewPool
   prefab: {fileID: 3222098425943334830, guid: 5d32c15df63bde84daa42a7ebdf67f44, type: 3}
+--- !u!114 &606307829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606307817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb154753f07c39408fa1577c581b386, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageTextPool
+  prefab: {fileID: 3353094300628174136, guid: f8d524c0392ca65489d1e4438c566913, type: 3}
 --- !u!1 &610720184
 GameObject:
   m_ObjectHideFlags: 0
