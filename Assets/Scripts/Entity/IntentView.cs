@@ -23,6 +23,7 @@ public class IntentView : MonoBehaviour
             this.text.text = text;
 
             canvasGroup.alpha = 0f;
+            gameObject.SetActive(true);
         });
         sequence.Append(canvasGroup.DOFade(1f, 0.5f));
 
@@ -33,6 +34,7 @@ public class IntentView : MonoBehaviour
         Sequence sequence = DOTween.Sequence();
 
         sequence.Append(canvasGroup.DOFade(0f, 0.5f));
+        sequence.AppendCallback(() => { gameObject.SetActive(false); });
 
         return sequence;
     }

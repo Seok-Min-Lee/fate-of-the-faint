@@ -32,6 +32,9 @@ public class EnemyView : EntityView, ITargetable
         combatManager.CombatSystem.EventBus.Subscribe<BuffChanged>(OnBuffChanged);
 
         statusCG.alpha = 0f;
+        hpView.Init(instance.CurrentHp, instance.MaxHp);
+        blockView.Init(instance.Block);
+        intentView.gameObject.SetActive(false);
     }
     private void OnDisable()
     {
@@ -47,9 +50,7 @@ public class EnemyView : EntityView, ITargetable
     }
     public void OnCombatStarted(CombatStarted e)
     {
-        //hpText.text = instance.CurrentHp.ToString();
         animationSystem.Enqueue(() => ShowStatusCor());
-        animationSystem.Enqueue(() => ChangeHpCor());
     }
     public void OnCombatEnded(CombatEnded e)
     {
@@ -73,6 +74,7 @@ public class EnemyView : EntityView, ITargetable
         }
 
         animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_DIE, 1f));
+        animationSystem.Enqueue(() => HideStatusCor());
     }
     public void OnAttackDeclared(AttackDeclared e)
     {
@@ -130,8 +132,7 @@ public class EnemyView : EntityView, ITargetable
             animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_HIT, 1f));
         }
 
-        //hpText.text = e.EndAmount.ToString();
-        animationSystem.Enqueue(() => ChangeHpCor());
+        animationSystem.Enqueue(() => ChangeHpCor(instance.CurrentHp, instance.MaxHp));
     }
     public void OnBlockChanged(BlockChanged e)
     {
@@ -147,11 +148,11 @@ public class EnemyView : EntityView, ITargetable
 
         if (e.EndAmount > e.StartAmount)
         {
-            animationSystem.Enqueue(() => ShowBlockCor());
+            animationSystem.Enqueue(() => ShowBlockCor(instance.Block));
         }
         else
         {
-            animationSystem.Enqueue(() => ChagneBlockCor());
+            animationSystem.Enqueue(() => ChangeBlockCor(instance.Block));
 
             if (instance.Block <= 0)
             {
@@ -206,23 +207,6 @@ public class EnemyView : EntityView, ITargetable
             }
         }
     }
-    private IEnumerator PlayAnimatorTriggerCor(string key, float duration)
-    {
-        animator.SetTrigger(key);
-        yield return new WaitForSeconds(duration);
-    }
-    private IEnumerator ShowBlockCor()
-    {
-        yield return blockView.Show(instance.Block.ToString()).WaitForCompletion();
-    }
-    private IEnumerator HideBlockCor()
-    {
-        yield return blockView.Hide().WaitForCompletion();
-    }
-    private IEnumerator ChagneBlockCor()
-    {
-        yield return blockView.Change(instance.Block.ToString()).WaitForCompletion();
-    }
     private IEnumerator ShowIntentCor(Sprite sprite, string text)
     {
         yield return intentView.Show(sprite, text).WaitForCompletion();
@@ -230,9 +214,5 @@ public class EnemyView : EntityView, ITargetable
     private IEnumerator HideIntentCor()
     {
         yield return intentView.Hide().WaitForCompletion();
-    }
-    private IEnumerator ChangeHpCor()
-    {
-        yield return hpView.Change(instance.CurrentHp, instance.MaxHp).WaitForCompletion();
     }
 }

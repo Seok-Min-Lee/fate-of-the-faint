@@ -8,11 +8,20 @@ public class EntityBlockView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI text;
 
     private Color textColor;
-    public void Start()
+    public void Init(int value)
     {
         textColor = text.color;
+
+        if (value > 0)
+        {
+            text.text = value.ToString();
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
-    public Sequence Show(string value)
+    public Sequence Show(int value)
     {
         Sequence sequence = DOTween.Sequence();
 
@@ -20,7 +29,7 @@ public class EntityBlockView : MonoBehaviour
         {
             borderCG.alpha = 0f;
 
-            text.text = value;
+            text.text = value.ToString();
             text.color = Color.clear;
             text.transform.localScale = Vector3.one * 1.25f;
 
@@ -45,13 +54,13 @@ public class EntityBlockView : MonoBehaviour
 
         return sequence;
     }
-    public Sequence Change(string value)
+    public Sequence Change(int value)
     {
         Sequence sequence = DOTween.Sequence();
 
         sequence.AppendCallback(() => 
         {
-            text.text = value;
+            text.text = value.ToString();
             text.transform.localScale = Vector3.one * 1.25f;
         });
         sequence.Append(text.transform.DOScale(Vector3.one, 0.25f).SetEase(Ease.OutBack));

@@ -14,7 +14,16 @@ public class EntityHpView : MonoBehaviour
         rectTransform = GetComponent<RectTransform>();
         textColor = text.color;
     }
+    public void Init(int currentHp, int maxHp)
+    {
+        text.text = currentHp + "/" + maxHp;
+        text.transform.localScale = Vector3.one;
 
+        guage.sizeDelta = new Vector2(
+            rectTransform.sizeDelta.x * currentHp / maxHp,
+            rectTransform.sizeDelta.y
+        );
+    }
     public Sequence Change(int currentHp, int maxHp)
     {
         Sequence sequence = DOTween.Sequence();

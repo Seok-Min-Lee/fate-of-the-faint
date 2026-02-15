@@ -22,4 +22,34 @@ public class EntityView : MonoBehaviour
     {
         yield return statusCG.DOFade(1f, 1f).WaitForCompletion();
     }
+    protected IEnumerator HideStatusCor()
+    {
+        yield return statusCG.DOFade(0f, 1f).WaitForCompletion();
+    }
+    protected IEnumerator PlayAnimatorTriggerCor(string key, float duration)
+    {
+        animator.SetTrigger(key);
+        yield return new WaitForSeconds(duration);
+    }
+    protected IEnumerator PlayAnimatorBoolCor(string key, bool value)
+    {
+        animator.SetBool(AnimationKeys.PLAYER_ENCOUNTER, value);
+        yield return null;
+    }
+    protected IEnumerator ShowBlockCor(int value)
+    {
+        yield return blockView.Show(value).WaitForCompletion();
+    }
+    protected IEnumerator HideBlockCor()
+    {
+        yield return blockView.Hide().WaitForCompletion();
+    }
+    protected IEnumerator ChangeBlockCor(int value)
+    {
+        yield return blockView.Change(value).WaitForCompletion();
+    }
+    protected IEnumerator ChangeHpCor(int currentHp, int maxHp)
+    {
+        yield return hpView.Change(currentHp, maxHp).WaitForCompletion();
+    }
 }

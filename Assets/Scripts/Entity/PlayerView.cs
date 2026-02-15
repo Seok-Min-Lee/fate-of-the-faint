@@ -30,6 +30,8 @@ public class PlayerView : EntityView, ITargetable
 
         animator.SetBool(AnimationKeys.PLAYER_ENCOUNTER, true);
         statusCG.alpha = 0f;
+        hpView.Init(instance.CurrentHp, instance.MaxHp);
+        blockView.Init(instance.Block);
     }
     private void OnDisable()
     {
@@ -51,7 +53,6 @@ public class PlayerView : EntityView, ITargetable
 
         animationSystem.Enqueue(() => PlayAnimatorBoolCor(AnimationKeys.PLAYER_ENCOUNTER, false));
         animationSystem.Enqueue(() => ShowStatusCor());
-        animationSystem.Enqueue(() => ChangeHpCor());
     }
     public void OnCombatEnded(CombatEnded e)
     {
@@ -75,6 +76,7 @@ public class PlayerView : EntityView, ITargetable
         }
 
         animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_DIE, 1f));
+        animationSystem.Enqueue(() => HideStatusCor());
     }
     public void OnAttackDeclared(AttackDeclared e)
     {
@@ -113,8 +115,7 @@ public class PlayerView : EntityView, ITargetable
             animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_HIT, 1f));
         }
 
-        //hpText.text = e.EndAmount.ToString();
-        animationSystem.Enqueue(() => ChangeHpCor());
+        animationSystem.Enqueue(() => ChangeHpCor(instance.CurrentHp, instance.MaxHp));
     }
     public void OnBlockChanged(BlockChanged e)
     {
@@ -130,11 +131,11 @@ public class PlayerView : EntityView, ITargetable
 
         if (e.EndAmount > e.StartAmount)
         {
-            animationSystem.Enqueue(() => ShowBlockCor());
+            animationSystem.Enqueue(() => ShowBlockCor(instance.Block));
         }
         else
         {
-            animationSystem.Enqueue(() => ChagneBlockCor());
+            animationSystem.Enqueue(() => ChangeBlockCor(instance.Block));
 
             if (instance.Block <= 0)
             {
@@ -188,31 +189,5 @@ public class PlayerView : EntityView, ITargetable
                 }
             }
         }
-    }
-    private IEnumerator PlayAnimatorTriggerCor(string key, float duration)
-    {
-        animator.SetTrigger(key);
-        yield return new WaitForSeconds(duration);
-    }
-    private IEnumerator PlayAnimatorBoolCor(string key, bool value)
-    {
-        animator.SetBool(AnimationKeys.PLAYER_ENCOUNTER, value);
-        yield return null;
-    }
-    private IEnumerator ShowBlockCor()
-    {
-        yield return blockView.Show(instance.Block.ToString()).WaitForCompletion();
-    }
-    private IEnumerator HideBlockCor()
-    {
-        yield return blockView.Hide().WaitForCompletion();
-    }
-    private IEnumerator ChagneBlockCor()
-    {
-        yield return blockView.Change(instance.Block.ToString()).WaitForCompletion();
-    }
-    private IEnumerator ChangeHpCor()
-    {
-        yield return hpView.Change(instance.CurrentHp, instance.MaxHp).WaitForCompletion();
     }
 }
