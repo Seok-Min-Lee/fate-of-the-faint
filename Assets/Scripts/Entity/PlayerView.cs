@@ -28,8 +28,8 @@ public class PlayerView : EntityView, ITargetable
         combatManager.CombatSystem.EventBus.Subscribe<BlockChanged>(OnBlockChanged);
         combatManager.CombatSystem.EventBus.Subscribe<BuffChanged>(OnBuffChanged);
 
-        hpText.text = instance.CurrentHp.ToString();
         animator.SetBool(AnimationKeys.PLAYER_ENCOUNTER, true);
+        statusCG.alpha = 0f;
     }
     private void OnDisable()
     {
@@ -50,6 +50,8 @@ public class PlayerView : EntityView, ITargetable
         }
 
         animationSystem.Enqueue(() => PlayAnimatorBoolCor(AnimationKeys.PLAYER_ENCOUNTER, false));
+        animationSystem.Enqueue(() => ShowStatusCor());
+        animationSystem.Enqueue(() => ChangeHpCor());
     }
     public void OnCombatEnded(CombatEnded e)
     {
@@ -111,7 +113,8 @@ public class PlayerView : EntityView, ITargetable
             animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_HIT, 1f));
         }
 
-        hpText.text = e.EndAmount.ToString();
+        //hpText.text = e.EndAmount.ToString();
+        animationSystem.Enqueue(() => ChangeHpCor());
     }
     public void OnBlockChanged(BlockChanged e)
     {
@@ -207,5 +210,9 @@ public class PlayerView : EntityView, ITargetable
     private IEnumerator ChagneBlockCor()
     {
         yield return blockView.Change(instance.Block.ToString()).WaitForCompletion();
+    }
+    private IEnumerator ChangeHpCor()
+    {
+        yield return hpView.Change(instance.CurrentHp, instance.MaxHp).WaitForCompletion();
     }
 }

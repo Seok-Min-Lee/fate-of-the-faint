@@ -30,6 +30,8 @@ public class EnemyView : EntityView, ITargetable
         combatManager.CombatSystem.EventBus.Subscribe<HpChanged>(OnHpChanged);
         combatManager.CombatSystem.EventBus.Subscribe<BlockChanged>(OnBlockChanged);
         combatManager.CombatSystem.EventBus.Subscribe<BuffChanged>(OnBuffChanged);
+
+        statusCG.alpha = 0f;
     }
     private void OnDisable()
     {
@@ -45,7 +47,9 @@ public class EnemyView : EntityView, ITargetable
     }
     public void OnCombatStarted(CombatStarted e)
     {
-        hpText.text = instance.CurrentHp.ToString();
+        //hpText.text = instance.CurrentHp.ToString();
+        animationSystem.Enqueue(() => ShowStatusCor());
+        animationSystem.Enqueue(() => ChangeHpCor());
     }
     public void OnCombatEnded(CombatEnded e)
     {
@@ -90,6 +94,7 @@ public class EnemyView : EntityView, ITargetable
         }
 
         animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_SKILL, 1f));
+        animationSystem.Enqueue(() => HideIntentCor());
     }
     public void OnEnemyIntentDecided(EnemyIntentDecided e)
     {
@@ -125,7 +130,8 @@ public class EnemyView : EntityView, ITargetable
             animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_HIT, 1f));
         }
 
-        hpText.text = e.EndAmount.ToString();
+        //hpText.text = e.EndAmount.ToString();
+        animationSystem.Enqueue(() => ChangeHpCor());
     }
     public void OnBlockChanged(BlockChanged e)
     {
@@ -224,5 +230,9 @@ public class EnemyView : EntityView, ITargetable
     private IEnumerator HideIntentCor()
     {
         yield return intentView.Hide().WaitForCompletion();
+    }
+    private IEnumerator ChangeHpCor()
+    {
+        yield return hpView.Change(instance.CurrentHp, instance.MaxHp).WaitForCompletion();
     }
 }

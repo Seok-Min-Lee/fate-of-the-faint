@@ -1274,9 +1274,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyView
   aimPoint: {fileID: 8474460030037053104}
-  hpText: {fileID: 7625526203612111257}
   animator: {fileID: 2197749908163672323}
+  statusCG: {fileID: 1810937888474627467}
   blockView: {fileID: 7745026650887261155}
+  hpView: {fileID: 4712469801292598292}
   buffPresets:
   - Type: 0
     Symbol: {fileID: 508184719, guid: 7a6bcef74001f16408a0cab611484529, type: 3}
@@ -1894,11 +1895,27 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d70bf5cdf8bc24446a8d51bca059c6b9, type: 3}
+--- !u!225 &1810937888474627467 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 2588349760291781806, guid: d70bf5cdf8bc24446a8d51bca059c6b9, type: 3}
+  m_PrefabInstance: {fileID: 4236220452013064485}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &3756856096569883414 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1074421569485617715, guid: d70bf5cdf8bc24446a8d51bca059c6b9, type: 3}
   m_PrefabInstance: {fileID: 4236220452013064485}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4712469801292598292 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8911526760277265713, guid: d70bf5cdf8bc24446a8d51bca059c6b9, type: 3}
+  m_PrefabInstance: {fileID: 4236220452013064485}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 387661b4342941947a095da0e9585fed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EntityHpView
 --- !u!114 &4783767413551874416 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8694567500729450581, guid: d70bf5cdf8bc24446a8d51bca059c6b9, type: 3}
@@ -1915,17 +1932,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6692614649534539406, guid: d70bf5cdf8bc24446a8d51bca059c6b9, type: 3}
   m_PrefabInstance: {fileID: 4236220452013064485}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7625526203612111257 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5987917925267300540, guid: d70bf5cdf8bc24446a8d51bca059c6b9, type: 3}
-  m_PrefabInstance: {fileID: 4236220452013064485}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!114 &7745026650887261155 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5886706892334058182, guid: d70bf5cdf8bc24446a8d51bca059c6b9, type: 3}
