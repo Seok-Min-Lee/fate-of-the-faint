@@ -35,7 +35,8 @@ public class DamageSystem : BaseSystem
             context: eventContext,
             source: damage.Source,
             target: damage.Target,
-            amount: Mathf.Max(0, sum)
+            amount: Mathf.Max(0, sum),
+            repeat: e.Repeat
         ));
     }
 }

@@ -224,17 +224,19 @@ public struct CardPlayDeclared : ICombatEvent
 }
 public struct AttackDeclared : ICombatEvent
 {
-    public AttackDeclared(EventContext context, EntityInstance source, EntityInstance target, int amount)
+    public AttackDeclared(EventContext context, EntityInstance source, EntityInstance target, int amount, int repeat)
     {
         Context = context;
         Source = source;
         Target = target;
         Amount = amount;
+        Repeat = repeat;
     }
     public EventContext Context { get; private set; }
     public EntityInstance Source { get; private set; }
     public EntityInstance Target { get; private set; }
     public int Amount { get; private set; }
+    public int Repeat { get; private set; }
     public EventMeta Meta => EventMetas.AttackDeclared;
 }
 public struct BlockDeclared : ICombatEvent
@@ -309,17 +311,19 @@ public struct DamageRequested : ICombatEvent
 }
 public struct DamageResolved : ICombatEvent
 {
-    public DamageResolved(EventContext context, EntityInstance source, EntityInstance target, int amount)
+    public DamageResolved(EventContext context, EntityInstance source, EntityInstance target, int amount, int repeat)
     {
         Context = context;
         Source = source;
         Target = target;
         Amount = amount;
+        Repeat = repeat;
     }
     public EventContext Context { get; private set; }
     public EntityInstance Source { get; private set; }
     public EntityInstance Target { get; private set; }
     public int Amount { get; private set; }
+    public int Repeat { get; private set; }
     public EventMeta Meta => EventMetas.DamageResolved;
 }
 public struct BuffRequested : ICombatEvent

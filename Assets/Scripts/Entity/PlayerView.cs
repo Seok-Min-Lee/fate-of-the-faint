@@ -150,7 +150,7 @@ public class PlayerView : EntityView, ITargetable
             {
                 animationSystem.Register(
                     priority: AnimationPriority.Target, 
-                    command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_HIT, 1f)
+                    command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_HIT)
                 );
             }
         }
@@ -176,14 +176,14 @@ public class PlayerView : EntityView, ITargetable
         {
             animationSystem.Register(
                 priority: AnimationPriority.Actor,
-                command: () => ShowBlockCor(instance.Block)
+                command: () => ShowBlockCor(e.EndAmount)
             );
         }
         else
         {
             animationSystem.Register(
                 priority: AnimationPriority.Target,
-                command: () => ChangeBlockCor(instance.Block)
+                command: () => ChangeBlockCor(e.EndAmount)
             );
 
             if (instance.Block <= 0)

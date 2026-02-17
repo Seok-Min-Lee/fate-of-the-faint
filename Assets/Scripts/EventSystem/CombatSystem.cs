@@ -276,35 +276,33 @@ public class CombatSystem : BaseSystem
 
                 for (int i = 0; i < targets.Count; i++)
                 {
-                    for (int j = 0; j < effect.repeat; j++)
+                    switch (effect.effectType)
                     {
-                        switch (effect.effectType)
-                        {
-                            case EffectType.Attack:
-                                EventBus.Publish<AttackDeclared>(new AttackDeclared(
-                                    context: eventContext,
-                                    source: enemy,
-                                    target: targets[i],
-                                    amount: effect.value
-                                ));
-                                break;
-                            case EffectType.Block:
-                                EventBus.Publish<BlockDeclared>(new BlockDeclared(
-                                    context: eventContext,
-                                    source: enemy,
-                                    target: targets[i],
-                                    amount: effect.value
-                                ));
-                                break;
-                            case EffectType.Strengthen:
-                                break;
-                            case EffectType.Weaken:
-                                break;
-                            case EffectType.Vulnerable:
-                                break;
-                            default:
-                                return;
-                        }
+                        case EffectType.Attack:
+                            EventBus.Publish<AttackDeclared>(new AttackDeclared(
+                                context: eventContext,
+                                source: enemy,
+                                target: targets[i],
+                                amount: effect.value,
+                                repeat: effect.repeat
+                            ));
+                            break;
+                        case EffectType.Block:
+                            EventBus.Publish<BlockDeclared>(new BlockDeclared(
+                                context: eventContext,
+                                source: enemy,
+                                target: targets[i],
+                                amount: effect.value
+                            ));
+                            break;
+                        case EffectType.Strengthen:
+                            break;
+                        case EffectType.Weaken:
+                            break;
+                        case EffectType.Vulnerable:
+                            break;
+                        default:
+                            return;
                     }
                 }
             }
@@ -432,42 +430,50 @@ public class CombatSystem : BaseSystem
             return;
         }
 
-        int damage = e.Amount;
-
-        if (instance.Block > 0)
+        for (int i = 0; i < e.Repeat; i++)
         {
-            damage -= instance.Block;
+            if (instance.IsDead)
+            {
+                break;
+            }
 
-            int beforeBlock = instance.Block;
-            instance.SetBlock(Mathf.Max(0, instance.Block - e.Amount));
+            int damage = e.Amount;
 
-            EventBus.Publish<BlockChanged>(new BlockChanged(
-                context: CreateContext(e.Context),
-                target: instance,
-                startAmount: beforeBlock,
-                endAmount: instance.Block
-            ));
-        }
+            if (instance.Block > 0)
+            {
+                damage -= instance.Block;
 
-        if (damage > 0)
-        {
-            int beforeHp = instance.CurrentHp;
-            instance.SetCurrentHp(Mathf.Max(0, instance.CurrentHp - damage));
+                int beforeBlock = instance.Block;
+                instance.SetBlock(Mathf.Max(0, instance.Block - e.Amount));
 
-            EventBus.Publish<HpChanged>(new HpChanged(
-                context: CreateContext(e.Context),
-                target: instance,
-                startAmount: beforeHp,
-                endAmount: instance.CurrentHp
-            ));
-        }
+                EventBus.Publish<BlockChanged>(new BlockChanged(
+                    context: CreateContext(e.Context),
+                    target: instance,
+                    startAmount: beforeBlock,
+                    endAmount: instance.Block
+                ));
+            }
 
-        if (instance.CurrentHp <= 0)
-        {
-            EventBus.Publish<DeathDeclared>(new DeathDeclared(
-                context: CreateContext(e.Context),
-                target: instance
-            ));
+            if (damage > 0)
+            {
+                int beforeHp = instance.CurrentHp;
+                instance.SetCurrentHp(Mathf.Max(0, instance.CurrentHp - damage));
+
+                EventBus.Publish<HpChanged>(new HpChanged(
+                    context: CreateContext(e.Context),
+                    target: instance,
+                    startAmount: beforeHp,
+                    endAmount: instance.CurrentHp
+                ));
+            }
+
+            if (instance.CurrentHp <= 0)
+            {
+                EventBus.Publish<DeathDeclared>(new DeathDeclared(
+                    context: CreateContext(e.Context),
+                    target: instance
+                ));
+            }
         }
     }
 

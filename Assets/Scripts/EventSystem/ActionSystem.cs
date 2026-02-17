@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using UnityEngine;
 
 public class ActionSystem : BaseSystem
 {
@@ -17,7 +19,13 @@ public class ActionSystem : BaseSystem
 
         eventBus.Publish<ActionEnded>(new ActionEnded(CreateContext(action)));
 
+        combatSystem.AnimationSystem.Register(AnimationPriority.Entity, () => DelayCor(1f));
         combatSystem.AnimationSystem.PlayQueue(CreateContext(action));
+
+        IEnumerator DelayCor(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+        }
     }
     private EventContext CreateContext(ActionContext action)
     {
