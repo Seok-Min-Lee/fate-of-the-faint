@@ -59,8 +59,14 @@ public class PlayerView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Enqueue(() => PlayAnimatorBoolCor(AnimationKeys.PLAYER_ENCOUNTER, false));
-        animationSystem.Enqueue(() => ShowStatusCor());
+        animationSystem.Register(
+            priority: AnimationPriority.UIWindow, 
+            command: () => PlayAnimatorBoolCor(AnimationKeys.PLAYER_ENCOUNTER, false)
+        );
+        animationSystem.Register(
+            priority: AnimationPriority.Entity, 
+            command: () => ShowStatusCor()
+        );
     }
     public void OnCombatEnded(CombatEnded e)
     {
@@ -69,7 +75,10 @@ public class PlayerView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_VICTORY, 1f));
+        animationSystem.Register(
+            priority: AnimationPriority.Entity, 
+            command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_VICTORY, 1f)
+        );
     }
     public void OnDeathDeclared(DeathDeclared e)
     {
@@ -83,8 +92,14 @@ public class PlayerView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_DIE, 1f));
-        animationSystem.Enqueue(() => HideStatusCor());
+        animationSystem.Register(
+            priority: AnimationPriority.Target,
+            command: () => HideStatusCor()
+        );
+        animationSystem.Register(
+            priority: AnimationPriority.Target, 
+            command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_DIE, 1f)
+        );
     }
     public void OnAttackDeclared(AttackDeclared e)
     {
@@ -94,7 +109,10 @@ public class PlayerView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_ATTACK, 1f));
+        animationSystem.Register(
+            priority: AnimationPriority.Actor,
+            command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_ATTACK)
+        );
     }
     public void OnBlockDeclared(BlockDeclared e)
     {
@@ -104,7 +122,10 @@ public class PlayerView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_SKILL, 1f));
+        animationSystem.Register(
+            priority: AnimationPriority.Actor, 
+            command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_SKILL, 1f)
+        );
     }
     public void OnHpChanged(HpChanged e)
     {
@@ -120,20 +141,24 @@ public class PlayerView : EntityView, ITargetable
 
         if (e.EndAmount < e.StartAmount)
         {
+            animationSystem.Register(
+                priority: AnimationPriority.Target,
+                command: () => ShowDamageTextCor(e.StartAmount - e.EndAmount)
+            );
+
             if (e.EndAmount > 0)
             {
-                animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_HIT, 1f));
+                animationSystem.Register(
+                    priority: AnimationPriority.Target, 
+                    command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_HIT, 1f)
+                );
             }
-
-            DamageText damageText = damageTextPool.Pop();
-            damageText.Spawn(
-                text: (e.StartAmount - e.EndAmount).ToString(),
-                parent: statusCG.transform,
-                pool: damageTextPool
-            );
         }
 
-        animationSystem.Enqueue(() => ChangeHpCor(instance.CurrentHp, instance.MaxHp));
+        animationSystem.Register(
+            priority: AnimationPriority.Entity,
+            command: () => ChangeHpCor(instance.CurrentHp, instance.MaxHp)
+        );
     }
     public void OnBlockChanged(BlockChanged e)
     {
@@ -149,15 +174,24 @@ public class PlayerView : EntityView, ITargetable
 
         if (e.EndAmount > e.StartAmount)
         {
-            animationSystem.Enqueue(() => ShowBlockCor(instance.Block));
+            animationSystem.Register(
+                priority: AnimationPriority.Actor,
+                command: () => ShowBlockCor(instance.Block)
+            );
         }
         else
         {
-            animationSystem.Enqueue(() => ChangeBlockCor(instance.Block));
+            animationSystem.Register(
+                priority: AnimationPriority.Target,
+                command: () => ChangeBlockCor(instance.Block)
+            );
 
             if (instance.Block <= 0)
             {
-                animationSystem.Enqueue(() => HideBlockCor());
+                animationSystem.Register(
+                    priority: AnimationPriority.Target,
+                    command: () => HideBlockCor()
+                );
             }
         }
     }

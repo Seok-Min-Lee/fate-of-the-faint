@@ -90,7 +90,10 @@ public class UIMonoSystem : BaseMonoSystem
         }
         CombatWindow combatWindow = window as CombatWindow;
 
-        animationSystem.Enqueue(() => CombatStartedAnimationCor(combatWindow));
+        animationSystem.Register(
+            priority: AnimationPriority.UIWindow,
+            command: () => CombatStartedAnimationCor(combatWindow)
+        );
     }
     public void OnCombatEnded(CombatEnded e)
     {
@@ -100,13 +103,19 @@ public class UIMonoSystem : BaseMonoSystem
             windowDictionary.TryGetValue(WindowType.Victory, out window))
         {
             VictoryWindow victoryWindow = window as VictoryWindow;
-            animationSystem.Enqueue(() => CombatEndedVictoryAnimationCor(victoryWindow));
+            animationSystem.Register(
+                priority: AnimationPriority.UIWindow, 
+                command: () => CombatEndedVictoryAnimationCor(victoryWindow)
+            );
         }
         else if (e.Context.Combat.state == CombatState.Defeat &&
                  windowDictionary.TryGetValue(WindowType.Defeat, out window))
         {
             DefeatWindow defeatWindow = window as DefeatWindow;
-            animationSystem.Enqueue(() => CombatEndedDefeatWindowAnimationCor(defeatWindow));
+            animationSystem.Register(
+                priority: AnimationPriority.UIWindow,
+                command: () => CombatEndedDefeatWindowAnimationCor(defeatWindow)
+            );
         }
         else
         {
@@ -126,7 +135,10 @@ public class UIMonoSystem : BaseMonoSystem
         }
         CombatWindow combatWindow = window as CombatWindow;
 
-        animationSystem.Enqueue(() => PlayerTurnStartedMotionCor(combatWindow));
+        animationSystem.Register(
+            priority: AnimationPriority.UIWindow,
+            command: () => PlayerTurnStartedMotionCor(combatWindow)
+        );
     }
     public void OnEnemyTurnStarted(EnemyTurnStarted e)
     {
@@ -141,7 +153,10 @@ public class UIMonoSystem : BaseMonoSystem
         }
         CombatWindow combatWindow = window as CombatWindow;
 
-        animationSystem.Enqueue(() => EnemyTurnStartedAnimationCor(combatWindow));
+        animationSystem.Register(
+            priority: AnimationPriority.UIWindow,
+            command: () => EnemyTurnStartedAnimationCor(combatWindow)
+        );
     }
     public void OnPlayerTurnEnded(PlayerTurnEnded e)
     {

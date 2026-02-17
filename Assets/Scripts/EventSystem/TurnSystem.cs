@@ -5,7 +5,7 @@ public class TurnSystem : BaseSystem
 {
     private readonly EventBus eventBus;
     public TurnSystem(EventBus eventBus)
-    {
+    {   
         this.eventBus = eventBus;
     }
 
@@ -13,9 +13,11 @@ public class TurnSystem : BaseSystem
     private int turnId = 0;
     private List<EnemyInstance> enemies;
     private Queue<Action> eventQueue = new Queue<Action>();
-    public void Init(IEnumerable<EnemyInstance> enemies)
+    private AnimationMonoSystem animationSystem;
+    public void Init(IEnumerable<EnemyInstance> enemies, AnimationMonoSystem animationSystem)
     {
         this.enemies = new List<EnemyInstance>(enemies);
+        this.animationSystem = animationSystem;
     }
     public void UpdateTick()
     {
@@ -92,6 +94,8 @@ public class TurnSystem : BaseSystem
             combat: e.Context.Combat
         );
         eventBus.Publish<PlayerTurnStarted>(new PlayerTurnStarted(context: eventContext));
+
+        animationSystem.PlayQueue(eventContext);
     }
     private void PublishEnemyTurnStarted(ICombatEvent e)
     {
@@ -116,6 +120,8 @@ public class TurnSystem : BaseSystem
             combat: e.Context.Combat
         );
         eventBus.Publish<EnemyTurnStarted>(new EnemyTurnStarted(context: eventContext));
+
+        animationSystem.PlayQueue(eventContext);
     }
     private void PublishEnemyTurnEnded(ICombatEvent e)
     {

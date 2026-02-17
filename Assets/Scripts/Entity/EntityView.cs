@@ -21,36 +21,60 @@ public class EntityView : MonoBehaviour
 
     protected IEnumerator ShowStatusCor()
     {
-        yield return statusCG.DOFade(1f, 1f).WaitForCompletion();
+        statusCG.DOFade(1f, 1f);
+        yield break;
     }
     protected IEnumerator HideStatusCor()
     {
-        yield return statusCG.DOFade(0f, 1f).WaitForCompletion();
+        statusCG.DOFade(0f, 1f);
+        yield break;
     }
-    protected IEnumerator PlayAnimatorTriggerCor(string key, float duration)
+    protected IEnumerator PlayAnimatorTriggerCor(string key, float duration = 0)
     {
         animator.SetTrigger(key);
-        yield return new WaitForSeconds(duration);
+
+        if (duration > 0)
+        {
+            yield return new WaitForSeconds(duration);
+        }
+        else
+        {
+            yield break;
+        }
     }
     protected IEnumerator PlayAnimatorBoolCor(string key, bool value)
     {
         animator.SetBool(AnimationKeys.PLAYER_ENCOUNTER, value);
-        yield return null;
+        yield break;
     }
     protected IEnumerator ShowBlockCor(int value)
     {
-        yield return blockView.Show(value).WaitForCompletion();
+        blockView.Show(value);
+        yield break;
     }
     protected IEnumerator HideBlockCor()
     {
-        yield return blockView.Hide().WaitForCompletion();
+        blockView.Hide();
+        yield break;
     }
     protected IEnumerator ChangeBlockCor(int value)
     {
-        yield return blockView.Change(value).WaitForCompletion();
+        blockView.Change(value);
+        yield break;
     }
     protected IEnumerator ChangeHpCor(int currentHp, int maxHp)
     {
-        yield return hpView.Change(currentHp, maxHp).WaitForCompletion();
+        hpView.Change(currentHp, maxHp);
+        yield break;
+    }
+    protected IEnumerator ShowDamageTextCor(int value)
+    {
+        DamageText damageText = damageTextPool.Pop();
+        damageText.Spawn(
+            text: value.ToString(),
+            parent: statusCG.transform,
+            pool: damageTextPool
+        );
+        yield break;
     }
 }

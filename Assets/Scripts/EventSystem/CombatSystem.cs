@@ -53,7 +53,7 @@ public class CombatSystem : BaseSystem
         this.relicSystem = relicSystem;
         this.AnimationSystem = animationSystem;
 
-        TurnSystem.Init(enemies);
+        TurnSystem.Init(enemies, animationSystem);
     }
     public void UpdateTick()
     {
@@ -190,7 +190,7 @@ public class CombatSystem : BaseSystem
             ));
         }
 
-        AnimationSystem.PlayQueue(e.Context);
+        //AnimationSystem.PlayQueue(e.Context);
     }
     public void OnEnemyTurnStarted(EnemyTurnStarted e)
     {
@@ -231,7 +231,7 @@ public class CombatSystem : BaseSystem
             }
         }
 
-        AnimationSystem.PlayQueue(e.Context);
+        //AnimationSystem.PlayQueue(e.Context);
         actionRequestQueue.Enqueue(() => EnemyActionStart(e.Context.Turn.EnemyQueue.Dequeue().Id));
     }
     private void EnemyActionStart(Guid enemyId)
@@ -314,7 +314,7 @@ public class CombatSystem : BaseSystem
             return;
         }
 
-        AnimationSystem.PlayQueue(e.Context);
+        //AnimationSystem.PlayQueue(e.Context);
         actionRequestQueue.Enqueue(() => EnemyActionStart(e.Enemy.Id));
     }
     public void OnDeathDeclared(DeathDeclared e)
@@ -335,11 +335,15 @@ public class CombatSystem : BaseSystem
         {
             CombatContext.state = CombatState.Defeat;
 
-            EventBus.Publish<CombatEnded>(new CombatEnded(
-                context: eventContext, 
-                result: CombatState.Defeat
-            ));
-            AnimationSystem.PlayQueue(e.Context);
+            actionRequestQueue.Enqueue(() =>
+            {
+                EventBus.Publish<CombatEnded>(new CombatEnded(
+                    context: eventContext,
+                    result: CombatState.Defeat
+                ));
+
+                AnimationSystem.PlayQueue(e.Context);
+            });
         }
         else
         {
@@ -347,11 +351,15 @@ public class CombatSystem : BaseSystem
             {
                 CombatContext.state = CombatState.Victory;
 
-                EventBus.Publish<CombatEnded>(new CombatEnded(
-                    context: eventContext,
-                    result: CombatState.Victory
-                ));
-                AnimationSystem.PlayQueue(e.Context);
+                actionRequestQueue.Enqueue(() =>
+                {
+                    EventBus.Publish<CombatEnded>(new CombatEnded(
+                        context: eventContext,
+                        result: CombatState.Victory
+                    ));
+
+                    AnimationSystem.PlayQueue(e.Context);
+                });
             }
         }
     }

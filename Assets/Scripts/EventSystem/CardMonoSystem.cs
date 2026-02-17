@@ -226,7 +226,10 @@ public class CardMonoSystem : BaseMonoSystem
         hand.Add(cardInstance);
 
         // Animation
-        animationSystem.Enqueue(() => DrawCardCor(cardInstance));
+        animationSystem.Register(
+            priority: AnimationPriority.Actor,
+            command: () => DrawCardCor(cardInstance)
+        );
 
         // Event
         EventContext _context = CreateContext(context);

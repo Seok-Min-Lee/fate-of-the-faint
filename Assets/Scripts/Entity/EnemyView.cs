@@ -58,7 +58,10 @@ public class EnemyView : EntityView, ITargetable
     }
     public void OnCombatStarted(CombatStarted e)
     {
-        animationSystem.Enqueue(() => ShowStatusCor());
+        animationSystem.Register(
+            priority: AnimationPriority.Entity, 
+            command: () => ShowStatusCor()
+        );
     }
     public void OnCombatEnded(CombatEnded e)
     {
@@ -67,7 +70,10 @@ public class EnemyView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_VICTORY, 0f));
+        animationSystem.Register(
+            priority: AnimationPriority.Entity,
+            command: () => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_VICTORY)
+        );
     }
     public void OnDeathDeclared(DeathDeclared e)
     {
@@ -81,8 +87,14 @@ public class EnemyView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_DIE, 1f));
-        animationSystem.Enqueue(() => HideStatusCor());
+        animationSystem.Register(
+            priority: AnimationPriority.Target,
+            command: () => HideStatusCor()
+        );
+        animationSystem.Register(
+            priority: AnimationPriority.Target,
+            command: () => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_DIE, 1f)
+        );
     }
     public void OnAttackDeclared(AttackDeclared e)
     {
@@ -92,8 +104,14 @@ public class EnemyView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_ATTACK, 1f));
-        animationSystem.Enqueue(() => HideIntentCor());
+        animationSystem.Register(
+            priority: AnimationPriority.Actor,
+            command: () => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_ATTACK)
+        );
+        animationSystem.Register(
+            priority: AnimationPriority.Actor,
+            command: () => HideIntentCor()
+        );
     }
     public void OnBlockDeclared(BlockDeclared e)
     {
@@ -103,8 +121,14 @@ public class EnemyView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_SKILL, 1f));
-        animationSystem.Enqueue(() => HideIntentCor());
+        animationSystem.Register(
+            priority: AnimationPriority.Actor,
+            command: () => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_SKILL, 1f)
+        );
+        animationSystem.Register(
+            priority: AnimationPriority.Actor,
+            command: () => HideIntentCor()
+        );
     }
     public void OnEnemyIntentDecided(EnemyIntentDecided e)
     {
@@ -118,9 +142,11 @@ public class EnemyView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Enqueue(() => ShowIntentCor(
-            sprite: instance.NextAction.IntentIcon,
-            text: instance.NextAction.Effects[0].value.ToString()
+        animationSystem.Register(
+            priority: AnimationPriority.Actor,
+            command: () => ShowIntentCor(
+                            sprite: instance.NextAction.IntentIcon,
+                            text: instance.NextAction.Effects[0].value.ToString()
         ));
     }
     public void OnHpChanged(HpChanged e)
@@ -137,20 +163,24 @@ public class EnemyView : EntityView, ITargetable
 
         if (e.EndAmount < e.StartAmount)
         {
+            animationSystem.Register(
+                priority: AnimationPriority.Target,
+                command: () => ShowDamageTextCor(e.StartAmount - e.EndAmount)
+            );
+
             if (e.EndAmount > 0)
             {
-                animationSystem.Enqueue(() => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_HIT, 1f));
+                animationSystem.Register(
+                    priority: AnimationPriority.Target,
+                    command: () => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_HIT, 1f)
+                );
             }
-
-            DamageText damageText = damageTextPool.Pop();
-            damageText.Spawn(
-                text: (e.StartAmount - e.EndAmount).ToString(),
-                parent: statusCG.transform,
-                pool: damageTextPool
-            );
         }
 
-        animationSystem.Enqueue(() => ChangeHpCor(instance.CurrentHp, instance.MaxHp));
+        animationSystem.Register(
+            priority: AnimationPriority.Entity,
+            command: () => ChangeHpCor(instance.CurrentHp, instance.MaxHp)
+        );
     }
     public void OnBlockChanged(BlockChanged e)
     {
@@ -166,15 +196,24 @@ public class EnemyView : EntityView, ITargetable
 
         if (e.EndAmount > e.StartAmount)
         {
-            animationSystem.Enqueue(() => ShowBlockCor(instance.Block));
+            animationSystem.Register(
+                priority: AnimationPriority.Actor,
+                command: () => ShowBlockCor(instance.Block)
+            );
         }
         else
         {
-            animationSystem.Enqueue(() => ChangeBlockCor(instance.Block));
+            animationSystem.Register(
+                priority: AnimationPriority.Target,
+                command: () => ChangeBlockCor(instance.Block)
+            );
 
             if (instance.Block <= 0)
             {
-                animationSystem.Enqueue(() => HideBlockCor());
+                animationSystem.Register(
+                    priority: AnimationPriority.Target,
+                    command: () => HideBlockCor()
+                );
             }
         }
     }
@@ -227,10 +266,14 @@ public class EnemyView : EntityView, ITargetable
     }
     private IEnumerator ShowIntentCor(Sprite sprite, string text)
     {
-        yield return intentView.Show(sprite, text).WaitForCompletion();
+        intentView.Show(sprite, text);
+        yield break;
+        //yield return intentView.Show(sprite, text).WaitForCompletion();
     }
     private IEnumerator HideIntentCor()
     {
-        yield return intentView.Hide().WaitForCompletion();
+        intentView.Hide();
+        yield break;
+        //yield return intentView.Hide().WaitForCompletion();
     }
 }
