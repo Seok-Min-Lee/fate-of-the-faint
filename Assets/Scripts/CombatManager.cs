@@ -10,6 +10,7 @@ public class CombatManager : MonoBehaviour
     [SerializeField] private UIMonoSystem uiSystem;
     [SerializeField] private RelicMonoSystem relicSystem;
     [SerializeField] private AnimationMonoSystem animationSystem;
+    [SerializeField] private CameraMonoSystem cameraSystem;
     [SerializeField] private PlayerView playerPrefab;
     [SerializeField] private EntityBuffViewPool entityBuffPool;
     [SerializeField] private DamageTextPool damageTextPool;
@@ -50,6 +51,11 @@ public class CombatManager : MonoBehaviour
             max: playerInstance.Energy
         );
         animationSystem.Init(CombatSystem.EventBus);
+        cameraSystem.Init(
+            eventBus: CombatSystem.EventBus, 
+            player: playerInstance,
+            animationSystem: animationSystem
+        );
         uiSystem.Init(
             eventBus: CombatSystem.EventBus,
             actionSystem: CombatSystem.ActionSystem,
@@ -75,6 +81,7 @@ public class CombatManager : MonoBehaviour
             uiSystem: uiSystem, 
             relicSystem: relicSystem,
             animationSystem: animationSystem,
+            cameraSystem: cameraSystem,
             player: playerInstance,
             enemies: enemyInstances
         );

@@ -4372,6 +4372,7 @@ MonoBehaviour:
   uiSystem: {fileID: 606307826}
   relicSystem: {fileID: 3108958426846968672}
   animationSystem: {fileID: 606307827}
+  cameraSystem: {fileID: 1551523249}
   playerPrefab: {fileID: 3590264590922241840, guid: 341ee4c7cdddb6146b15246fa7025fa8, type: 3}
   entityBuffPool: {fileID: 606307828}
   damageTextPool: {fileID: 606307829}
@@ -10543,6 +10544,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1551523248}
+  - component: {fileID: 1551523249}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -10568,6 +10570,21 @@ Transform:
   - {fileID: 1540660978}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 30, y: -30, z: 0}
+--- !u!114 &1551523249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1551523247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b535f52afda3b74da9f2a9913360b26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraMonoSystem
+  duration: 0.08
+  strength: 0.08
+  vibrato: 8
 --- !u!1 &1555104400
 GameObject:
   m_ObjectHideFlags: 0

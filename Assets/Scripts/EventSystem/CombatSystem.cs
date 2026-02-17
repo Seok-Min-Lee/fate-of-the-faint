@@ -23,6 +23,7 @@ public class CombatSystem : BaseSystem
     private EnergySystem energySystem;
     private CardMonoSystem cardSystem;
     private UIMonoSystem uiSystem;
+    private CameraMonoSystem cameraSystem;
     private RelicMonoSystem relicSystem;
 
     private PlayerInstance player;
@@ -36,6 +37,7 @@ public class CombatSystem : BaseSystem
         EnergySystem energySystem, 
         CardMonoSystem cardSystem, 
         UIMonoSystem uiSystem,
+        CameraMonoSystem cameraSystem,
         AnimationMonoSystem animationSystem,
         RelicMonoSystem relicSystem,
         PlayerInstance player,
@@ -50,8 +52,9 @@ public class CombatSystem : BaseSystem
         this.energySystem = energySystem;
         this.cardSystem = cardSystem;
         this.uiSystem = uiSystem;
-        this.relicSystem = relicSystem;
+        this.cameraSystem = this.cameraSystem;
         this.AnimationSystem = animationSystem;
+        this.relicSystem = relicSystem;
 
         TurnSystem.Init(enemies, animationSystem);
     }
