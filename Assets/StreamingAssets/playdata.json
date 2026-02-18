@@ -17,7 +17,9 @@
         "atk_double",
         "skl_weak",
         "atk_vuln",
-        "pwr_strength"
+        "pwr_strength",
+        "skl_energy",
+        "atk_draw"
     ],
     "relicIds": [
         "Relic_A"

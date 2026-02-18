@@ -55,20 +55,30 @@ public class EnergySystem : BaseSystem
             return;
         }
 
-        EventContext eventContext = CreateContext(e.Context);
-        eventBus.Publish(new EnergyResolved(context: eventContext, result: result));
+        eventBus.Publish(new EnergyResolved(
+            context: CreateContext(e.Context), 
+            result: result
+        ));
+    }
+    public void OnGainEnergyDeclared(GainEnergyDeclared e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
+        EnergyChanged(e.Amount, e.Context);
     }
     private void EnergyChanged(int amount, EventContext context)
     {
         int startAmount = Energy;
         Energy += amount;
 
-        EventContext eventContext = CreateContext(context);
-
         eventBus.Publish<EnergyChanged>(new EnergyChanged(
-            context: eventContext,
+            context: CreateContext(context),
             startAmount: startAmount, 
-            endAmount: Energy
+            endAmount: Energy,
+            maxAmount: MaxEnergy
         ));
     }
 }

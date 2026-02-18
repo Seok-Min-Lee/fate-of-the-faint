@@ -76,5 +76,6 @@ public enum AnimationPriority
     CardHand,
     Actor,
     Target,
-    Entity
+    Entity,
+    End
 }

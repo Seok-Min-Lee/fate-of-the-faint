@@ -135,76 +135,90 @@ public class CardMonoSystem : BaseMonoSystem
                     break;
             }
 
-            for (int i = 0; i < targets.Count; i++)
+
+            EventContext context = CreateContext(e.Context);
+
+            if (ce.effectType == EffectType.DrawCard)
             {
-                EntityInstance target = targets[i];
+                eventBus.Publish<DrawCardDeclared>(new DrawCardDeclared(context: context));
+                for (int i = 0; i < ce.value; i++)
+                {
+                    DrawCard(context);
+                }
+            }
+            else if (ce.effectType == EffectType.GainEnergy)
+            {
+                // 여기서 EnergyChangeRequest 사용하면 StackOverflow 발생
+                eventBus.Publish<GainEnergyDeclared>(new GainEnergyDeclared(
+                    context: context,
+                    amount: ce.value
+                ));
+            }
+            else if (ce.effectType == EffectType.ModifyCost)
+            {
+                eventBus.Publish<ModifyCostDeclared>(new ModifyCostDeclared(context: context));
+            }
+            else
+            {
+                for (int i = 0; i < targets.Count; i++)
+                {
+                    EntityInstance target = targets[i];
 
-                EventContext context = CreateContext(e.Context);
+                    context = CreateContext(e.Context);
 
-                if (ce.effectType == EffectType.Attack)
-                {
-                    eventBus.Publish<AttackDeclared>(new AttackDeclared(
-                        context: context,
-                        source: player,
-                        target: target,
-                        amount: ce.value,
-                        repeat: ce.repeat
-                    ));
-                }
-                else if (ce.effectType == EffectType.Block)
-                {
-                    eventBus.Publish<BlockDeclared>(new BlockDeclared(
-                        context: context,
-                        source: player,
-                        target: player,
-                        amount: ce.value
-                    ));
-                }
-                else if (ce.effectType == EffectType.DrawCard)
-                {
-                    eventBus.Publish<DrawCardDeclared>(new DrawCardDeclared(context: context));
-                }
-                else if (ce.effectType == EffectType.GainEnergy)
-                {
-                    eventBus.Publish<GainEnergyDeclared>(new GainEnergyDeclared(context: context));
-                }
-                else if (ce.effectType == EffectType.ModifyCost)
-                {
-                    eventBus.Publish<ModifyCostDeclared>(new ModifyCostDeclared(context: context));
-                }
-                else if (ce.effectType == EffectType.Strengthen)
-                {
-                    eventBus.Publish<BuffDeclared>(new BuffDeclared(
-                        context: context,
-                        source: player,
-                        target: target,
-                        type: BuffType.Strength,
-                        amount: ce.value
-                    ));
-                }
-                else if (ce.effectType == EffectType.Weaken)
-                {
-                    eventBus.Publish<BuffDeclared>(new BuffDeclared(
-                        context: context,
-                        source: player,
-                        target: target,
-                        type: BuffType.Weak,
-                        amount: ce.value
-                    ));
-                }
-                else if (ce.effectType == EffectType.Vulnerable)
-                {
-                    eventBus.Publish<BuffDeclared>(new BuffDeclared(
-                        context: context,
-                        source: player,
-                        target: target,
-                        type: BuffType.Vulnerable,
-                        amount: ce.value
-                    ));
-                }
-                else
-                {
-                    return;
+                    if (ce.effectType == EffectType.Attack)
+                    {
+                        eventBus.Publish<AttackDeclared>(new AttackDeclared(
+                            context: context,
+                            source: player,
+                            target: target,
+                            amount: ce.value,
+                            repeat: ce.repeat
+                        ));
+                    }
+                    else if (ce.effectType == EffectType.Block)
+                    {
+                        eventBus.Publish<BlockDeclared>(new BlockDeclared(
+                            context: context,
+                            source: player,
+                            target: player,
+                            amount: ce.value
+                        ));
+                    }
+                    else if (ce.effectType == EffectType.Strengthen)
+                    {
+                        eventBus.Publish<BuffDeclared>(new BuffDeclared(
+                            context: context,
+                            source: player,
+                            target: target,
+                            type: BuffType.Strength,
+                            amount: ce.value
+                        ));
+                    }
+                    else if (ce.effectType == EffectType.Weaken)
+                    {
+                        eventBus.Publish<BuffDeclared>(new BuffDeclared(
+                            context: context,
+                            source: player,
+                            target: target,
+                            type: BuffType.Weak,
+                            amount: ce.value
+                        ));
+                    }
+                    else if (ce.effectType == EffectType.Vulnerable)
+                    {
+                        eventBus.Publish<BuffDeclared>(new BuffDeclared(
+                            context: context,
+                            source: player,
+                            target: target,
+                            type: BuffType.Vulnerable,
+                            amount: ce.value
+                        ));
+                    }
+                    else
+                    {
+                        return;
+                    }
                 }
             }
         }
@@ -239,14 +253,11 @@ public class CardMonoSystem : BaseMonoSystem
         hand.Remove(cardView.CardInstance);
         discardPile.Add(cardView.CardInstance);
 
-        // CardView
-        cardHand.DestroyCard(cardView);
-        cardViewPool.Push(cardView);
-
         // Animation
-        cardView.Discard();
-
-        UpdateUI();
+        animationSystem.Register(
+            priority: AnimationPriority.Actor,
+            command: () => DiscardCardCor(cardView)
+        );
 
         // Event
         EventContext _context = CreateContext(context);
@@ -286,9 +297,17 @@ public class CardMonoSystem : BaseMonoSystem
             cardContainer: cardHand
         );
 
-        //yield return cardView.Draw().WaitForCompletion();
         cardView.Draw();
         yield return new WaitForSeconds(0.1f);
+        UpdateUI();
+    }
+    IEnumerator DiscardCardCor(CardView cardView)
+    {
+        cardHand.DestroyCard(cardView);
+        cardViewPool.Push(cardView);
+
+        cardView.Discard();
+        yield return null;
         UpdateUI();
     }
     public void UpdateUI()

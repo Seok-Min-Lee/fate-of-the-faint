@@ -286,9 +286,15 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         canvas.overrideSorting = true;
     }
+    Sequence sequence;
     public Sequence Draw()
     {
-        Sequence sequence = DOTween.Sequence();
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+        //Sequence sequence = DOTween.Sequence();
 
         sequence.AppendCallback(() =>
         {
@@ -297,6 +303,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             transform.rotation = Quaternion.Euler(0, 0, -90);
             transform.localScale = Vector3.zero;
             gameObject.SetActive(true);
+            Debug.Log("draw start");
         });
 
         sequence.Append(transform.DOMove(new Vector3(960,0), 0.3333f).SetEase(Ease.OutSine));
@@ -306,17 +313,24 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         sequence.AppendCallback(() =>
         {
             isUsable = true;
+            Debug.Log("draw end");
         });
 
         return sequence;
     }
     public Sequence Discard()
     {
-        Sequence sequence = DOTween.Sequence();
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+        //Sequence sequence = DOTween.Sequence();
 
         sequence.AppendCallback(() => 
         {
             isUsable = false;
+            Debug.Log("discard start");
         });
         sequence.Append(transform.DOMove(cardPlayConfig.DiscardArea.position, 0.3333f).SetEase(Ease.OutSine));
         sequence.Join(transform.DOScale(Vector3.zero, 0.3333f).SetEase(Ease.OutSine));
@@ -325,6 +339,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             isUsable = true;
             gameObject.SetActive(false);
+            Debug.Log("discard end");
         });
 
         return sequence;

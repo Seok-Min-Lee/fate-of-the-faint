@@ -58,6 +58,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8f68c601939657a4eacc7f98abb28ce9, type: 2}
   - {fileID: 11400000, guid: 37bb6af784b05c14698084c58d43b3cb, type: 2}
   - {fileID: 11400000, guid: 9b7a469380fca194fa051b99fd5d7828, type: 2}
+  - {fileID: 11400000, guid: 9ebb45b6d8ff5d44e86a2f200b8a309c, type: 2}
   relics:
   - {fileID: 11400000, guid: 7fa1420b30d5250469326c2c2bcc7e82, type: 2}
   potions: []

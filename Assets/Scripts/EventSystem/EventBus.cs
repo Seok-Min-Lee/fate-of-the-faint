@@ -173,15 +173,17 @@ public struct EnergyResolved : ICombatEvent
 }
 public struct EnergyChanged : ICombatEvent
 {
-    public EnergyChanged(EventContext context, int startAmount, int endAmount)
+    public EnergyChanged(EventContext context, int startAmount, int endAmount, int maxAmount)
     {
         Context = context;
         StartAmount = startAmount;
         EndAmount = endAmount;
+        MaxAmount = maxAmount;
     }
     public EventContext Context { get; private set; }
     public int StartAmount { get; private set; }
     public int EndAmount { get; private set; }
+    public int MaxAmount { get; private set; }
     public EventMeta Meta => EventMetas.EnergyChanged;
 }
 public struct CardDrawed : ICombatEvent
@@ -265,11 +267,13 @@ public struct DrawCardDeclared : ICombatEvent
 }
 public struct GainEnergyDeclared : ICombatEvent
 {
-    public GainEnergyDeclared(EventContext context)
+    public GainEnergyDeclared(EventContext context, int amount)
     {
         Context = context;
+        Amount = amount;
     }
     public EventContext Context { get; private set; }
+    public int Amount { get; private set; }
     public EventMeta Meta => EventMetas.GainEnergyDeclared;
 }
 public struct ModifyCostDeclared : ICombatEvent

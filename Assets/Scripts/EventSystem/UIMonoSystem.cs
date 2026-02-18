@@ -12,7 +12,7 @@ public class UIMonoSystem : BaseMonoSystem
     [Header("Canvas")]
     [SerializeField] private Transform windowParent;
 
-    [SerializeField] private TextMeshProUGUI energy;
+    [SerializeField] private EnergyView energy;
     [SerializeField] private TextMeshProUGUI drawPile;
     [SerializeField] private TextMeshProUGUI discardPile;
 
@@ -172,7 +172,10 @@ public class UIMonoSystem : BaseMonoSystem
             return;
         }
 
-        energy.text = e.EndAmount.ToString();
+        animationSystem.Register(
+            priority: AnimationPriority.Actor,
+            command: () => energy.ChangeCor(e.EndAmount, e.MaxAmount)
+        );
     }
     public void OnClickCardDisplay()
     {
