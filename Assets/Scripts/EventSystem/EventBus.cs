@@ -258,11 +258,13 @@ public struct BlockDeclared : ICombatEvent
 }
 public struct DrawCardDeclared : ICombatEvent
 {
-    public DrawCardDeclared(EventContext context)
+    public DrawCardDeclared(EventContext context, int amount)
     {
         Context = context;
+        Amount = amount;
     }
     public EventContext Context { get; private set; }
+    public int Amount { get; private set; }
     public EventMeta Meta => EventMetas.DrawCardDeclared;
 }
 public struct GainEnergyDeclared : ICombatEvent
@@ -278,11 +280,15 @@ public struct GainEnergyDeclared : ICombatEvent
 }
 public struct ModifyCostDeclared : ICombatEvent
 {
-    public ModifyCostDeclared(EventContext context)
+    public ModifyCostDeclared(EventContext context, CostModificationScope scope, int amount)
     {
         Context = context;
+        Scope = scope;
+        Amount = amount;
     }
     public EventContext Context { get; private set; }
+    public CostModificationScope Scope { get; private set; }
+    public int Amount { get; private set; }
     public EventMeta Meta => EventMetas.ModifyCostDeclared;
 }
 public struct BuffDeclared : ICombatEvent

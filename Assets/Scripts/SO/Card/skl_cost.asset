@@ -25,5 +25,5 @@ MonoBehaviour:
   - targetType: 0
     effectType: 4
     repeat: 1
-    value: 0
+    value: 9
   upgradeCard: {fileID: 0}

@@ -104,6 +104,8 @@ public class CombatSystem : BaseSystem
         EventBus.Subscribe<PlayerTurnStarted>(cardSystem.OnPlayerTurnStarted);
         EventBus.Subscribe<PlayerTurnEnded>(cardSystem.OnPlayerTurnEnded);
         EventBus.Subscribe<EnergyResolved>(cardSystem.OnEnergyResolved);
+        EventBus.Subscribe<DrawCardDeclared>(cardSystem.OnDrawCardDeclared);
+        EventBus.Subscribe<ModifyCostDeclared>(cardSystem.OnModifyCostDeclared);
 
         EventBus.Subscribe<DamageRequested>(relicSystem.OnDamageRequested);
 
@@ -142,6 +144,8 @@ public class CombatSystem : BaseSystem
         EventBus.Unsubscribe<PlayerTurnStarted>(cardSystem.OnPlayerTurnStarted);
         EventBus.Unsubscribe<PlayerTurnEnded>(cardSystem.OnPlayerTurnEnded);
         EventBus.Unsubscribe<EnergyResolved>(cardSystem.OnEnergyResolved);
+        EventBus.Unsubscribe<DrawCardDeclared>(cardSystem.OnDrawCardDeclared);
+        EventBus.Unsubscribe<ModifyCostDeclared>(cardSystem.OnModifyCostDeclared);
 
         EventBus.Unsubscribe<DamageRequested>(relicSystem.OnDamageRequested);
 

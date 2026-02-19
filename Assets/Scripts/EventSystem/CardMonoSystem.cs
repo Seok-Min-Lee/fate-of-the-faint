@@ -19,6 +19,7 @@ public class CardMonoSystem : BaseMonoSystem
     [SerializeField] private TextMeshProUGUI drawPileText;
     [SerializeField] private TextMeshProUGUI discardPileText;
 
+    private List<CardInstance> cardInstanceAll = new List<CardInstance>();
     private List<CardInstance> drawPile = new List<CardInstance>();
     private List<CardInstance> hand = new List<CardInstance>();
     private List<CardInstance> discardPile = new List<CardInstance>();
@@ -41,6 +42,7 @@ public class CardMonoSystem : BaseMonoSystem
         this.animationSystem = animationSystem;
         this.player = player;
 
+        cardInstanceAll.AddRange(cardInstances);
         drawPile.AddRange(Utils.Shuffle(cardInstances));
 
         UpdateUI();
@@ -54,6 +56,8 @@ public class CardMonoSystem : BaseMonoSystem
 
         actionSystem.ExcuteAction(actionContext, (eventContext) =>
         {
+            bool existModifier = cardInstanceAll.Any(c => c.ExistModifier);
+
             eventBus.Publish<CardPlayDeclared>(new CardPlayDeclared(
                 context: eventContext,
                 cardView: cardView
@@ -64,9 +68,10 @@ public class CardMonoSystem : BaseMonoSystem
             eventBus.Publish<EnergyChangeRequested>(new EnergyChangeRequested(
                 context: eventContext,
                 request: requestContext,
-                amount: -cardInstance.CostForTurn
+                amount: -cardInstance.Cost
             ));
 
+            // 
             if (requestContext.isResult)
             {
                 DiscardCard(cardView, eventContext);
@@ -77,6 +82,12 @@ public class CardMonoSystem : BaseMonoSystem
                 cardInstance = null;
                 target = null;
             }
+
+            // Cost Update
+            if (existModifier)
+            {
+                RemoveModificationsByScope(CostModificationScope.Action);
+            }
         });
     }
     public void OnCombatEnded(CombatEnded e)
@@ -86,8 +97,7 @@ public class CardMonoSystem : BaseMonoSystem
             return;
         }
 
-        //EventContext eventContext = CreateContext(e.Context);
-        //ClearCardHand(eventContext);
+        RemoveModificationsByScope(CostModificationScope.Combat);
     }
     public void OnPlayerTurnStarted(PlayerTurnStarted e) 
     {
@@ -109,8 +119,9 @@ public class CardMonoSystem : BaseMonoSystem
         }
 
         EventContext eventContext = CreateContext(e.Context);
-
         ClearCardHand(eventContext);
+
+        RemoveModificationsByScope(CostModificationScope.Turn);
     }
     public void OnEnergyResolved(EnergyResolved e)
     {
@@ -140,11 +151,10 @@ public class CardMonoSystem : BaseMonoSystem
 
             if (ce.effectType == EffectType.DrawCard)
             {
-                eventBus.Publish<DrawCardDeclared>(new DrawCardDeclared(context: context));
-                for (int i = 0; i < ce.value; i++)
-                {
-                    DrawCard(context);
-                }
+                eventBus.Publish<DrawCardDeclared>(new DrawCardDeclared(
+                    context: context, 
+                    amount: ce.value
+                ));
             }
             else if (ce.effectType == EffectType.GainEnergy)
             {
@@ -156,7 +166,11 @@ public class CardMonoSystem : BaseMonoSystem
             }
             else if (ce.effectType == EffectType.ModifyCost)
             {
-                eventBus.Publish<ModifyCostDeclared>(new ModifyCostDeclared(context: context));
+                eventBus.Publish<ModifyCostDeclared>(new ModifyCostDeclared(
+                    context: context, 
+                    scope: CostModificationScope.Action, 
+                    amount: ce.value
+                ));
             }
             else
             {
@@ -221,6 +235,41 @@ public class CardMonoSystem : BaseMonoSystem
                     }
                 }
             }
+        }
+    }
+    public void OnDrawCardDeclared(DrawCardDeclared e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
+        EventContext context = CreateContext(e.Context);
+
+        for (int i = 0; i < e.Amount; i++)
+        {
+            DrawCard(context);
+        }
+    }
+    public void OnModifyCostDeclared(ModifyCostDeclared e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
+        foreach (CardInstance instance in cardInstanceAll)
+        {
+            instance.AddModification(new CostModification(
+                scope: e.Scope,
+                amount: -e.Amount,
+                source: this
+            ));
+        }
+
+        foreach (CardView view in cardViewPool.Actives)
+        {
+            view.ModifiyCost();
         }
     }
     private void DrawCard(EventContext context)
@@ -309,6 +358,18 @@ public class CardMonoSystem : BaseMonoSystem
         cardView.Discard();
         yield return null;
         UpdateUI();
+    }
+    private void RemoveModificationsByScope(CostModificationScope scope)
+    {
+        foreach (CardInstance c in cardInstanceAll)
+        {
+            c.RemoveModifications(scope);
+        }
+
+        foreach (CardView view in cardViewPool.Actives)
+        {
+            view.ModifiyCost();
+        }
     }
     public void UpdateUI()
     {

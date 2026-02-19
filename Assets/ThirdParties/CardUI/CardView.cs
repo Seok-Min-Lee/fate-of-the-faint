@@ -238,7 +238,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
     [Header("Custom")]
     [SerializeField] private ViewType type;
-    [SerializeField] private TextMeshProUGUI cost;
+    [SerializeField] private CardCostView cost;
     [SerializeField] private TextMeshProUGUI name;
     [SerializeField] private TextMeshProUGUI desc;
     [SerializeField] private CardArt[] arts;
@@ -268,9 +268,13 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         transform.parent = cardContainer.transform;
 
-        cost.text = cardInstance.Origin.Cost.ToString();
         name.text = cardInstance.Origin.Name;
         desc.text = cardInstance.Origin.Description;
+
+        cost.Change(
+            value: cardInstance.Cost.ToString(), 
+            color: cardInstance.ExistModifier ? Color.green : Color.white
+        );
 
         for (int i = 0; i < arts.Length; i++)
         {
@@ -286,6 +290,13 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         canvas.overrideSorting = true;
     }
+    public void ModifiyCost()
+    {
+        cost.Change(
+            value: CardInstance.Cost.ToString(),
+            color: CardInstance.ExistModifier ? Color.green : Color.white
+        );
+    }
     Sequence sequence;
     public Sequence Draw()
     {
@@ -294,7 +305,6 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             sequence.Kill();
         }
         sequence = DOTween.Sequence();
-        //Sequence sequence = DOTween.Sequence();
 
         sequence.AppendCallback(() =>
         {
@@ -303,7 +313,6 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             transform.rotation = Quaternion.Euler(0, 0, -90);
             transform.localScale = Vector3.zero;
             gameObject.SetActive(true);
-            Debug.Log("draw start");
         });
 
         sequence.Append(transform.DOMove(new Vector3(960,0), 0.3333f).SetEase(Ease.OutSine));
@@ -313,7 +322,6 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         sequence.AppendCallback(() =>
         {
             isUsable = true;
-            Debug.Log("draw end");
         });
 
         return sequence;
@@ -325,12 +333,10 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             sequence.Kill();
         }
         sequence = DOTween.Sequence();
-        //Sequence sequence = DOTween.Sequence();
 
         sequence.AppendCallback(() => 
         {
             isUsable = false;
-            Debug.Log("discard start");
         });
         sequence.Append(transform.DOMove(cardPlayConfig.DiscardArea.position, 0.3333f).SetEase(Ease.OutSine));
         sequence.Join(transform.DOScale(Vector3.zero, 0.3333f).SetEase(Ease.OutSine));
@@ -339,7 +345,6 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             isUsable = true;
             gameObject.SetActive(false);
-            Debug.Log("discard end");
         });
 
         return sequence;

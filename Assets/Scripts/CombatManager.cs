@@ -188,9 +188,7 @@ public class CombatManager : MonoBehaviour
         {
             instances.Add(new CardInstance(
                 instanceId: sample.Id,
-                origin: sample,
-                costForTurn: sample.Cost,
-                costForCombat: sample.Cost
+                origin: sample
             ));
         }
 

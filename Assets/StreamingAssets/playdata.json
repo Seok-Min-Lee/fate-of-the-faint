@@ -19,7 +19,8 @@
         "atk_vuln",
         "pwr_strength",
         "skl_energy",
-        "atk_draw"
+        "atk_draw",
+        "skl_cost"
     ],
     "relicIds": [
         "Relic_A"
