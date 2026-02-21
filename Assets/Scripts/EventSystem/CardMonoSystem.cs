@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,6 @@ public class CardMonoSystem : BaseMonoSystem
     private EventBus eventBus;
     private CombatSystem combatSystem;
     private ActionSystem actionSystem;
-    private AnimationMonoSystem animationSystem;
     private EntityInstance player;
 
     [SerializeField] private CardContainer cardHand;
@@ -31,7 +31,6 @@ public class CardMonoSystem : BaseMonoSystem
         EventBus eventBus,
         CombatSystem combatSystem,
         ActionSystem actionSystem,
-        AnimationMonoSystem animationSystem,
         IEnumerable<CardInstance> cardInstances,
         EntityInstance player
     )
@@ -39,7 +38,6 @@ public class CardMonoSystem : BaseMonoSystem
         this.eventBus = eventBus;
         this.combatSystem = combatSystem;
         this.actionSystem = actionSystem;
-        this.animationSystem = animationSystem;
         this.player = player;
 
         cardInstanceAll.AddRange(cardInstances);
@@ -54,7 +52,7 @@ public class CardMonoSystem : BaseMonoSystem
 
         ActionContext actionContext = new ActionContext(source: this, type: ActionType.PlayerCardPlay);
 
-        actionSystem.ExcuteAction(actionContext, (eventContext) =>
+        actionSystem.ExcuteAction(actionContext, (eventContext, animationContext) =>
         {
             bool existModifier = cardInstanceAll.Any(c => c.ExistModifier);
 
@@ -67,6 +65,7 @@ public class CardMonoSystem : BaseMonoSystem
 
             eventBus.Publish<EnergyChangeRequested>(new EnergyChangeRequested(
                 context: eventContext,
+                motion: animationContext,
                 request: requestContext,
                 amount: -cardInstance.Cost
             ));
@@ -74,7 +73,11 @@ public class CardMonoSystem : BaseMonoSystem
             // 
             if (requestContext.isResult)
             {
-                DiscardCard(cardView, eventContext);
+                DiscardCard(
+                    cardView: cardView, 
+                    context: eventContext, 
+                    motion: animationContext
+                );
             }
             else
             {
@@ -108,7 +111,7 @@ public class CardMonoSystem : BaseMonoSystem
 
         for (int i = 0; i < 5; i++)
         {
-            DrawCard(e.Context);
+            DrawCard(context: e.Context, motion: e.Motion);
         }
     }
     public void OnPlayerTurnEnded(PlayerTurnEnded e)
@@ -118,8 +121,10 @@ public class CardMonoSystem : BaseMonoSystem
             return;
         }
 
-        EventContext eventContext = CreateContext(e.Context);
-        ClearCardHand(eventContext);
+        ClearCardHand(
+            context: CreateContext(e.Context), 
+            motion: e.Motion
+        );
 
         RemoveModificationsByScope(CostModificationScope.Turn);
     }
@@ -153,6 +158,7 @@ public class CardMonoSystem : BaseMonoSystem
             {
                 eventBus.Publish<DrawCardDeclared>(new DrawCardDeclared(
                     context: context, 
+                    motion: e.Motion,
                     amount: ce.value
                 ));
             }
@@ -161,6 +167,7 @@ public class CardMonoSystem : BaseMonoSystem
                 // 여기서 EnergyChangeRequest 사용하면 StackOverflow 발생
                 eventBus.Publish<GainEnergyDeclared>(new GainEnergyDeclared(
                     context: context,
+                    motion: e.Motion,
                     amount: ce.value
                 ));
             }
@@ -184,6 +191,7 @@ public class CardMonoSystem : BaseMonoSystem
                     {
                         eventBus.Publish<AttackDeclared>(new AttackDeclared(
                             context: context,
+                            motion: e.Motion,
                             source: player,
                             target: target,
                             amount: ce.value,
@@ -194,6 +202,7 @@ public class CardMonoSystem : BaseMonoSystem
                     {
                         eventBus.Publish<BlockDeclared>(new BlockDeclared(
                             context: context,
+                            motion: e.Motion,
                             source: player,
                             target: player,
                             amount: ce.value
@@ -203,6 +212,7 @@ public class CardMonoSystem : BaseMonoSystem
                     {
                         eventBus.Publish<BuffDeclared>(new BuffDeclared(
                             context: context,
+                            motion: e.Motion,
                             source: player,
                             target: target,
                             type: BuffType.Strength,
@@ -213,6 +223,7 @@ public class CardMonoSystem : BaseMonoSystem
                     {
                         eventBus.Publish<BuffDeclared>(new BuffDeclared(
                             context: context,
+                            motion: e.Motion,
                             source: player,
                             target: target,
                             type: BuffType.Weak,
@@ -223,6 +234,7 @@ public class CardMonoSystem : BaseMonoSystem
                     {
                         eventBus.Publish<BuffDeclared>(new BuffDeclared(
                             context: context,
+                            motion: e.Motion,
                             source: player,
                             target: target,
                             type: BuffType.Vulnerable,
@@ -248,7 +260,7 @@ public class CardMonoSystem : BaseMonoSystem
 
         for (int i = 0; i < e.Amount; i++)
         {
-            DrawCard(context);
+            DrawCard(context: context, motion: e.Motion);
         }
     }
     public void OnModifyCostDeclared(ModifyCostDeclared e)
@@ -272,7 +284,7 @@ public class CardMonoSystem : BaseMonoSystem
             view.ModifiyCost();
         }
     }
-    private void DrawCard(EventContext context)
+    private void DrawCard(EventContext context, MotionContext motion)
     {
         if (hand.Count == 10)
         {
@@ -287,31 +299,53 @@ public class CardMonoSystem : BaseMonoSystem
         hand.Add(cardInstance);
 
         // Animation
-        animationSystem.Register(
-            priority: AnimationPriority.Actor,
-            command: () => DrawCardCor(cardInstance)
-        );
+        motion.AddTask(new MotionTask(
+            priority: MotionPriority.Card,
+            command: () => DrawCardCor(cardInstance),
+            source: this
+        ));
 
         // Event
         EventContext _context = CreateContext(context);
         eventBus.Publish<CardDrawed>(new CardDrawed(context: _context));
     }
-    private void DiscardCard(CardView cardView, EventContext context)
+    private void DiscardCard(CardView cardView, EventContext context, MotionContext motion)
     {
         // Instance
         hand.Remove(cardView.CardInstance);
         discardPile.Add(cardView.CardInstance);
 
         // Animation
-        animationSystem.Register(
-            priority: AnimationPriority.Actor,
-            command: () => DiscardCardCor(cardView)
-        );
+        motion.AddTask(new MotionTask(
+            priority: MotionPriority.Card,
+            command: () => DiscardCardCor(cardView),
+            source: this
+        ));
 
         // Event
         EventContext _context = CreateContext(context);
         eventBus.Publish<CardDiscarded>(new CardDiscarded(context: _context));
     }
+    private void DiscardCards(IEnumerable<CardView> views, EventContext context, MotionContext motion)
+	{
+        // Instance
+        foreach (CardView view in views)
+		{
+			hand.Remove(view.CardInstance);
+			discardPile.Add(view.CardInstance);
+		}
+
+		// Animation
+		motion.AddTask(new MotionTask(
+			priority: MotionPriority.Start,
+			command: () => DiscardCardsCor(views),
+			source: this
+		));
+
+		// Event
+		EventContext _context = CreateContext(context);
+		eventBus.Publish<CardDiscarded>(new CardDiscarded(context: _context));
+	}
     private void ChargeCard(EventContext context)
     {
         if (drawPile.Count > 0)
@@ -328,15 +362,14 @@ public class CardMonoSystem : BaseMonoSystem
         eventBus.Publish<CardCharged>(new CardCharged(context: _context));
     }
 
-    private void ClearCardHand(EventContext context)
+    private void ClearCardHand(EventContext context, MotionContext motion)
     {
-        int count = cardViewPool.Actives.Count;
-        List<CardView> views = cardViewPool.Actives.ToList();
-        for (int i = 0; i < count; i++)
-        {
-            DiscardCard(views[i], context);
-        }
-    }
+		DiscardCards(
+			views: cardHand.Cards.Reverse(),
+			context: context,
+			motion: motion
+		);
+	}
     IEnumerator DrawCardCor(CardInstance cardInstance)
     {
         CardView cardView = cardViewPool.Pop(false);
@@ -353,12 +386,35 @@ public class CardMonoSystem : BaseMonoSystem
     IEnumerator DiscardCardCor(CardView cardView)
     {
         cardHand.DestroyCard(cardView);
-        cardViewPool.Push(cardView);
 
-        cardView.Discard();
-        yield return null;
-        UpdateUI();
+        yield return cardView.Discard().WaitForCompletion();
+
+		cardViewPool.Push(cardView);
+		UpdateUI();
     }
+    IEnumerator DiscardCardsCor(IEnumerable<CardView> views)
+    {
+        List<CardView> copies = new List<CardView>(views);
+
+        for (int i = 0; i < copies.Count; i++)
+        {
+            CardView view = copies.ElementAt(i);
+			cardHand.DestroyCard(view);
+
+            if (i < copies.Count - 1)
+            {
+                view.Discard();
+                yield return new WaitForSeconds(0.05f);
+			}
+            else
+            {
+                yield return view.Discard().WaitForCompletion();
+			}
+
+			cardViewPool.Push(view);
+		    UpdateUI();
+		}
+	}
     private void RemoveModificationsByScope(CostModificationScope scope)
     {
         foreach (CardInstance c in cardInstanceAll)

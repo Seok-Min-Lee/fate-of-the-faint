@@ -16,7 +16,7 @@ public class CombatSystem : BaseSystem
     public TurnSystem TurnSystem { get; }
     public ActionSystem ActionSystem { get; }
     public CombatContext CombatContext { get; private set; }
-    public AnimationMonoSystem AnimationSystem { get; private set; }
+    public MotionMonoSystem AnimationSystem { get; private set; }
 
     private DamageSystem damageSystem;
     private BuffSystem buffSystem;
@@ -38,7 +38,7 @@ public class CombatSystem : BaseSystem
         CardMonoSystem cardSystem, 
         UIMonoSystem uiSystem,
         CameraMonoSystem cameraSystem,
-        AnimationMonoSystem animationSystem,
+        MotionMonoSystem animationSystem,
         RelicMonoSystem relicSystem,
         PlayerInstance player,
         IEnumerable<EnemyInstance> enemies
@@ -52,7 +52,7 @@ public class CombatSystem : BaseSystem
         this.energySystem = energySystem;
         this.cardSystem = cardSystem;
         this.uiSystem = uiSystem;
-        this.cameraSystem = this.cameraSystem;
+        this.cameraSystem = cameraSystem;
         this.AnimationSystem = animationSystem;
         this.relicSystem = relicSystem;
 
@@ -167,6 +167,7 @@ public class CombatSystem : BaseSystem
 
             EventBus.Publish<BlockChanged>(new BlockChanged(
                 context: CreateContext(e.Context),
+                motion: e.Motion,
                 target: player,
                 startAmount: beforeBlock,
                 endAmount: player.Block
@@ -181,6 +182,7 @@ public class CombatSystem : BaseSystem
             player.ApplyBuff(type, -1);
             EventBus.Publish<BuffChanged>(new BuffChanged(
                 context: CreateContext(e.Context),
+                motion: e.Motion,
                 target: player,
                 type: type,
                 startAmount: startAmount,
@@ -195,11 +197,10 @@ public class CombatSystem : BaseSystem
 
             EventBus.Publish<EnemyIntentDecided>(new EnemyIntentDecided(
                 context: CreateContext(e.Context),
+                motion: e.Motion,
                 source: enemy
             ));
         }
-
-        //AnimationSystem.PlayQueue(e.Context);
     }
     public void OnEnemyTurnStarted(EnemyTurnStarted e)
     {
@@ -218,6 +219,7 @@ public class CombatSystem : BaseSystem
 
                 EventBus.Publish<BlockChanged>(new BlockChanged(
                     context: CreateContext(e.Context),
+                    motion: e.Motion,
                     target: enemy,
                     startAmount: beforeBlock,
                     endAmount: enemy.Block
@@ -232,6 +234,7 @@ public class CombatSystem : BaseSystem
                 enemy.ApplyBuff(type, -1);
                 EventBus.Publish<BuffChanged>(new BuffChanged(
                     context: CreateContext(e.Context),
+                    motion: e.Motion,
                     target: enemy,
                     type: type,
                     startAmount: startAmount,
@@ -240,7 +243,6 @@ public class CombatSystem : BaseSystem
             }
         }
 
-        //AnimationSystem.PlayQueue(e.Context);
         actionRequestQueue.Enqueue(() => EnemyActionStart(e.Context.Turn.EnemyQueue.Dequeue().Id));
     }
     private void EnemyActionStart(Guid enemyId)
@@ -259,7 +261,7 @@ public class CombatSystem : BaseSystem
             type: ActionType.EnemyAct
         );
 
-        ActionSystem.ExcuteAction(actionContext, (eventContext) =>
+        ActionSystem.ExcuteAction(actionContext, (eventContext, animationContext) =>
         {
             foreach (IntentEffect effect in enemy.NextAction.Effects)
             {
@@ -287,6 +289,7 @@ public class CombatSystem : BaseSystem
                         case EffectType.Attack:
                             EventBus.Publish<AttackDeclared>(new AttackDeclared(
                                 context: eventContext,
+                                motion: animationContext,
                                 source: enemy,
                                 target: targets[i],
                                 amount: effect.value,
@@ -296,6 +299,7 @@ public class CombatSystem : BaseSystem
                         case EffectType.Block:
                             EventBus.Publish<BlockDeclared>(new BlockDeclared(
                                 context: eventContext,
+                                motion: animationContext,
                                 source: enemy,
                                 target: targets[i],
                                 amount: effect.value
@@ -321,7 +325,6 @@ public class CombatSystem : BaseSystem
             return;
         }
 
-        //AnimationSystem.PlayQueue(e.Context);
         actionRequestQueue.Enqueue(() => EnemyActionStart(e.Enemy.Id));
     }
     public void OnDeathDeclared(DeathDeclared e)
@@ -344,12 +347,18 @@ public class CombatSystem : BaseSystem
 
             actionRequestQueue.Enqueue(() =>
             {
+                MotionContext motionContext = new MotionContext(this);
+
                 EventBus.Publish<CombatEnded>(new CombatEnded(
                     context: eventContext,
+                    motion: motionContext,
                     result: CombatState.Defeat
                 ));
 
-                AnimationSystem.PlayQueue(e.Context);
+                AnimationSystem.Play(
+                    context: eventContext, 
+                    motion: motionContext
+                );
             });
         }
         else
@@ -360,12 +369,18 @@ public class CombatSystem : BaseSystem
 
                 actionRequestQueue.Enqueue(() =>
                 {
+                    MotionContext motionContext = new MotionContext(this);
+
                     EventBus.Publish<CombatEnded>(new CombatEnded(
                         context: eventContext,
+                        motion: motionContext,
                         result: CombatState.Victory
                     ));
 
-                    AnimationSystem.PlayQueue(e.Context);
+                    AnimationSystem.Play(
+                        context: eventContext,
+                        motion: motionContext
+                    );
                 });
             }
         }
@@ -454,6 +469,7 @@ public class CombatSystem : BaseSystem
 
                 EventBus.Publish<BlockChanged>(new BlockChanged(
                     context: CreateContext(e.Context),
+                    motion: e.Motion,
                     target: instance,
                     startAmount: beforeBlock,
                     endAmount: instance.Block
@@ -467,6 +483,7 @@ public class CombatSystem : BaseSystem
 
                 EventBus.Publish<HpChanged>(new HpChanged(
                     context: CreateContext(e.Context),
+                    motion: e.Motion,
                     target: instance,
                     startAmount: beforeHp,
                     endAmount: instance.CurrentHp
@@ -477,6 +494,7 @@ public class CombatSystem : BaseSystem
             {
                 EventBus.Publish<DeathDeclared>(new DeathDeclared(
                     context: CreateContext(e.Context),
+                    motion: e.Motion,
                     target: instance
                 ));
             }
@@ -518,6 +536,7 @@ public class CombatSystem : BaseSystem
 
         EventBus.Publish<BuffChanged>(new BuffChanged(
             context: eventContext,
+            motion: e.Motion,
             target: instance,
             type: e.Type,
             startAmount: startAmount,
@@ -550,6 +569,7 @@ public class CombatSystem : BaseSystem
 
         EventBus.Publish<BlockChanged>(new BlockChanged(
             context: CreateContext(e.Context),
+            motion: e.Motion,
             target: instance,
             startAmount: beforeBlock,
             endAmount: instance.Block
@@ -566,10 +586,20 @@ public class CombatSystem : BaseSystem
             combat: CombatContext
         );
 
-        CombatContext.state = CombatState.Combat;
-        EventBus.Publish<CombatStarted>(new CombatStarted(eventContext));
+        MotionContext motionContext = new MotionContext(this);
 
-        AnimationSystem.PlayQueue(eventContext);
+        CombatContext.state = CombatState.Combat;
+
+        EventBus.Publish<CombatStarted>(new CombatStarted(
+            context: eventContext, 
+            motion: motionContext
+        ));
+
+        AnimationSystem.Play(
+            context: eventContext, 
+            motion: motionContext
+        );
+
         actionRequestQueue.Enqueue(() =>
         {
             RequestContext requestContext = new RequestContext(this);

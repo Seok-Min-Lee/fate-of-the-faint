@@ -33,6 +33,7 @@ public class DamageSystem : BaseSystem
         eventContext = base.CreateContext(e.Context);
         eventBus.Publish<DamageResolved>(new DamageResolved(
             context: eventContext,
+            motion: e.Motion,
             source: damage.Source,
             target: damage.Target,
             amount: Mathf.Max(0, sum),

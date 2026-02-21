@@ -8,14 +8,11 @@ public class EnemyView : EntityView, ITargetable
     public Transform AimPoint => aimPoint;
     public EntityInstance Instance => instance;
 
-    private EnemyInstance instance;
     private CombatManager combatManager;
-    private AnimationMonoSystem animationSystem;
 
     public void Init(
         EnemyInstance instance,
         CombatManager combatManager, 
-        AnimationMonoSystem animationSystem, 
         Vector3 position, 
         EntityBuffViewPool buffViewPool,
         DamageTextPool damageTextPool
@@ -23,7 +20,6 @@ public class EnemyView : EntityView, ITargetable
     {
         this.instance = instance;
         this.combatManager = combatManager;
-        this.animationSystem = animationSystem;
         base.buffViewPool = buffViewPool;
         base.damageTextPool = damageTextPool;
 
@@ -58,10 +54,11 @@ public class EnemyView : EntityView, ITargetable
     }
     public void OnCombatStarted(CombatStarted e)
     {
-        animationSystem.Register(
-            priority: AnimationPriority.Entity, 
-            command: () => ShowStatusCor()
-        );
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Entity,
+            command: () => ShowStatusCor(),
+            source: this
+        ));
     }
     public void OnCombatEnded(CombatEnded e)
     {
@@ -70,10 +67,11 @@ public class EnemyView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Register(
-            priority: AnimationPriority.Entity,
-            command: () => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_VICTORY)
-        );
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Entity,
+            command: () => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_VICTORY),
+            source: this
+        ));
     }
     public void OnDeathDeclared(DeathDeclared e)
     {
@@ -87,14 +85,16 @@ public class EnemyView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Register(
-            priority: AnimationPriority.Target,
-            command: () => HideStatusCor()
-        );
-        animationSystem.Register(
-            priority: AnimationPriority.Target,
-            command: () => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_DIE, 1f)
-        );
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Target,
+            command: () => HideStatusCor(),
+            source: this
+        ));
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Target,
+            command: () => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_DIE),
+            source: this
+        ));
     }
     public void OnAttackDeclared(AttackDeclared e)
     {
@@ -104,14 +104,16 @@ public class EnemyView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Register(
-            priority: AnimationPriority.Actor,
-            command: () => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_ATTACK)
-        );
-        animationSystem.Register(
-            priority: AnimationPriority.Actor,
-            command: () => HideIntentCor()
-        );
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Actor,
+            command: () => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_ATTACK),
+            source: this
+        ));
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Actor,
+            command: () => HideIntentCor(),
+            source: this
+        ));
     }
     public void OnBlockDeclared(BlockDeclared e)
     {
@@ -121,14 +123,16 @@ public class EnemyView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Register(
-            priority: AnimationPriority.Actor,
-            command: () => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_SKILL, 1f)
-        );
-        animationSystem.Register(
-            priority: AnimationPriority.Actor,
-            command: () => HideIntentCor()
-        );
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Actor,
+            command: () => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_SKILL),
+            source: this
+        ));
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Actor,
+            command: () => HideIntentCor(),
+            source: this
+        ));
     }
     public void OnEnemyIntentDecided(EnemyIntentDecided e)
     {
@@ -142,138 +146,24 @@ public class EnemyView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Register(
-            priority: AnimationPriority.Actor,
-            command: () => ShowIntentCor(
-                            sprite: instance.NextAction.IntentIcon,
-                            text: instance.NextAction.Effects[0].value.ToString()
+        EnemyInstance enemy = instance as EnemyInstance;
+        Sprite icon = enemy.NextAction.IntentIcon;
+        string text = enemy.NextAction.Effects[0].value.ToString();
+
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Actor,
+            command: () => ShowIntentCor(sprite: icon, text: text),
+            source: this
         ));
-    }
-    public void OnHpChanged(HpChanged e)
-    {
-        if (e.Context.Combat.state != CombatState.Combat)
-        {
-            return;
-        }
-
-        if (e.Target.Id != instance.Id)
-        {
-            return;
-        }
-
-        if (e.EndAmount < e.StartAmount)
-        {
-            animationSystem.Register(
-                priority: AnimationPriority.Target,
-                command: () => ShowDamageTextCor(e.StartAmount - e.EndAmount)
-            );
-
-            if (e.EndAmount > 0)
-            {
-                animationSystem.Register(
-                    priority: AnimationPriority.Target,
-                    command: () => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_HIT)
-                );
-            }
-        }
-
-        animationSystem.Register(
-            priority: AnimationPriority.Entity,
-            command: () => ChangeHpCor(instance.CurrentHp, instance.MaxHp)
-        );
-    }
-    public void OnBlockChanged(BlockChanged e)
-    {
-        if (e.Context.Combat.state != CombatState.Combat)
-        {
-            return;
-        }
-
-        if (e.Target.Id != instance.Id)
-        {
-            return;
-        }
-
-        if (e.EndAmount > e.StartAmount)
-        {
-            animationSystem.Register(
-                priority: AnimationPriority.Actor,
-                command: () => ShowBlockCor(e.EndAmount)
-            );
-        }
-        else
-        {
-            animationSystem.Register(
-                priority: AnimationPriority.Target,
-                command: () => ChangeBlockCor(e.EndAmount)
-            );
-
-            if (instance.Block <= 0)
-            {
-                animationSystem.Register(
-                    priority: AnimationPriority.Target,
-                    command: () => HideBlockCor()
-                );
-            }
-        }
-    }
-    public void OnBuffChanged(BuffChanged e)
-    {
-        if (e.Context.Combat.state != CombatState.Combat)
-        {
-            return;
-        }
-
-        if (e.Target.Id != instance.Id)
-        {
-            return;
-        }
-
-        if (buffViewDictionary.TryGetValue(e.Type, out EntityBuffView value))
-        {
-            if (e.EndAmount > 0)
-            {
-                value.SetText(e.EndAmount.ToString());
-            }
-            else
-            {
-                buffViewPool.Push(value);
-                buffViewDictionary.Remove(e.Type);
-            }
-        }
-        else
-        {
-            if (e.EndAmount > 0)
-            {
-                EntityBuffView view = buffViewPool.Pop();
-
-                for (int i = 0; i < buffPresets.Length; i++)
-                {
-                    if (buffPresets[i].Type == e.Type)
-                    {
-                        view.Init(
-                            preset: buffPresets[i],
-                            text: e.EndAmount.ToString(),
-                            parent: buffParent
-                        );
-
-                        buffViewDictionary.Add(view.Type, view);
-                        break;
-                    }
-                }
-            }
-        }
     }
     private IEnumerator ShowIntentCor(Sprite sprite, string text)
     {
         intentView.Show(sprite, text);
         yield break;
-        //yield return intentView.Show(sprite, text).WaitForCompletion();
     }
     private IEnumerator HideIntentCor()
     {
         intentView.Hide();
         yield break;
-        //yield return intentView.Hide().WaitForCompletion();
     }
 }

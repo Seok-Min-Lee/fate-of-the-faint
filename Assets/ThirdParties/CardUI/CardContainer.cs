@@ -41,6 +41,7 @@ public class CardContainer : MonoBehaviour
     [SerializeField]
     private EventsConfig eventsConfig;
 
+    public IReadOnlyList<CardView> Cards => cards;
     private List<CardView> cards = new();
     //private List<CardWrapper> cards = new();
 

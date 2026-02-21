@@ -13,8 +13,8 @@ public class TurnSystem : BaseSystem
     private int turnId = 0;
     private List<EnemyInstance> enemies;
     private Queue<Action> eventQueue = new Queue<Action>();
-    private AnimationMonoSystem animationSystem;
-    public void Init(IEnumerable<EnemyInstance> enemies, AnimationMonoSystem animationSystem)
+    private MotionMonoSystem animationSystem;
+    public void Init(IEnumerable<EnemyInstance> enemies, MotionMonoSystem animationSystem)
     {
         this.enemies = new List<EnemyInstance>(enemies);
         this.animationSystem = animationSystem;
@@ -77,7 +77,10 @@ public class TurnSystem : BaseSystem
 
         e.Request.isResult = true;
 
-        eventBus.Publish<PlayerTurnEnded>(new PlayerTurnEnded(CreateContext(e.Context)));
+        eventBus.Publish<PlayerTurnEnded>(new PlayerTurnEnded(
+            context: CreateContext(e.Context),
+            motion: e.Motion
+        ));
     }
     private void PublishPlayerTurnStarted(ICombatEvent e)
     {
@@ -92,10 +95,17 @@ public class TurnSystem : BaseSystem
             action: null,
             turn: e.Context.Turn,
             combat: e.Context.Combat
-        );
-        eventBus.Publish<PlayerTurnStarted>(new PlayerTurnStarted(context: eventContext));
+        ); 
+        MotionContext motionContext = new MotionContext(this);
+        eventBus.Publish<PlayerTurnStarted>(new PlayerTurnStarted(
+            context: eventContext,
+            motion: motionContext
+        ));
 
-        animationSystem.PlayQueue(eventContext);
+        animationSystem.Play(
+            context: eventContext,
+            motion: motionContext
+        );
     }
     private void PublishEnemyTurnStarted(ICombatEvent e)
     {
@@ -118,10 +128,18 @@ public class TurnSystem : BaseSystem
             action: null,
             turn: TurnContext,
             combat: e.Context.Combat
-        );
-        eventBus.Publish<EnemyTurnStarted>(new EnemyTurnStarted(context: eventContext));
+        ); 
+        MotionContext motionContext = new MotionContext(this);
 
-        animationSystem.PlayQueue(eventContext);
+        eventBus.Publish<EnemyTurnStarted>(new EnemyTurnStarted(
+            context: eventContext,
+            motion: motionContext
+        ));
+
+        animationSystem.Play(
+            context: eventContext,
+            motion: motionContext
+        );
     }
     private void PublishEnemyTurnEnded(ICombatEvent e)
     {
@@ -131,8 +149,12 @@ public class TurnSystem : BaseSystem
             turn: e.Context.Turn,
             combat: e.Context.Combat
         );
+        MotionContext motionContext = new MotionContext(this);
 
-        eventBus.Publish<EnemyTurnEnded>(new EnemyTurnEnded(context: eventContext));
+        eventBus.Publish<EnemyTurnEnded>(new EnemyTurnEnded(
+            context: eventContext,
+            motion: motionContext
+        ));
 
         eventQueue.Enqueue(() => PublishPlayerTurnStarted(e));
     }

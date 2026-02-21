@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using UnityEngine;
 
 public class ActionSystem : BaseSystem
 {
@@ -11,21 +9,26 @@ public class ActionSystem : BaseSystem
         this.eventBus = eventBus;
         this.combatSystem = combatSystem;
     }
-    public void ExcuteAction(ActionContext action, Action<EventContext> declared)
+    public void ExcuteAction(ActionContext action, Action<EventContext, MotionContext> declared)
     {
-        eventBus.Publish<ActionStarted>(new ActionStarted(CreateContext(action)));
+        MotionContext motionContext = new MotionContext(this);
 
-        declared?.Invoke(CreateContext(action));
+        eventBus.Publish<ActionStarted>(new ActionStarted(
+            context:CreateContext(action),
+            motion: motionContext
+        ));
 
-        eventBus.Publish<ActionEnded>(new ActionEnded(CreateContext(action)));
+        declared?.Invoke(CreateContext(action), motionContext);
 
-        combatSystem.AnimationSystem.Register(AnimationPriority.Entity, () => DelayCor(1f));
-        combatSystem.AnimationSystem.PlayQueue(CreateContext(action));
+        eventBus.Publish<ActionEnded>(new ActionEnded(
+            context: CreateContext(action),
+            motion: motionContext
+        ));
 
-        IEnumerator DelayCor(float delay)
-        {
-            yield return new WaitForSeconds(delay);
-        }
+        combatSystem.AnimationSystem.Play(
+            context: CreateContext(action),
+            motion: motionContext
+        );
     }
     private EventContext CreateContext(ActionContext action)
     {

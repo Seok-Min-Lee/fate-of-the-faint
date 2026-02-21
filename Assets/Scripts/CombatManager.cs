@@ -9,7 +9,7 @@ public class CombatManager : MonoBehaviour
     [SerializeField] private CardMonoSystem cardSystem;
     [SerializeField] private UIMonoSystem uiSystem;
     [SerializeField] private RelicMonoSystem relicSystem;
-    [SerializeField] private AnimationMonoSystem animationSystem;
+    [SerializeField] private MotionMonoSystem animationSystem;
     [SerializeField] private CameraMonoSystem cameraSystem;
     [SerializeField] private PlayerView playerPrefab;
     [SerializeField] private EntityBuffViewPool entityBuffPool;
@@ -33,7 +33,6 @@ public class CombatManager : MonoBehaviour
         playerView.Init(
             instance: playerInstance,
             combatManager: this,
-            animationSystem: animationSystem,
             position: new Vector3(-0.71f, 0f, -0.71f),
             buffViewPool: entityBuffPool,
             damageTextPool: damageTextPool
@@ -53,13 +52,11 @@ public class CombatManager : MonoBehaviour
         animationSystem.Init(CombatSystem.EventBus);
         cameraSystem.Init(
             eventBus: CombatSystem.EventBus, 
-            player: playerInstance,
-            animationSystem: animationSystem
+            player: playerInstance
         );
         uiSystem.Init(
             eventBus: CombatSystem.EventBus,
-            actionSystem: CombatSystem.ActionSystem,
-            animationSystem: animationSystem
+            actionSystem: CombatSystem.ActionSystem
         );
         relicSystem.Init(
             eventBus: CombatSystem.EventBus,
@@ -69,7 +66,6 @@ public class CombatManager : MonoBehaviour
             eventBus: CombatSystem.EventBus, 
             combatSystem: CombatSystem,
             actionSystem: CombatSystem.ActionSystem,
-            animationSystem: animationSystem,
             cardInstances: cardInstance, 
             player: playerInstance
         );
@@ -169,7 +165,6 @@ public class CombatManager : MonoBehaviour
             view.Init(
                 instance: _instance,
                 combatManager: this,
-                animationSystem: animationSystem,
                 position: positions[i],
                 buffViewPool: entityBuffPool,
                 damageTextPool: damageTextPool

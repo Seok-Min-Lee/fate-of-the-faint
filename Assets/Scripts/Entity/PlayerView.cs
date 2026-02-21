@@ -6,21 +6,17 @@ using UnityEngine;
 public class PlayerView : EntityView, ITargetable
 {
     private CombatManager combatManager;
-    private AnimationMonoSystem animationSystem;
-    private PlayerInstance instance;
     public Transform AimPoint => aimPoint;
     public EntityInstance Instance => instance;
     public void Init(
         PlayerInstance instance, 
         CombatManager combatManager, 
-        AnimationMonoSystem animationSystem, 
         Vector3 position, 
         EntityBuffViewPool buffViewPool,
         DamageTextPool damageTextPool
     )
     {
         this.combatManager = combatManager;
-        this.animationSystem = animationSystem;
         this.instance = instance;
         base.buffViewPool = buffViewPool;
         base.damageTextPool = damageTextPool;
@@ -59,14 +55,17 @@ public class PlayerView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Register(
-            priority: AnimationPriority.UIWindow, 
-            command: () => PlayAnimatorBoolCor(AnimationKeys.PLAYER_ENCOUNTER, false)
-        );
-        animationSystem.Register(
-            priority: AnimationPriority.Entity, 
-            command: () => ShowStatusCor()
-        );
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Start,
+            command: () => PlayAnimatorBoolCor(AnimationKeys.PLAYER_ENCOUNTER, false),
+            source: this
+        ));
+
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Entity,
+            command: () => ShowStatusCor(),
+            source: this
+        ));
     }
     public void OnCombatEnded(CombatEnded e)
     {
@@ -75,10 +74,11 @@ public class PlayerView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Register(
-            priority: AnimationPriority.Entity, 
-            command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_VICTORY, 1f)
-        );
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Entity,
+            command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_VICTORY),
+            source: this
+        ));
     }
     public void OnDeathDeclared(DeathDeclared e)
     {
@@ -92,14 +92,16 @@ public class PlayerView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Register(
-            priority: AnimationPriority.Target,
-            command: () => HideStatusCor()
-        );
-        animationSystem.Register(
-            priority: AnimationPriority.Target, 
-            command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_DIE, 1f)
-        );
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Target,
+            command: () => HideStatusCor(),
+            source: this
+        ));
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Target,
+            command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_DIE),
+            source: this
+        ));
     }
     public void OnAttackDeclared(AttackDeclared e)
     {
@@ -109,10 +111,11 @@ public class PlayerView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Register(
-            priority: AnimationPriority.Actor,
-            command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_ATTACK)
-        );
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Actor,
+            command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_ATTACK),
+            source: this
+        ));
     }
     public void OnBlockDeclared(BlockDeclared e)
     {
@@ -122,124 +125,10 @@ public class PlayerView : EntityView, ITargetable
             return;
         }
 
-        animationSystem.Register(
-            priority: AnimationPriority.Actor, 
-            command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_SKILL, 1f)
-        );
-    }
-    public void OnHpChanged(HpChanged e)
-    {
-        if (e.Context.Combat.state != CombatState.Combat)
-        {
-            return;
-        }
-
-        if (e.Target.Id != instance.Id)
-        {
-            return;
-        }
-
-        if (e.EndAmount < e.StartAmount)
-        {
-            animationSystem.Register(
-                priority: AnimationPriority.Target,
-                command: () => ShowDamageTextCor(e.StartAmount - e.EndAmount)
-            );
-
-            if (e.EndAmount > 0)
-            {
-                animationSystem.Register(
-                    priority: AnimationPriority.Target, 
-                    command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_HIT)
-                );
-            }
-        }
-
-        animationSystem.Register(
-            priority: AnimationPriority.Entity,
-            command: () => ChangeHpCor(instance.CurrentHp, instance.MaxHp)
-        );
-    }
-    public void OnBlockChanged(BlockChanged e)
-    {
-        if (e.Context.Combat.state != CombatState.Combat)
-        {
-            return;
-        }
-
-        if (e.Target.Id != instance.Id)
-        {
-            return;
-        }
-
-        if (e.EndAmount > e.StartAmount)
-        {
-            animationSystem.Register(
-                priority: AnimationPriority.Actor,
-                command: () => ShowBlockCor(e.EndAmount)
-            );
-        }
-        else
-        {
-            animationSystem.Register(
-                priority: AnimationPriority.Target,
-                command: () => ChangeBlockCor(e.EndAmount)
-            );
-
-            if (instance.Block <= 0)
-            {
-                animationSystem.Register(
-                    priority: AnimationPriority.Target,
-                    command: () => HideBlockCor()
-                );
-            }
-        }
-    }
-    public void OnBuffChanged(BuffChanged e)
-    {
-        if (e.Context.Combat.state != CombatState.Combat)
-        {
-            return;
-        }
-
-        if (e.Target.Id != instance.Id)
-        {
-            return;
-        }
-
-        if (buffViewDictionary.TryGetValue(e.Type, out EntityBuffView value))
-        {
-            if (e.EndAmount > 0)
-            {
-                value.SetText(e.EndAmount.ToString());
-            }
-            else
-            {
-                buffViewPool.Push(value);
-                buffViewDictionary.Remove(e.Type);
-            }
-        }
-        else
-        {
-            if (e.EndAmount > 0)
-            {
-                EntityBuffView view = buffViewPool.Pop();
-
-                for (int i = 0; i < buffPresets.Length; i++)
-                {
-                    if (buffPresets[i].Type == e.Type)
-                    {
-                        view.Init(
-                            preset: buffPresets[i], 
-                            text: e.EndAmount.ToString(),
-                            parent: buffParent
-                        );
-
-                        buffViewDictionary.Add(view.Type, view);
-                        break;
-                    }
-                }
-            }
-        }
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Actor,
+            command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_SKILL),
+            source: this
+        ));
     }
 }

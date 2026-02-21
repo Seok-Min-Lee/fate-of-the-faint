@@ -7,7 +7,6 @@ public class UIMonoSystem : BaseMonoSystem
 {
     private EventBus eventBus;
     private ActionSystem actionSystem;
-    private AnimationMonoSystem animationSystem;
 
     [Header("Canvas")]
     [SerializeField] private Transform windowParent;
@@ -76,11 +75,10 @@ public class UIMonoSystem : BaseMonoSystem
             }
         }
     }
-    public void Init(EventBus eventBus, ActionSystem actionSystem, AnimationMonoSystem animationSystem)
+    public void Init(EventBus eventBus, ActionSystem actionSystem)
     {
         this.eventBus = eventBus;
         this.actionSystem = actionSystem;
-        this.animationSystem = animationSystem;
     }
     public void OnCombatStarted(CombatStarted e)
     {
@@ -90,10 +88,11 @@ public class UIMonoSystem : BaseMonoSystem
         }
         CombatWindow combatWindow = window as CombatWindow;
 
-        animationSystem.Register(
-            priority: AnimationPriority.UIWindow,
-            command: () => CombatStartedAnimationCor(combatWindow)
-        );
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Window,
+            command: () => CombatStartedAnimationCor(combatWindow),
+            source: this
+        ));
     }
     public void OnCombatEnded(CombatEnded e)
     {
@@ -103,19 +102,23 @@ public class UIMonoSystem : BaseMonoSystem
             windowDictionary.TryGetValue(WindowType.Victory, out window))
         {
             VictoryWindow victoryWindow = window as VictoryWindow;
-            animationSystem.Register(
-                priority: AnimationPriority.UIWindow, 
-                command: () => CombatEndedVictoryAnimationCor(victoryWindow)
-            );
+
+            e.Motion.AddTask(new MotionTask(
+                priority: MotionPriority.Window,
+                command: () => CombatEndedVictoryAnimationCor(victoryWindow),
+                source: this
+            ));
         }
         else if (e.Context.Combat.state == CombatState.Defeat &&
                  windowDictionary.TryGetValue(WindowType.Defeat, out window))
         {
             DefeatWindow defeatWindow = window as DefeatWindow;
-            animationSystem.Register(
-                priority: AnimationPriority.UIWindow,
-                command: () => CombatEndedDefeatWindowAnimationCor(defeatWindow)
-            );
+
+            e.Motion.AddTask(new MotionTask(
+                priority: MotionPriority.Window,
+                command: () => CombatEndedDefeatWindowAnimationCor(defeatWindow),
+                source: this
+            ));
         }
         else
         {
@@ -135,10 +138,11 @@ public class UIMonoSystem : BaseMonoSystem
         }
         CombatWindow combatWindow = window as CombatWindow;
 
-        animationSystem.Register(
-            priority: AnimationPriority.UIWindow,
-            command: () => PlayerTurnStartedMotionCor(combatWindow)
-        );
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Window,
+            command: () => PlayerTurnStartedMotionCor(combatWindow),
+            source: this
+        ));
     }
     public void OnEnemyTurnStarted(EnemyTurnStarted e)
     {
@@ -153,10 +157,11 @@ public class UIMonoSystem : BaseMonoSystem
         }
         CombatWindow combatWindow = window as CombatWindow;
 
-        animationSystem.Register(
-            priority: AnimationPriority.UIWindow,
-            command: () => EnemyTurnStartedAnimationCor(combatWindow)
-        );
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Window,
+            command: () => EnemyTurnStartedAnimationCor(combatWindow),
+            source: this
+        ));
     }
     public void OnPlayerTurnEnded(PlayerTurnEnded e)
     {
@@ -172,10 +177,11 @@ public class UIMonoSystem : BaseMonoSystem
             return;
         }
 
-        animationSystem.Register(
-            priority: AnimationPriority.Actor,
-            command: () => energy.ChangeCor(e.EndAmount, e.MaxAmount)
-        );
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Actor,
+            command: () => energy.ChangeCor(e.EndAmount, e.MaxAmount),
+            source: this
+        ));
     }
     public void OnClickCardDisplay()
     {
@@ -209,12 +215,13 @@ public class UIMonoSystem : BaseMonoSystem
     {
         ActionContext actionContext = new ActionContext(source: this, type: ActionType.PlayerTurnEnd);
 
-        actionSystem.ExcuteAction(actionContext, (eventContext) =>
+        actionSystem.ExcuteAction(actionContext, (eventContext, animationContext) =>
         {
             RequestContext requestContext = new RequestContext(source: this);
 
             eventBus.Publish<PlayerTurnEndRequested>(new PlayerTurnEndRequested(
                 context: eventContext,
+                motion: animationContext,
                 request: requestContext
             ));
         });

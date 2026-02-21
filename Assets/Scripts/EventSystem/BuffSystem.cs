@@ -31,6 +31,7 @@ public class BuffSystem : BaseSystem
         eventContext = CreateContext(e.Context);
         eventBus.Publish<BuffResolved>(new BuffResolved(
             context: eventContext,
+            motion: e.Motion,
             source: buff.Source,
             target: buff.Target,
             type: buff.Type,

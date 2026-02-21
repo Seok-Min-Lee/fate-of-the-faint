@@ -10,13 +10,11 @@ public class CameraMonoSystem : BaseMonoSystem
     [Range(0, 64)] public int vibrato;
 
     private EventBus eventBus;
-    private AnimationMonoSystem animationSystem;
     private PlayerInstance player;
-    public void Init(EventBus eventBus, PlayerInstance player, AnimationMonoSystem animationSystem)
+    public void Init(EventBus eventBus, PlayerInstance player)
     {
         this.eventBus = eventBus;
         this.player = player;
-        this.animationSystem = animationSystem;
 
         eventBus.Subscribe<AttackDeclared>(OnAttackDeclared);
     }
@@ -34,18 +32,20 @@ public class CameraMonoSystem : BaseMonoSystem
 
         if (e.Source == player)
         {
-            animationSystem.Register(
-                priority: AnimationPriority.Target,
-                command: () => CameraPunchCor(new Vector2(1, 1))
-            );
+            e.Motion.AddTask(new MotionTask(
+                priority: MotionPriority.Entity,
+                command: () => CameraPunchCor(new Vector2(1, 1)),
+                source: this
+            ));
         }
 
         if (e.Target == player)
         {
-            animationSystem.Register(
-                priority: AnimationPriority.Target,
-                command: () => CameraPunchCor(new Vector2(-1, -1))
-            );
+            e.Motion.AddTask(new MotionTask(
+                priority: MotionPriority.Entity,
+                command: () => CameraPunchCor(new Vector2(-1, -1)),
+                source: this
+            ));
         }
     }
     private IEnumerator CameraPunchCor(Vector2 direction)

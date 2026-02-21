@@ -19,6 +19,128 @@ public class EntityView : MonoBehaviour
     protected EntityBuffViewPool buffViewPool;
     protected DamageTextPool damageTextPool;
 
+    protected EntityInstance instance;
+    public void OnHpChanged(HpChanged e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
+        if (e.Target.Id != instance.Id)
+        {
+            return;
+        }
+
+        if (e.EndAmount < e.StartAmount)
+        {
+            e.Motion.AddTask(new MotionTask(
+                priority: MotionPriority.Target,
+                command: () => ShowDamageTextCor(e.StartAmount - e.EndAmount),
+                source: this
+            ));
+
+            if (e.EndAmount > 0)
+            {
+                e.Motion.AddTask(new MotionTask(
+                    priority: MotionPriority.Target,
+                    command: () => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_HIT),
+                    source: this
+                ));
+            }
+        }
+
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Entity,
+            command: () => ChangeHpCor(instance.CurrentHp, instance.MaxHp),
+            source: this
+        ));
+    }
+    public void OnBlockChanged(BlockChanged e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
+        if (e.Target.Id != instance.Id)
+        {
+            return;
+        }
+
+        if (e.EndAmount > e.StartAmount)
+        {
+            e.Motion.AddTask(new MotionTask(
+                priority: MotionPriority.Actor,
+                command: () => ShowBlockCor(e.EndAmount),
+                source: this
+            ));
+        }
+        else
+        {
+            e.Motion.AddTask(new MotionTask(
+                priority: MotionPriority.Target,
+                command: () => ChangeBlockCor(e.EndAmount),
+                source: this
+            ));
+
+            if (instance.Block <= 0)
+            {
+                e.Motion.AddTask(new MotionTask(
+                    priority: MotionPriority.Target,
+                    command: () => HideBlockCor(),
+                    source: this
+                ));
+            }
+        }
+    }
+    public void OnBuffChanged(BuffChanged e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
+        if (e.Target.Id != instance.Id)
+        {
+            return;
+        }
+
+        if (buffViewDictionary.TryGetValue(e.Type, out EntityBuffView value))
+        {
+            if (e.EndAmount > 0)
+            {
+                value.SetText(e.EndAmount.ToString());
+            }
+            else
+            {
+                buffViewPool.Push(value);
+                buffViewDictionary.Remove(e.Type);
+            }
+        }
+        else
+        {
+            if (e.EndAmount > 0)
+            {
+                EntityBuffView view = buffViewPool.Pop();
+
+                for (int i = 0; i < buffPresets.Length; i++)
+                {
+                    if (buffPresets[i].Type == e.Type)
+                    {
+                        view.Init(
+                            preset: buffPresets[i],
+                            text: e.EndAmount.ToString(),
+                            parent: buffParent
+                        );
+
+                        buffViewDictionary.Add(view.Type, view);
+                        break;
+                    }
+                }
+            }
+        }
+    }
     protected IEnumerator ShowStatusCor()
     {
         statusCG.DOFade(1f, 1f);

@@ -19,7 +19,11 @@ public class EnergySystem : BaseSystem
             return;
         }
 
-        EnergyChanged(MaxEnergy - Energy, e.Context);
+        EnergyChanged(
+            amount: MaxEnergy - Energy, 
+            context: e.Context,
+            motion: e.Motion
+        );
     }
     public void OnEnergyChangeRequested(EnergyChangeRequested e)
     {
@@ -37,14 +41,22 @@ public class EnergySystem : BaseSystem
         else if (e.Amount > 0) // 충전
         {
             result = true;
-            EnergyChanged(e.Amount, e.Context);
+            EnergyChanged(
+                amount: e.Amount, 
+                context: e.Context,
+                motion: e.Motion
+            );
         }
         else // 사용
         {
             if (Energy >= Mathf.Abs(e.Amount))
             {
                 result = true;
-                EnergyChanged(e.Amount, e.Context);
+                EnergyChanged(
+                    amount: e.Amount,
+                    context: e.Context,
+                    motion: e.Motion
+                );
             }
         }
 
@@ -57,6 +69,7 @@ public class EnergySystem : BaseSystem
 
         eventBus.Publish(new EnergyResolved(
             context: CreateContext(e.Context), 
+            motion: e.Motion,
             result: result
         ));
     }
@@ -67,15 +80,20 @@ public class EnergySystem : BaseSystem
             return;
         }
 
-        EnergyChanged(e.Amount, e.Context);
+        EnergyChanged(
+            amount: e.Amount,
+            context: e.Context,
+            motion: e.Motion
+        );
     }
-    private void EnergyChanged(int amount, EventContext context)
+    private void EnergyChanged(int amount, EventContext context, MotionContext motion)
     {
         int startAmount = Energy;
         Energy += amount;
 
         eventBus.Publish<EnergyChanged>(new EnergyChanged(
             context: CreateContext(context),
+            motion: motion,
             startAmount: startAmount, 
             endAmount: Energy,
             maxAmount: MaxEnergy

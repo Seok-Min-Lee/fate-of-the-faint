@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public interface ICombatEvent 
 {
@@ -40,21 +41,25 @@ public class EventBus
 }
 public struct CombatStarted : ICombatEvent
 {
-    public CombatStarted(EventContext context)
+    public CombatStarted(EventContext context, MotionContext motion)
     {
         Context = context;
+        Motion = motion;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EventMeta Meta => EventMetas.CombatStarted;
 }
 public struct CombatEnded : ICombatEvent
 {
-    public CombatEnded(EventContext context, CombatState result)
+    public CombatEnded(EventContext context, MotionContext motion, CombatState result)
     {
         Context = context;
+        Motion = motion;
         Result = result;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EventMeta Meta => EventMetas.CombatEnded;
     public CombatState Result;
 }
@@ -71,49 +76,59 @@ public struct PlayerTurnStartRequested : ICombatEvent
 }
 public struct PlayerTurnStarted : ICombatEvent
 {
-    public PlayerTurnStarted(EventContext context)
+    public PlayerTurnStarted(EventContext context, MotionContext motion)
     {
         Context = context;
+        Motion = motion;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EventMeta Meta => EventMetas.PlayerTurnStarted;
 }
 public struct PlayerTurnEndRequested : ICombatEvent
 {
-    public PlayerTurnEndRequested(EventContext context, RequestContext request)
+    public PlayerTurnEndRequested(EventContext context, MotionContext motion, RequestContext request)
     {
         Context = context;
+        Motion = motion;
         Request = request;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public RequestContext Request { get; private set; }
     public EventMeta Meta => EventMetas.PlayerTurnEndRequested;
 }
 public struct PlayerTurnEnded : ICombatEvent
 {
-    public PlayerTurnEnded(EventContext context)
+    public PlayerTurnEnded(EventContext context, MotionContext motion)
     {
         Context = context;
+        Motion = motion;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EventMeta Meta => EventMetas.PlayerTurnEnded;
 }
 public struct EnemyTurnStarted : ICombatEvent
 {
-    public EnemyTurnStarted(EventContext context)
+    public EnemyTurnStarted(EventContext context, MotionContext motion)
     {
         Context = context;
+        Motion = motion;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EventMeta Meta => EventMetas.EnemyTurnStarted;
 }
 public struct EnemyTurnEnded : ICombatEvent
 {
-    public EnemyTurnEnded(EventContext context)
+    public EnemyTurnEnded(EventContext context, MotionContext motion)
     {
         Context = context;
+        Motion = motion;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EventMeta Meta => EventMetas.EnemyTurnEnded;
 }
 public struct EnemyActionStartRequested : ICombatEvent
@@ -131,56 +146,66 @@ public struct EnemyActionStartRequested : ICombatEvent
 }
 public struct ActionStarted : ICombatEvent
 {
-    public ActionStarted(EventContext context)
+    public ActionStarted(EventContext context, MotionContext motion)
     {
         Context = context;
+        Motion = motion;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EventMeta Meta => EventMetas.ActionStarted;
 }
 public struct ActionEnded : ICombatEvent
 {
-    public ActionEnded(EventContext context)
+    public ActionEnded(EventContext context, MotionContext motion)
     {
         Context = context;
+        Motion = motion;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EventMeta Meta => EventMetas.ActionEnded;
 }
 public struct EnergyChangeRequested : ICombatEvent
 {
-    public EnergyChangeRequested(EventContext context, RequestContext request, int amount)
+    public EnergyChangeRequested(EventContext context, RequestContext request, MotionContext motion, int amount)
     {
         Context = context;
         Request = request;
+        Motion = motion;
         Amount = amount;
     }
     public EventContext Context { get; private set; }
     public RequestContext Request { get; private set; }
+    public MotionContext Motion { get; private set; }
     public int Amount { get; private set; }
     public EventMeta Meta => EventMetas.EnergyChangeRequested;
 }
 public struct EnergyResolved : ICombatEvent
 {
-    public EnergyResolved(EventContext context, bool result)
+    public EnergyResolved(EventContext context, MotionContext motion, bool result)
     {
         Context = context;
+        Motion = motion;
         Result = result;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public bool Result { get; private set; }
     public EventMeta Meta => EventMetas.EnergyResolved;
 }
 public struct EnergyChanged : ICombatEvent
 {
-    public EnergyChanged(EventContext context, int startAmount, int endAmount, int maxAmount)
+    public EnergyChanged(EventContext context, MotionContext motion, int startAmount, int endAmount, int maxAmount)
     {
         Context = context;
+        Motion = motion;
         StartAmount = startAmount;
         EndAmount = endAmount;
         MaxAmount = maxAmount;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public int StartAmount { get; private set; }
     public int EndAmount { get; private set; }
     public int MaxAmount { get; private set; }
@@ -226,15 +251,17 @@ public struct CardPlayDeclared : ICombatEvent
 }
 public struct AttackDeclared : ICombatEvent
 {
-    public AttackDeclared(EventContext context, EntityInstance source, EntityInstance target, int amount, int repeat)
+    public AttackDeclared(EventContext context, MotionContext motion, EntityInstance source, EntityInstance target, int amount, int repeat)
     {
         Context = context;
+        Motion = motion;
         Source = source;
         Target = target;
         Amount = amount;
         Repeat = repeat;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EntityInstance Source { get; private set; }
     public EntityInstance Target { get; private set; }
     public int Amount { get; private set; }
@@ -243,14 +270,16 @@ public struct AttackDeclared : ICombatEvent
 }
 public struct BlockDeclared : ICombatEvent
 {
-    public BlockDeclared(EventContext context, EntityInstance source, EntityInstance target, int amount)
+    public BlockDeclared(EventContext context, MotionContext motion, EntityInstance source, EntityInstance target, int amount)
     {
         Context = context;
+        Motion = motion;
         Source = source;
         Target = target;
         Amount = amount;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EntityInstance Source { get; private set; }
     public EntityInstance Target { get; private set; }
     public int Amount { get; private set; }
@@ -258,23 +287,27 @@ public struct BlockDeclared : ICombatEvent
 }
 public struct DrawCardDeclared : ICombatEvent
 {
-    public DrawCardDeclared(EventContext context, int amount)
+    public DrawCardDeclared(EventContext context, MotionContext motion, int amount)
     {
         Context = context;
+        Motion = motion;
         Amount = amount;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public int Amount { get; private set; }
     public EventMeta Meta => EventMetas.DrawCardDeclared;
 }
 public struct GainEnergyDeclared : ICombatEvent
 {
-    public GainEnergyDeclared(EventContext context, int amount)
+    public GainEnergyDeclared(EventContext context, MotionContext motion, int amount)
     {
         Context = context;
+        Motion = motion;
         Amount = amount;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public int Amount { get; private set; }
     public EventMeta Meta => EventMetas.GainEnergyDeclared;
 }
@@ -293,15 +326,17 @@ public struct ModifyCostDeclared : ICombatEvent
 }
 public struct BuffDeclared : ICombatEvent
 {
-    public BuffDeclared(EventContext context, EntityInstance source, EntityInstance target, BuffType type, int amount)
+    public BuffDeclared(EventContext context, MotionContext motion, EntityInstance source, EntityInstance target, BuffType type, int amount)
     {
         Context = context;
+        Motion = motion;
         Source = source;
         Target = target;
         Type = type;
         Amount = amount;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EntityInstance Source { get; private set; }
     public EntityInstance Target { get; private set; }
     public BuffType Type { get; private set; }
@@ -321,15 +356,17 @@ public struct DamageRequested : ICombatEvent
 }
 public struct DamageResolved : ICombatEvent
 {
-    public DamageResolved(EventContext context, EntityInstance source, EntityInstance target, int amount, int repeat)
+    public DamageResolved(EventContext context, MotionContext motion, EntityInstance source, EntityInstance target, int amount, int repeat)
     {
         Context = context;
+        Motion = motion;
         Source = source;
         Target = target;
         Amount = amount;
         Repeat = repeat;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EntityInstance Source { get; private set; }
     public EntityInstance Target { get; private set; }
     public int Amount { get; private set; }
@@ -349,15 +386,17 @@ public struct BuffRequested : ICombatEvent
 }
 public struct BuffResolved : ICombatEvent
 {
-    public BuffResolved(EventContext context, EntityInstance source, EntityInstance target, BuffType type, int amount)
+    public BuffResolved(EventContext context, MotionContext motion, EntityInstance source, EntityInstance target, BuffType type, int amount)
     {
         Context = context;
+        Motion = motion;
         Source = source;
         Target = target;
         Type = type;
         Amount = amount;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EntityInstance Source { get; private set; }
     public EntityInstance Target { get; private set; }
     public BuffType Type { get; private set; }
@@ -366,14 +405,16 @@ public struct BuffResolved : ICombatEvent
 }
 public struct HpChanged : ICombatEvent
 {
-    public HpChanged(EventContext context, EntityInstance target, int startAmount, int endAmount)
+    public HpChanged(EventContext context, MotionContext motion, EntityInstance target, int startAmount, int endAmount)
     {
         Context = context;
+        Motion = motion;
         Target = target;
         StartAmount = startAmount;
         EndAmount = endAmount;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EntityInstance Target { get; private set; }
     public int StartAmount { get; private set; }
     public int EndAmount { get; private set; }
@@ -381,14 +422,16 @@ public struct HpChanged : ICombatEvent
 }
 public struct BlockChanged : ICombatEvent
 {
-    public BlockChanged(EventContext context, EntityInstance target, int startAmount, int endAmount)
+    public BlockChanged(EventContext context, MotionContext motion, EntityInstance target, int startAmount, int endAmount)
     {
         Context = context;
+        Motion = motion;
         Target = target;
         StartAmount = startAmount;
         EndAmount = endAmount;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EntityInstance Target { get; private set; }
     public int StartAmount { get; private set; }
     public int EndAmount { get; private set; }
@@ -396,15 +439,17 @@ public struct BlockChanged : ICombatEvent
 }
 public struct BuffChanged : ICombatEvent
 {
-    public BuffChanged(EventContext context, EntityInstance target, BuffType type, int startAmount, int endAmount)
+    public BuffChanged(EventContext context, MotionContext motion, EntityInstance target, BuffType type, int startAmount, int endAmount)
     {
         Context = context;
+        Motion = motion;
         Target = target;
         Type = type;
         StartAmount = startAmount;
         EndAmount = endAmount;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EntityInstance Target { get; private set; }
     public BuffType Type { get; private set; }
     public int StartAmount { get; private set; }
@@ -413,12 +458,14 @@ public struct BuffChanged : ICombatEvent
 }
 public struct DeathDeclared : ICombatEvent
 {
-    public DeathDeclared(EventContext context, EntityInstance target)
+    public DeathDeclared(EventContext context, MotionContext motion, EntityInstance target)
     {
         Context = context;
+        Motion = motion;
         Source = target;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EntityInstance Source { get; private set; }
     public EventMeta Meta => EventMetas.DeathDeclared;
 }
@@ -442,12 +489,14 @@ public struct AnimationEnded : ICombatEvent
 }
 public struct EnemyIntentDecided : ICombatEvent
 {
-    public EnemyIntentDecided(EventContext context, EnemyInstance source)
+    public EnemyIntentDecided(EventContext context, MotionContext motion, EnemyInstance source)
     {
         Context = context;
+        Motion = motion;
         Source = source;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EnemyInstance Source { get; private set; }
     public EventMeta Meta => EventMetas.EnemyIntentDecided;
 }
