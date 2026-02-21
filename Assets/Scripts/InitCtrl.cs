@@ -9,6 +9,6 @@ public class InitCtrl : MonoBehaviour
         {
             yield return new WaitForSeconds(1f);
         }
-        UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.COMBAT);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static UnityEngine.GraphicsBuffer;
 
 public interface ICombatEvent 
 {
@@ -248,6 +250,48 @@ public struct CardPlayDeclared : ICombatEvent
     public EventContext Context { get; private set; }
     public CardView CardView { get; private set; }
     public EventMeta Meta => EventMetas.CardPlayDeclared;
+}
+public struct AttackPlayed : ICombatEvent
+{
+    public AttackPlayed(EventContext context, MotionContext motion, EntityInstance source)
+    {
+        Context = context;
+        Motion = motion;
+        Source = source;
+    }
+
+    public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
+    public EntityInstance Source { get; private set; }
+    public EventMeta Meta => EventMetas.AttackPlayed;
+}
+public struct SkillPlayed : ICombatEvent
+{
+    public SkillPlayed(EventContext context, MotionContext motion, EntityInstance source)
+    {
+        Context = context;
+        Motion = motion;
+        Source = source;
+    }
+
+    public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
+    public EntityInstance Source { get; private set; }
+    public EventMeta Meta => EventMetas.SkillPlayed;
+}
+public struct PowerPlayed : ICombatEvent
+{
+    public PowerPlayed(EventContext context, MotionContext motion, EntityInstance source)
+    {
+        Context = context;
+        Motion = motion;
+        Source = source;
+    }
+
+    public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
+    public EntityInstance Source { get; private set; }
+    public EventMeta Meta => EventMetas.PowerPlayed;
 }
 public struct AttackDeclared : ICombatEvent
 {

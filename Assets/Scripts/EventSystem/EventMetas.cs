@@ -18,6 +18,9 @@
     public static readonly EventMeta CardDiscarded = new EventMeta("CardDiscarded", EventCategory.Card);
     public static readonly EventMeta CardCharged = new EventMeta("CardCharged", EventCategory.Card);
     public static readonly EventMeta CardPlayDeclared = new EventMeta("CardPlayDeclared", EventCategory.Card);
+    public static readonly EventMeta AttackPlayed = new EventMeta("AttackPlayed", EventCategory.Card);
+    public static readonly EventMeta SkillPlayed = new EventMeta("SkillPlayed", EventCategory.Card);
+    public static readonly EventMeta PowerPlayed = new EventMeta("PowerPlayed", EventCategory.Card);
     public static readonly EventMeta AttackDeclared = new EventMeta("AttackDeclared", EventCategory.Card);
     public static readonly EventMeta BlockDeclared = new EventMeta("BlockDeclared", EventCategory.Card);
     public static readonly EventMeta DrawCardDeclared = new EventMeta("DrawCardDeclared", EventCategory.Card);

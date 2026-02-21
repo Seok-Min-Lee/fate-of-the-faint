@@ -135,8 +135,38 @@ public class CardMonoSystem : BaseMonoSystem
             return;
         }
 
+        EventContext context = CreateContext(e.Context);
+
+        // Motion Play
+        switch (cardInstance.Origin.Type)
+        {
+            case CardType.Attack:
+                eventBus.Publish<AttackPlayed>(new AttackPlayed(
+                    context: context,
+                    motion: e.Motion,
+                    source: player
+                ));
+                break;
+            case CardType.Skill:
+                eventBus.Publish<SkillPlayed>(new SkillPlayed(
+                    context: context,
+                    motion: e.Motion,
+                    source: player
+                ));
+                break;
+            case CardType.Power:
+                eventBus.Publish<PowerPlayed>(new PowerPlayed(
+                    context: context,
+                    motion: e.Motion,
+                    source: player
+                ));
+                break;
+        }
+
+        // Effect Process
         foreach (CardEffect ce in cardInstance.Origin.Effects)
         {
+            // Target
             List<EntityInstance> targets = new List<EntityInstance>();
             switch (ce.targetType)
             {
@@ -151,9 +181,7 @@ public class CardMonoSystem : BaseMonoSystem
                     break;
             }
 
-
-            EventContext context = CreateContext(e.Context);
-
+            //
             if (ce.effectType == EffectType.DrawCard)
             {
                 eventBus.Publish<DrawCardDeclared>(new DrawCardDeclared(

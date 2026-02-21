@@ -26,8 +26,9 @@ public class PlayerView : EntityView, ITargetable
         combatManager.CombatSystem.EventBus.Subscribe<CombatStarted>(OnCombatStarted);
         combatManager.CombatSystem.EventBus.Subscribe<CombatEnded>(OnCombatEnded);
         combatManager.CombatSystem.EventBus.Subscribe<DeathDeclared>(OnDeathDeclared);
-        combatManager.CombatSystem.EventBus.Subscribe<AttackDeclared>(OnAttackDeclared);
-        combatManager.CombatSystem.EventBus.Subscribe<BlockDeclared>(OnBlockDeclared);
+        combatManager.CombatSystem.EventBus.Subscribe<AttackPlayed>(OnAttackPlayed);
+        combatManager.CombatSystem.EventBus.Subscribe<SkillPlayed>(OnSkillPlayed);
+        combatManager.CombatSystem.EventBus.Subscribe<PowerPlayed>(OnPowerPlayed);
         combatManager.CombatSystem.EventBus.Subscribe<HpChanged>(OnHpChanged);
         combatManager.CombatSystem.EventBus.Subscribe<BlockChanged>(OnBlockChanged);
         combatManager.CombatSystem.EventBus.Subscribe<BuffChanged>(OnBuffChanged);
@@ -42,8 +43,9 @@ public class PlayerView : EntityView, ITargetable
         combatManager.CombatSystem.EventBus.Unsubscribe<CombatStarted>(OnCombatStarted);
         combatManager.CombatSystem.EventBus.Unsubscribe<CombatEnded>(OnCombatEnded);
         combatManager.CombatSystem.EventBus.Unsubscribe<DeathDeclared>(OnDeathDeclared);
-        combatManager.CombatSystem.EventBus.Unsubscribe<AttackDeclared>(OnAttackDeclared);
-        combatManager.CombatSystem.EventBus.Unsubscribe<BlockDeclared>(OnBlockDeclared);
+        combatManager.CombatSystem.EventBus.Unsubscribe<AttackPlayed>(OnAttackPlayed);
+        combatManager.CombatSystem.EventBus.Unsubscribe<SkillPlayed>(OnSkillPlayed);
+        combatManager.CombatSystem.EventBus.Unsubscribe<PowerPlayed>(OnPowerPlayed);
         combatManager.CombatSystem.EventBus.Unsubscribe<HpChanged>(OnHpChanged);
         combatManager.CombatSystem.EventBus.Unsubscribe<BlockChanged>(OnBlockChanged);
         combatManager.CombatSystem.EventBus.Unsubscribe<BuffChanged>(OnBuffChanged);
@@ -103,7 +105,7 @@ public class PlayerView : EntityView, ITargetable
             source: this
         ));
     }
-    public void OnAttackDeclared(AttackDeclared e)
+    public void OnAttackPlayed(AttackPlayed e)
     {
         if (e.Context.Combat.state != CombatState.Combat ||
             e.Source != instance)
@@ -117,10 +119,10 @@ public class PlayerView : EntityView, ITargetable
             source: this
         ));
     }
-    public void OnBlockDeclared(BlockDeclared e)
+    public void OnSkillPlayed(SkillPlayed e)
     {
         if (e.Context.Combat.state != CombatState.Combat ||
-            e.Target != instance)
+            e.Source != instance)
         {
             return;
         }
@@ -128,6 +130,20 @@ public class PlayerView : EntityView, ITargetable
         e.Motion.AddTask(new MotionTask(
             priority: MotionPriority.Actor,
             command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_SKILL),
+            source: this
+        ));
+    }
+    public void OnPowerPlayed(PowerPlayed e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat ||
+            e.Source != instance)
+        {
+            return;
+        }
+
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Actor,
+            command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_POWER),
             source: this
         ));
     }

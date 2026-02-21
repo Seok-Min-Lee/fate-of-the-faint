@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class CombatSystem : BaseSystem
 {
@@ -263,7 +265,29 @@ public class CombatSystem : BaseSystem
 
         ActionSystem.ExcuteAction(actionContext, (eventContext, animationContext) =>
         {
-            foreach (IntentEffect effect in enemy.NextAction.Effects)
+            IntentEffect[] effects = enemy.NextAction.Effects;
+
+            // Motion Play
+            switch (effects[0].effectType)
+            {
+                case EffectType.Attack:
+                    EventBus.Publish<AttackPlayed>(new AttackPlayed(
+                        context: eventContext,
+                        motion: animationContext,
+                        source: enemy
+                    )); 
+                    break;
+                default:
+                    EventBus.Publish<SkillPlayed>(new SkillPlayed(
+                        context: eventContext,
+                        motion: animationContext,
+                        source: enemy
+                    ));
+                    break;
+            }
+
+            // Effect Process
+            foreach (IntentEffect effect in effects)
             {
                 List<EntityInstance> targets = new List<EntityInstance>();
                 switch (effect.targetType)
@@ -306,10 +330,34 @@ public class CombatSystem : BaseSystem
                             ));
                             break;
                         case EffectType.Strengthen:
+                            EventBus.Publish<BuffDeclared>(new BuffDeclared(
+                                context: eventContext,
+                                motion: animationContext,
+                                source: enemy,
+                                target: targets[i],
+                                type: BuffType.Strength,
+                                amount: effect.value
+                            ));
                             break;
                         case EffectType.Weaken:
+                            EventBus.Publish<BuffDeclared>(new BuffDeclared(
+                                context: eventContext,
+                                motion: animationContext,
+                                source: enemy,
+                                target: targets[i],
+                                type: BuffType.Weak,
+                                amount: effect.value
+                            ));
                             break;
                         case EffectType.Vulnerable:
+                            EventBus.Publish<BuffDeclared>(new BuffDeclared(
+                                context: eventContext,
+                                motion: animationContext,
+                                source: enemy,
+                                target: targets[i],
+                                type: BuffType.Vulnerable,
+                                amount: effect.value
+                            ));
                             break;
                         default:
                             return;
