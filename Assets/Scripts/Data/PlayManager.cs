@@ -3,6 +3,7 @@
 public class PlayManager : MonoSingleton<PlayManager>
 {
     [SerializeField] private PlayerSO temp_PlaerSO;
+    [SerializeField] private MapGenConfig mapConfig;
 
     [Header("Catalog")]
     [SerializeField] private PlayerSO[] players;
@@ -13,6 +14,7 @@ public class PlayManager : MonoSingleton<PlayManager>
     public PlayData CurrentData { get; private set; }
     public GameCatalog Catalog { get; private set; }
     public MapGraph MapGraph { get; private set; }
+    public MapNode LatestNode { get; private set; }
     public bool isLoad { get; private set; }
     private void Awake()
     {
@@ -23,21 +25,35 @@ public class PlayManager : MonoSingleton<PlayManager>
             potions: potions
         );
 
+        // Play Data Load
         CurrentData = PlaySaveDataIO.TryLoadFromFile(out PlaySaveData data) ?
-                    PlayData.CreateFromSaveData(data, Catalog) :
-                    PlayData.CreateNew(temp_PlaerSO, 1234, Catalog);
+                      PlayData.CreateFromSaveData(data, Catalog) :
+                      PlayData.CreateNew(temp_PlaerSO, 1234, Catalog);
+
+        // Map Data Load
+        if (MapDataIO.TryLoadFromFile(out MapData mapData))
+        {
+            MapGraph = MapDataConverter.FromSaveData(mapData);
+            LatestNode = MapGraph.GetNode(mapData.currentNodeId);
+        }
+        else
+        {
+            MapGraph = MapGenerator.Generate(mapConfig);
+            LatestNode = null;
+        }
 
         isLoad = true;
     }
-    private void Update()
+    public void SavePlayData()
     {
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            PlaySaveDataIO.SaveToFile(CurrentData.ToSaveData());
-        }
+        PlaySaveDataIO.SaveToFile(CurrentData.ToSaveData());
     }
     public void ClearPlayData()
     {
         CurrentData = PlayData.ClearData();
+    }
+    public void UpdateLatestNode(MapNode node)
+    {
+        LatestNode = node;
     }
 }

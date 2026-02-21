@@ -18,7 +18,8 @@ public enum MapNodeType
 public enum MapNodeState
 {
     None,
-    Cleared
+    Visited,
+    Impossible,
 }
 
 [Serializable]
@@ -103,7 +104,12 @@ public sealed class MapGraph
     }
     public MapNode GetNode(int id) 
     {
-        return _nodeById[id];
+        if (_nodeById.TryGetValue(id, out MapNode node))
+        {
+
+        }
+
+        return node;
     }
 
     public IReadOnlyList<MapNode> GetFloor(int floor) 
@@ -134,6 +140,33 @@ public sealed class MapGraph
         }
 
         return Enumerable.Empty<int>();
+    }
+    public HashSet<int> BFS(int startNodeId)
+    {
+        HashSet<int> visited = new HashSet<int>();
+        Queue<int> q = new Queue<int>();
+
+        visited.Add(startNodeId);
+        q.Enqueue(startNodeId);
+
+        while (q.Count > 0)
+        {
+            int cur = q.Dequeue();
+
+            if (_edgeByFromId.TryGetValue(cur, out List<int> nextList))
+            {
+                for (int i = 0; i < nextList.Count; i++)
+                {
+                    int nxt = nextList[i];
+                    if (visited.Add(nxt))
+                    {
+                        q.Enqueue(nxt);
+                    }
+                }
+            }
+        }
+
+        return visited;
     }
 }
 
@@ -196,7 +229,7 @@ public static class MapGenerator
                 extra: new Vector2((float)rng.NextDouble(), (float)rng.NextDouble()),
                 type: MapNodeType.Start
             );
-            startNode.State = MapNodeState.Cleared; //
+            startNode.State = MapNodeState.Visited; //
             graph.Nodes.Add(startNode);
 
             // Floors 1..Floors-2 are regular; last floor is Boss

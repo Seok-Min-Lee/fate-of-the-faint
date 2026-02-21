@@ -32,4 +32,18 @@ public class GameObjectPool<T> : MonoBehaviour where T : MonoBehaviour
 
         return Poolable;
     }
+    public void RetrieveAll()
+    {
+        if (actives.Count <= 0)
+        {
+            return;
+        }
+
+        List<T> copies = new List<T>(actives);
+
+        foreach (T copy in copies)
+        {
+            Push(copy);
+        }
+    }
 }

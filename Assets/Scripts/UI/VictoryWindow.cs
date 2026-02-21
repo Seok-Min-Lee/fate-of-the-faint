@@ -45,6 +45,7 @@ public class VictoryWindow : UIMotionWindow
     }
     public void OnClickNext()
     {
+        PlayManager.Instance.SavePlayData();
         UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
     }
     private Sequence Show()

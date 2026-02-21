@@ -1,4 +1,5 @@
-﻿using UnityEditor.Rendering;
+﻿using DG.Tweening;
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -6,8 +7,9 @@ using UnityEngine.UI;
 public class MapNodeView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Image eventIcon;
-    [SerializeField] private Image clearIcon;
+    [SerializeField] private Image visitedIcon;
     public RectTransform RectTransform { get; private set; }
+    private Button button;
     public MapNode Node { get; private set; }
 
     private Sprite normal;
@@ -16,9 +18,13 @@ public class MapNodeView : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public int id;
     public int floor;
     public int col;
+
+    private Func<MapNode, bool> onClick;
+    private Sequence sequence;
     private void Awake()
     {
         RectTransform = GetComponent<RectTransform>();
+        button = GetComponent<Button>();
     }
     public void Init(MapNode node, Sprite normal, Sprite hover, bool isVisible)
     {
@@ -27,7 +33,10 @@ public class MapNodeView : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         this.hover = hover;
 
         eventIcon.sprite = normal;
-        clearIcon.gameObject.SetActive(node.State == MapNodeState.Cleared);
+        eventIcon.raycastTarget = true;
+        visitedIcon.gameObject.SetActive(node.State == MapNodeState.Visited);
+
+        button.interactable = true;
 
         gameObject.SetActive(isVisible);
 
@@ -36,7 +45,34 @@ public class MapNodeView : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         floor = node.Floor;
         col = node.Col;
     }
+    public void Bind(Func<MapNode, bool> onClick)
+    {
+        this.onClick = onClick;
+    }
+    public void Highlight()
+    {
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+        Vector3 start = Vector3.one * 0.9f;
+        Vector3 end = Vector3.one * 1.5f;
 
+        sequence.AppendCallback(() =>
+        {
+            transform.localScale = start;
+        });
+        sequence.Append(transform.DOScale(end, 1f).SetLoops(-1, LoopType.Yoyo));
+    }
+    public void Hide()
+    {
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        button.interactable = false;
+    }
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (Node.State == MapNodeState.None)
@@ -45,7 +81,6 @@ public class MapNodeView : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             RectTransform.localScale = Vector3.one * 1.25f;
         }
     }
-
     public void OnPointerExit(PointerEventData eventData)
     {
         eventIcon.sprite = normal;
@@ -53,9 +88,17 @@ public class MapNodeView : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     }
     public void OnClick()
     {
-        Node.State = MapNodeState.Cleared;
-        clearIcon.gameObject.SetActive(true);
+        if (onClick != null && onClick.Invoke(Node))
+        {
+            visitedIcon.gameObject.SetActive(true);
 
-        eventIcon.raycastTarget = false;
+            if (Node.Type == MapNodeType.Combat)
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.COMBAT);
+            }
+
+            Hide();
+            eventIcon.raycastTarget = false;
+        }
     }
 }

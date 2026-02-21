@@ -61,7 +61,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapNodeView
   eventIcon: {fileID: 2704058801626770124}
-  clearIcon: {fileID: 1445057750098072049}
+  visitedIcon: {fileID: 1445057750098072049}
+  id: 0
+  floor: 0
+  col: 0
 --- !u!114 &8545682356382306001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,7 +133,7 @@ GameObject:
   - component: {fileID: 6002985833560589874}
   - component: {fileID: 1445057750098072049}
   m_Layer: 5
-  m_Name: Checked
+  m_Name: Visited Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -184,7 +187,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: a5fa57291a7e0f4498196109a4bc4911, type: 3}
-  m_Type: 0
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4

@@ -138,8 +138,7 @@ MonoBehaviour:
     NoEliteBeforeFloor: 3
     MinEliteSpacing: 2
     Seed: 0
-  nodeParent: {fileID: 653890158639066871}
-  nodePrefab: {fileID: 4948351229967575284, guid: a33a3a2c9a716fb4b854fad2edad1ea7, type: 3}
+  nodePool: {fileID: 1204733366244045299}
   nodeIconPairs:
   - type: 0
     normal: {fileID: -644110104, guid: e6a454a17dc598b4c8a1ac0d723a6088, type: 3}
@@ -165,8 +164,7 @@ MonoBehaviour:
   - type: 7
     normal: {fileID: 0}
     hover: {fileID: 0}
-  edgeParent: {fileID: 1325918829338934554}
-  edgePrefab: {fileID: -5380421976371954468, guid: 6ed144482a5ff894ea3d1b7220c7d98b, type: 3}
+  edgePool: {fileID: 5056694167471088329}
   colSpacing: 200
   floorSpacing: 200
   extraSpacing: 40
@@ -180,6 +178,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1325918829338934554}
+  - component: {fileID: 5056694167471088329}
   m_Layer: 5
   m_Name: Edges
   m_TagString: Untagged
@@ -206,6 +205,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0}
+--- !u!114 &5056694167471088329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515305854015147104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ce77a05952121b46800b08bfd6f375c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapEdgeViewPool
+  prefab: {fileID: -5380421976371954468, guid: 6ed144482a5ff894ea3d1b7220c7d98b, type: 3}
 --- !u!1 &4365128111939861959
 GameObject:
   m_ObjectHideFlags: 0
@@ -292,6 +304,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 653890158639066871}
+  - component: {fileID: 1204733366244045299}
   m_Layer: 5
   m_Name: Nodes
   m_TagString: Untagged
@@ -318,6 +331,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 0}
+--- !u!114 &1204733366244045299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6414105612345555934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99629825e3d12f34ba9829461b144f3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapNodeViewPool
+  prefab: {fileID: 4948351229967575284, guid: a33a3a2c9a716fb4b854fad2edad1ea7, type: 3}
 --- !u!1 &6888204126509321146
 GameObject:
   m_ObjectHideFlags: 0

@@ -20,7 +20,12 @@
         "pwr_strength",
         "skl_energy",
         "atk_draw",
-        "skl_cost"
+        "skl_cost",
+        "atk_double",
+        "skl_weak_all",
+        "atk_cleave",
+        "atk_draw",
+        "atk_double"
     ],
     "relicIds": [
         "Relic_A"

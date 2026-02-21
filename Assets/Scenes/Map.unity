@@ -1689,6 +1689,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a66a90bf53e5f944c85ff0f085f932e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapBootstrap
+--- !u!114 &1138501500 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 352749378287307450, guid: 88e814634df13214592eb428672eb761, type: 3}
+  m_PrefabInstance: {fileID: 2795547307691988294}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ScrollRect
 --- !u!1 &1218638005
 GameObject:
   m_ObjectHideFlags: 0
@@ -1719,6 +1730,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapCtrl
   bootstrap: {fileID: 1138501499}
+  scrollRect: {fileID: 1138501500}
 --- !u!4 &1218638007
 Transform:
   m_ObjectHideFlags: 0

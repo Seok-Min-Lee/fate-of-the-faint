@@ -45,6 +45,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayManager
   temp_PlaerSO: {fileID: 11400000, guid: d20128742e8b7f845ba84946cce70854, type: 2}
+  mapConfig:
+    Floors: 15
+    Width: 4
+    MinNodesPerFloor: 2
+    MaxNodesPerFloor: 3
+    MinOutDegree: 1
+    MaxOutDegree: 2
+    MaxDeltaCol: 1
+    MaxAttempts: 50
+    TargetShops: 2
+    TargetRests: 3
+    TargetElites: 3
+    TargetTreasures: 1
+    NoShopBeforeFloor: 3
+    NoRestBeforeFloor: 2
+    NoEliteBeforeFloor: 3
+    MinEliteSpacing: 2
+    Seed: 0
   players:
   - {fileID: 11400000, guid: d20128742e8b7f845ba84946cce70854, type: 2}
   cards:
