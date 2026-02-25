@@ -109,6 +109,23 @@ public class CombatSystem : BaseSystem
         EventBus.Subscribe<DrawCardDeclared>(cardSystem.OnDrawCardDeclared);
         EventBus.Subscribe<ModifyCostDeclared>(cardSystem.OnModifyCostDeclared);
 
+        EventBus.Subscribe<CombatStarted>(relicSystem.OnCombatStarted);
+        EventBus.Subscribe<CombatEnded>(relicSystem.OnCombatEnded);
+        EventBus.Subscribe<PlayerTurnStarted>(relicSystem.OnPlayerTurnStarted);
+        EventBus.Subscribe<PlayerTurnEnded>(relicSystem.OnPlayerTurnEnded);
+        EventBus.Subscribe<EnemyTurnStarted>(relicSystem.OnEnemyTurnStarted);
+        EventBus.Subscribe<EnemyTurnEnded>(relicSystem.OnEnemyTurnEnded);
+        EventBus.Subscribe<ActionStarted>(relicSystem.OnActionStarted);
+        EventBus.Subscribe<ActionEnded>(relicSystem.OnActionEnded);
+        EventBus.Subscribe<CardDrawed>(relicSystem.OnCardDrawed);
+        EventBus.Subscribe<CardDiscarded>(relicSystem.OnCardDiscarded);
+        EventBus.Subscribe<CardExhausted>(relicSystem.OnCardExhausted);
+        EventBus.Subscribe<CardCharged>(relicSystem.OnCardCharged);
+        EventBus.Subscribe<AttackPlayed>(relicSystem.OnAttackPlayed);
+        EventBus.Subscribe<SkillPlayed>(relicSystem.OnSkillPlayed);
+        EventBus.Subscribe<PowerPlayed>(relicSystem.OnPowerPlayed);
+        EventBus.Subscribe<DeathDeclared>(relicSystem.OnDeathDeclared);
+        EventBus.Subscribe<HpChanged>(relicSystem.OnHpChanged);
         EventBus.Subscribe<DamageRequested>(relicSystem.OnDamageRequested);
 
         EventBus.Subscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
@@ -149,6 +166,23 @@ public class CombatSystem : BaseSystem
         EventBus.Unsubscribe<DrawCardDeclared>(cardSystem.OnDrawCardDeclared);
         EventBus.Unsubscribe<ModifyCostDeclared>(cardSystem.OnModifyCostDeclared);
 
+        EventBus.Unsubscribe<CombatStarted>(relicSystem.OnCombatStarted);
+        EventBus.Unsubscribe<CombatEnded>(relicSystem.OnCombatEnded);
+        EventBus.Unsubscribe<PlayerTurnStarted>(relicSystem.OnPlayerTurnStarted);
+        EventBus.Unsubscribe<PlayerTurnEnded>(relicSystem.OnPlayerTurnEnded);
+        EventBus.Unsubscribe<EnemyTurnStarted>(relicSystem.OnEnemyTurnStarted);
+        EventBus.Unsubscribe<EnemyTurnEnded>(relicSystem.OnEnemyTurnEnded);
+        EventBus.Unsubscribe<ActionStarted>(relicSystem.OnActionStarted);
+        EventBus.Unsubscribe<ActionEnded>(relicSystem.OnActionEnded);
+        EventBus.Unsubscribe<CardDrawed>(relicSystem.OnCardDrawed);
+        EventBus.Unsubscribe<CardDiscarded>(relicSystem.OnCardDiscarded);
+        EventBus.Unsubscribe<CardExhausted>(relicSystem.OnCardExhausted);
+        EventBus.Unsubscribe<CardCharged>(relicSystem.OnCardCharged);
+        EventBus.Unsubscribe<AttackPlayed>(relicSystem.OnAttackPlayed);
+        EventBus.Unsubscribe<SkillPlayed>(relicSystem.OnSkillPlayed);
+        EventBus.Unsubscribe<PowerPlayed>(relicSystem.OnPowerPlayed);
+        EventBus.Unsubscribe<DeathDeclared>(relicSystem.OnDeathDeclared);
+        EventBus.Unsubscribe<HpChanged>(relicSystem.OnHpChanged);
         EventBus.Unsubscribe<DamageRequested>(relicSystem.OnDamageRequested);
 
         EventBus.Unsubscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
@@ -258,12 +292,7 @@ public class CombatSystem : BaseSystem
             return;
         }
 
-        ActionContext actionContext = new ActionContext(
-            source: enemy,
-            type: ActionType.EnemyAct
-        );
-
-        ActionSystem.ExcuteAction(actionContext, (eventContext, animationContext) =>
+        ActionSystem.ExcuteAction(source: enemy, type: ActionType.EnemyAct, (eventContext, animationContext) =>
         {
             IntentEffect[] effects = enemy.NextAction.Effects;
 

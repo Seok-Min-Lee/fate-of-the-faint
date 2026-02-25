@@ -171,6 +171,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         eventsConfig?.OnCardHover?.Invoke(new CardHover(this));
         isHovered = true;
+        effectGO.SetActive(true);
     }
 
     public void OnPointerExit(PointerEventData eventData) 
@@ -183,6 +184,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         canvas.sortingOrder = uiLayer;
         isHovered = false;
         eventsConfig?.OnCardUnhover?.Invoke(new CardUnhover(this));
+        effectGO.SetActive(false);
     }
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -205,6 +207,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             canvas.sortingOrder = uiLayer;
             isHovered = false;
             eventsConfig?.OnCardUnhover?.Invoke(new CardUnhover(this));
+            effectGO.SetActive(false);
         }
 
         isDragged = false;
@@ -238,6 +241,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
     [Header("Custom")]
     [SerializeField] private ViewType type;
+    [SerializeField] private GameObject effectGO;
     [SerializeField] private CardCostView cost;
     [SerializeField] private TextMeshProUGUI name;
     [SerializeField] private TextMeshProUGUI desc;
@@ -312,6 +316,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             transform.position = cardPlayConfig.DrawArea.transform.position;
             transform.rotation = Quaternion.Euler(0, 0, -90);
             transform.localScale = Vector3.zero;
+
             gameObject.SetActive(true);
         });
 

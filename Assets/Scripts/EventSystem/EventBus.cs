@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static Unity.VisualScripting.Member;
 using static UnityEngine.GraphicsBuffer;
 
 public interface ICombatEvent 
@@ -12,8 +13,10 @@ public interface ICombatEvent
 public class EventBus
 {
     public event Action<ICombatEvent> OnPublished;
+    public IReadOnlyDictionary<Type, int> PublishCounter => _publishCounter;
 
     private readonly Dictionary<Type, Delegate> _handlers = new();
+    private readonly Dictionary<Type, int> _publishCounter = new();
 
     public void Subscribe<T>(Action<T> handler) where T : ICombatEvent
     {
@@ -35,8 +38,15 @@ public class EventBus
     {
         OnPublished?.Invoke(evt);
 
-        if (_handlers.TryGetValue(typeof(T), out var del))
+        var t = typeof(T);
+        if (_handlers.TryGetValue(t, out var del))
         {
+            if (!_publishCounter.TryGetValue(t, out int value))
+            {
+                _publishCounter.Add(t, 0);
+            }
+            _publishCounter[t]++;
+
             ((Action<T>)del)?.Invoke(evt);
         }
     }
@@ -215,29 +225,46 @@ public struct EnergyChanged : ICombatEvent
 }
 public struct CardDrawed : ICombatEvent
 {
-    public CardDrawed(EventContext context)
+    public CardDrawed(EventContext context, MotionContext motion)
     {
         Context = context;
+        Motion = motion;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EventMeta Meta => EventMetas.CardDrawed;
 }
 public struct CardDiscarded : ICombatEvent
 {
-    public CardDiscarded(EventContext context)
+    public CardDiscarded(EventContext context, MotionContext motion)
     {
         Context = context;
+        Motion = motion;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EventMeta Meta => EventMetas.CardDiscarded;
+}
+public struct CardExhausted : ICombatEvent
+{
+    public CardExhausted(EventContext context, MotionContext motion)
+    {
+        Context = context;
+        Motion = motion;
+    }
+    public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
+    public EventMeta Meta => EventMetas.CardExhausted;
 }
 public struct CardCharged : ICombatEvent
 {
-    public CardCharged(EventContext context)
+    public CardCharged(EventContext context, MotionContext motion)
     {
         Context = context;
+        Motion = motion;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EventMeta Meta => EventMetas.CardCharged;
 }
 public struct CardPlayDeclared : ICombatEvent
@@ -389,12 +416,14 @@ public struct BuffDeclared : ICombatEvent
 }
 public struct DamageRequested : ICombatEvent
 {
-    public DamageRequested(EventContext context, DamageContext damage)
+    public DamageRequested(EventContext context, MotionContext motion, DamageContext damage)
     {
         Context = context;
+        Motion = motion;
         Damage = damage;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public DamageContext Damage { get; private set; }
     public EventMeta Meta => EventMetas.DamageRequested;
 }
@@ -543,4 +572,17 @@ public struct EnemyIntentDecided : ICombatEvent
     public MotionContext Motion { get; private set; }
     public EnemyInstance Source { get; private set; }
     public EventMeta Meta => EventMetas.EnemyIntentDecided;
+}
+public struct RelicActivated : ICombatEvent
+{
+    public RelicActivated(EventContext context, MotionContext motion, RelicEntry source)
+    {
+        Context = context;
+        Motion = motion;
+        Source = source;
+    }
+    public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
+    public RelicEntry Source { get; private set; }
+    public EventMeta Meta => EventMetas.RelicActivated;
 }

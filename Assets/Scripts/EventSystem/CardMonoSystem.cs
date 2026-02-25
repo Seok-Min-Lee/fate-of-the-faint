@@ -50,9 +50,7 @@ public class CardMonoSystem : BaseMonoSystem
         this.cardInstance = cardView.CardInstance;
         this.target = target;
 
-        ActionContext actionContext = new ActionContext(source: this, type: ActionType.PlayerCardPlay);
-
-        actionSystem.ExcuteAction(actionContext, (eventContext, animationContext) =>
+        actionSystem.ExcuteAction(source: this, type: ActionType.PlayerCardPlay, (eventContext, animationContext) =>
         {
             bool existModifier = cardInstanceAll.Any(c => c.ExistModifier);
 
@@ -319,7 +317,7 @@ public class CardMonoSystem : BaseMonoSystem
             return;
         }
 
-        ChargeCard(context: context);
+        ChargeCard(context: context, motion: motion);
 
         // Instance 
         CardInstance cardInstance = drawPile.FirstOrDefault();
@@ -334,8 +332,10 @@ public class CardMonoSystem : BaseMonoSystem
         ));
 
         // Event
-        EventContext _context = CreateContext(context);
-        eventBus.Publish<CardDrawed>(new CardDrawed(context: _context));
+        eventBus.Publish<CardDrawed>(new CardDrawed(
+            context: CreateContext(context),
+            motion: motion
+        ));
     }
     private void DiscardCard(CardView cardView, EventContext context, MotionContext motion)
     {
@@ -351,8 +351,10 @@ public class CardMonoSystem : BaseMonoSystem
         ));
 
         // Event
-        EventContext _context = CreateContext(context);
-        eventBus.Publish<CardDiscarded>(new CardDiscarded(context: _context));
+        eventBus.Publish<CardDiscarded>(new CardDiscarded(
+            context: CreateContext(context),
+            motion: motion
+        ));
     }
     private void DiscardCards(IEnumerable<CardView> views, EventContext context, MotionContext motion)
 	{
@@ -371,10 +373,12 @@ public class CardMonoSystem : BaseMonoSystem
 		));
 
 		// Event
-		EventContext _context = CreateContext(context);
-		eventBus.Publish<CardDiscarded>(new CardDiscarded(context: _context));
+		eventBus.Publish<CardDiscarded>(new CardDiscarded(
+            context: CreateContext(context),
+            motion: motion
+        ));
 	}
-    private void ChargeCard(EventContext context)
+    private void ChargeCard(EventContext context, MotionContext motion)
     {
         if (drawPile.Count > 0)
         {
@@ -386,8 +390,10 @@ public class CardMonoSystem : BaseMonoSystem
 
         UpdateUI();
 
-        EventContext _context = CreateContext(context);
-        eventBus.Publish<CardCharged>(new CardCharged(context: _context));
+        eventBus.Publish<CardCharged>(new CardCharged(
+            context: CreateContext(context),
+            motion: motion
+        ));
     }
 
     private void ClearCardHand(EventContext context, MotionContext motion)

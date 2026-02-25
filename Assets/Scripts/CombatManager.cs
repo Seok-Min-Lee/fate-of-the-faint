@@ -43,6 +43,7 @@ public class CombatManager : MonoBehaviour
 
         List<CardInstance> cardInstance = CreateCardInstances(PlayManager.Instance.CurrentData.Cards.Select(x => x.Origin));
 
+        //
         DamageSystem damageSystem = new DamageSystem(CombatSystem.EventBus);
         BuffSystem buffSystem = new BuffSystem(CombatSystem.EventBus);
         EnergySystem energySystem = new EnergySystem(
@@ -60,7 +61,9 @@ public class CombatManager : MonoBehaviour
         );
         relicSystem.Init(
             eventBus: CombatSystem.EventBus,
-            player: playerInstance
+            player: playerInstance,
+            enemies: enemyInstances,
+            relics: PlayManager.Instance.CurrentData.Relics
         );
         cardSystem.Init(
             eventBus: CombatSystem.EventBus, 

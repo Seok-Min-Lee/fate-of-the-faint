@@ -213,9 +213,7 @@ public class UIMonoSystem : BaseMonoSystem
     }
     public void OnClickReturn()
     {
-        ActionContext actionContext = new ActionContext(source: this, type: ActionType.PlayerTurnEnd);
-
-        actionSystem.ExcuteAction(actionContext, (eventContext, animationContext) =>
+        actionSystem.ExcuteAction(source: this, type: ActionType.PlayerTurnEnd, (eventContext, animationContext) =>
         {
             RequestContext requestContext = new RequestContext(source: this);
 

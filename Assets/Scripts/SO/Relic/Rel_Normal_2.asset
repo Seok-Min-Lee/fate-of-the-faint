@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78febd5bf68226a4d8cec937799db1c2, type: 3}
+  m_Name: Rel_Normal_2
+  m_EditorClassIdentifier: Assembly-CSharp::RelicSO
+  id: Rel_Normal_2
+  displayName: "\uAD6C\uC2AC \uC8FC\uBA38\uB2C8"
+  description: "\uC804\uD22C \uC2DC\uC791 \uC2DC \uC801 \uC804\uCCB4\uC5D0\uAC8C
+    \uCDE8\uC57D\uC744 1 \uBD80\uC5EC\uD569\uB2C8\uB2E4."
+  flaverText: "\uB3C4\uC2DC\uC5D0\uC11C \uD55C \uB54C \uC778\uAE30 \uC788\uB358 \uC7A5\uB09C\uAC10\uC785\uB2C8\uB2E4.
+    \uC801\uC758 \uADE0\uD615\uC744 \uBB34\uB108\uB728\uB9AC\uAE30 \uC88B\uC2B5\uB2C8\uB2E4."
+  icon: {fileID: -391332808, guid: 451b12996821ada4cab14730504cccc0, type: 3}
+  rarity: 1
+  trigger: 0
+  target: 2
+  effect: 4
+  value: 1
+  ratio: 0

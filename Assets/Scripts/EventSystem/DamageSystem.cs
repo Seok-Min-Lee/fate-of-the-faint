@@ -25,6 +25,7 @@ public class DamageSystem : BaseSystem
         EventContext eventContext = base.CreateContext(e.Context);
         eventBus.Publish<DamageRequested>(new DamageRequested(
             context: eventContext,
+            motion: e.Motion,
             damage: damage
         ));
 

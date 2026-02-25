@@ -4,13 +4,17 @@ public class ActionSystem : BaseSystem
 {
     private readonly CombatSystem combatSystem;
     private readonly EventBus eventBus;
+
+    private int actionNum = 0;
     public ActionSystem(EventBus eventBus, CombatSystem combatSystem) 
     {
         this.eventBus = eventBus;
         this.combatSystem = combatSystem;
     }
-    public void ExcuteAction(ActionContext action, Action<EventContext, MotionContext> declared)
+    public void ExcuteAction(object source, ActionType type, Action<EventContext, MotionContext> declared)
     {
+        ActionContext action = new ActionContext(type: type, source: source);
+
         MotionContext motionContext = new MotionContext(this);
 
         eventBus.Publish<ActionStarted>(new ActionStarted(
@@ -42,11 +46,11 @@ public class ActionSystem : BaseSystem
 }
 public class ActionContext
 {
-    public ActionContext(object source, ActionType type)
+    public ActionContext(ActionType type, object source)
     {
         ActionId = Guid.NewGuid();
-        Source = source;
         Type = type;
+        Source = source;
     }
     public Guid ActionId { get; private set; }
     public object Source { get; private set; }   // Card, Monster, Relic 등

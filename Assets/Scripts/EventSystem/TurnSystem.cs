@@ -85,7 +85,7 @@ public class TurnSystem : BaseSystem
     private void PublishPlayerTurnStarted(ICombatEvent e)
     {
         TurnContext = new TurnContext(
-            turnId: ++turnId,
+            turnId: turnId++,
             phase: TurnPhase.Player,
             source: this
         );
@@ -110,7 +110,7 @@ public class TurnSystem : BaseSystem
     private void PublishEnemyTurnStarted(ICombatEvent e)
     {
         TurnContext = new TurnContext(
-            turnId: ++turnId,
+            turnId: turnId++,
             phase: TurnPhase.Enemy,
             source: this
         );

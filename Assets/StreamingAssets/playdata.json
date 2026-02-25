@@ -28,7 +28,15 @@
         "atk_double"
     ],
     "relicIds": [
-        "Relic_A"
+        "Rel_Normal_2",
+        "Rel_Normal_12",
+        "Rel_Normal_13",
+        "Rel_Normal_19",
+        "Rel_Normal_23",
+        "Rel_Rare_15",
+        "Rel_Rare_35",
+        "Rel_Special_2",
+        "Rel_Special_21"
     ],
     "potionIds": []
 }

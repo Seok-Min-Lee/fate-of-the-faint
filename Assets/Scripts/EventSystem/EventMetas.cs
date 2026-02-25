@@ -16,6 +16,7 @@
     public static readonly EventMeta EnergyChanged = new EventMeta("EnergyChanged", EventCategory.Energy);
     public static readonly EventMeta CardDrawed = new EventMeta("CardDrawed", EventCategory.Card);
     public static readonly EventMeta CardDiscarded = new EventMeta("CardDiscarded", EventCategory.Card);
+    public static readonly EventMeta CardExhausted = new EventMeta("CardExhausted", EventCategory.Card);
     public static readonly EventMeta CardCharged = new EventMeta("CardCharged", EventCategory.Card);
     public static readonly EventMeta CardPlayDeclared = new EventMeta("CardPlayDeclared", EventCategory.Card);
     public static readonly EventMeta AttackPlayed = new EventMeta("AttackPlayed", EventCategory.Card);
@@ -38,6 +39,7 @@
     public static readonly EventMeta AnimationStarted = new EventMeta("AnimationStarted", EventCategory.UI);
     public static readonly EventMeta AnimationEnded = new EventMeta("AnimationEnded", EventCategory.UI); 
     public static readonly EventMeta EnemyIntentDecided = new EventMeta("EnemyIntentDecided", EventCategory.Status);
+    public static readonly EventMeta RelicActivated = new EventMeta("RelicActivated", EventCategory.Status);
 }
 public readonly struct EventMeta
 {
