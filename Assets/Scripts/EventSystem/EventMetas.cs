@@ -12,6 +12,7 @@
     public static readonly EventMeta ActionStarted = new EventMeta("ActionStarted", EventCategory.Action);
     public static readonly EventMeta ActionEnded = new EventMeta("ActionEnded", EventCategory.Action);
     public static readonly EventMeta EnergyChangeRequested = new EventMeta("EnergyChangeRequested", EventCategory.Energy);
+    public static readonly EventMeta EnergyChargeRequested = new EventMeta("EnergyChargeRequested", EventCategory.Energy);
     public static readonly EventMeta EnergyResolved = new EventMeta("EnergyResolved", EventCategory.Energy);
     public static readonly EventMeta EnergyChanged = new EventMeta("EnergyChanged", EventCategory.Energy);
     public static readonly EventMeta CardDrawed = new EventMeta("CardDrawed", EventCategory.Card);

@@ -14,7 +14,7 @@ public class NoCardTypePlayedLastTurnGainEnergyRelicSO : RelicSO
         return new NoCardTypePlayedLastTurnGainEnergyRelicInstance(eventBus: eventBus, origin: this);
     }
 }
-public class NoCardTypePlayedLastTurnGainEnergyRelicInstance : RelicInstance, IPlayerTurnStarted, ICardPlayDeclared
+public class NoCardTypePlayedLastTurnGainEnergyRelicInstance : RelicInstance, IEnergyChargeRequested, ICardPlayDeclared
 {
     private CardType cardType;
     private int amount;
@@ -27,10 +27,10 @@ public class NoCardTypePlayedLastTurnGainEnergyRelicInstance : RelicInstance, IP
     }
     public override void Register()
     {
-        EventBus.Subscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
+        EventBus.Subscribe<EnergyChargeRequested>(OnEnergyChargeRequested);
         EventBus.Subscribe<CardPlayDeclared>(OnCardPlayDeclared);
     }
-    public void OnPlayerTurnStarted(PlayerTurnStarted e)
+    public void OnEnergyChargeRequested(EnergyChargeRequested e)
     {
         if (e.Context.Combat.state != CombatState.Combat)
         {
@@ -41,15 +41,11 @@ public class NoCardTypePlayedLastTurnGainEnergyRelicInstance : RelicInstance, IP
         {
             Activate(e.Context, e.Motion, () =>
             {
-                EventBus.Publish<GainEnergyDeclared>(new GainEnergyDeclared(
-                    context: e.Context,
-                    motion: e.Motion,
-                    amount: amount
-                ));
-
-                usedCard = false;
+                e.Energy.Add(amount, this);
             });
         }
+
+        usedCard = false;
     }
 
     public void OnCardPlayDeclared(CardPlayDeclared e)

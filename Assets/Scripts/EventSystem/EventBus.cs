@@ -193,17 +193,28 @@ public struct EnergyChangeRequested : ICombatEvent
     public int Amount { get; private set; }
     public EventMeta Meta => EventMetas.EnergyChangeRequested;
 }
-public struct EnergyResolved : ICombatEvent
+public struct EnergyChargeRequested : ICombatEvent
 {
-    public EnergyResolved(EventContext context, MotionContext motion, bool result)
+    public EnergyChargeRequested(EventContext context, MotionContext motion, EnergyContext energy)
     {
         Context = context;
         Motion = motion;
-        Result = result;
+        Energy = energy;
     }
     public EventContext Context { get; private set; }
     public MotionContext Motion { get; private set; }
-    public bool Result { get; private set; }
+    public EnergyContext Energy { get; private set; }
+    public EventMeta Meta => EventMetas.EnergyChargeRequested;
+}
+public struct EnergyResolved : ICombatEvent
+{
+    public EnergyResolved(EventContext context, MotionContext motion)
+    {
+        Context = context;
+        Motion = motion;
+    }
+    public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public EventMeta Meta => EventMetas.EnergyResolved;
 }
 public struct EnergyChanged : ICombatEvent

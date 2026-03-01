@@ -13,7 +13,7 @@ public class TurnCountingGainEnergyRelicSO : RelicSO
         return new TurnCountingGainEnergyRelicInstance(eventBus: eventBus, origin: this);
     }
 }
-public class TurnCountingGainEnergyRelicInstance : RelicInstance, IPlayerTurnStarted
+public class TurnCountingGainEnergyRelicInstance : RelicInstance, IPlayerTurnStarted, IEnergyChargeRequested
 {
     private int timing = 0;
     private int amount = 0;
@@ -27,6 +27,7 @@ public class TurnCountingGainEnergyRelicInstance : RelicInstance, IPlayerTurnSta
     public override void Register()
     {
         EventBus.Subscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
+        EventBus.Subscribe<EnergyChargeRequested>(OnEnergyChargeRequested);
     }
     public void OnPlayerTurnStarted(PlayerTurnStarted e)
     {
@@ -35,7 +36,17 @@ public class TurnCountingGainEnergyRelicInstance : RelicInstance, IPlayerTurnSta
             return;
         }
 
-        if (++count == timing)
+        count++;
+    }
+
+    public void OnEnergyChargeRequested(EnergyChargeRequested e)
+    {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
+        if (count == timing)
         {
             Activate(e.Context, e.Motion, () =>
             {

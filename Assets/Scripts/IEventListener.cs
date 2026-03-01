@@ -46,6 +46,10 @@ public interface IEnergyChangeRequested
 {
     void OnEnergyChangeRequested(EnergyChangeRequested e);
 }
+public interface IEnergyChargeRequested
+{
+    void OnEnergyChargeRequested(EnergyChargeRequested e);
+}
 public interface IEnergyResolved
 {
     void OnEnergyResolved(EnergyResolved e);
