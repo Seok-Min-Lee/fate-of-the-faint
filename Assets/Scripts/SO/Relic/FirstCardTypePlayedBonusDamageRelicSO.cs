@@ -3,9 +3,9 @@
 [CreateAssetMenu(fileName = "First Card Type Played Bonus Damage Relic ", menuName = "Scriptable Objects/Relic/First Card Type Played Bonus Damage Relic ")]
 public class FirstCardTypePlayedBonusDamageRelicSO : RelicSO
 {
-    [SerializeField] private CardView.ViewType cardType;
+    [SerializeField] private CardType cardType;
     [SerializeField] private int amount;
-    public CardView.ViewType CardType => cardType;
+    public CardType CardType => cardType;
     public int Amount => amount;
 
     public override RelicInstance CreateInstance(EventBus eventBus)
@@ -15,7 +15,7 @@ public class FirstCardTypePlayedBonusDamageRelicSO : RelicSO
 }
 public class FirstCardTypePlayedBonusDamageRelicInstance : RelicInstance, ICombatStarted, ICardPlayDeclared, IDamageRequested
 {
-    private CardView.ViewType cardType;
+    private CardType cardType;
     private int amount;
     private bool usedThisCombat = false;
     private bool isPrepared = false;
@@ -47,7 +47,7 @@ public class FirstCardTypePlayedBonusDamageRelicInstance : RelicInstance, IComba
         {
             return;
         }
-        if (e.CardView.Type != cardType)
+        if (e.CardView.CardInstance.Origin.Type != cardType)
         {
             return;
         }

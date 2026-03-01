@@ -240,14 +240,11 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
     [Header("Custom")]
-    [SerializeField] private ViewType type;
     [SerializeField] private GameObject effectGO;
     [SerializeField] private CardCostView cost;
     [SerializeField] private TextMeshProUGUI name;
     [SerializeField] private TextMeshProUGUI desc;
     [SerializeField] private CardArt[] arts;
-
-    public ViewType Type => type;
 
     public CardInstance CardInstance { get; private set; }
     public CardMonoSystem CardSystem { get; private set; }
@@ -353,11 +350,5 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         });
 
         return sequence;
-    }
-    public enum ViewType
-    {
-        Attack,
-        Skill,
-        Power,
     }
 }

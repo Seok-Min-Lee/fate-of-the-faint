@@ -3,10 +3,10 @@
 [CreateAssetMenu(fileName = "Card Type Play Counting Gain Energy Relic ", menuName = "Scriptable Objects/Relic/Card Type Play Counting Gain Energy Relic")]
 public class CardTypePlayCountingGainEnergyRelicSO : RelicSO
 {
-    [SerializeField] private CardView.ViewType cardType;
+    [SerializeField] private CardType cardType;
     [SerializeField] private int timing;
     [SerializeField] private int amount;
-    public CardView.ViewType CardType => cardType;
+    public CardType CardType => cardType;
     public int Timing => timing;
     public int Amount => amount;
     public override RelicInstance CreateInstance(EventBus eventBus)
@@ -16,7 +16,7 @@ public class CardTypePlayCountingGainEnergyRelicSO : RelicSO
 }
 public class CardPlayCountTriggerRelicInstance : RelicInstance, ICardPlayDeclared
 {
-    private CardView.ViewType cardType;
+    private CardType cardType;
     private int timing = 0;
     private int amount = 0;
     private int count = 0;
@@ -38,7 +38,7 @@ public class CardPlayCountTriggerRelicInstance : RelicInstance, ICardPlayDeclare
             return;
         }
 
-        if (e.CardView.Type != cardType)
+        if (e.CardView.CardInstance.Origin.Type != cardType)
         {
             return;
         }

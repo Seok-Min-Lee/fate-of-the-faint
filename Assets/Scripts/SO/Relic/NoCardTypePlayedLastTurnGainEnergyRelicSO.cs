@@ -5,9 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "No Card Type Played Last Turn Gain Energy Relic ", menuName = "Scriptable Objects/Relic/No Card Type Played Last Turn Gain Energy Relic")] 
 public class NoCardTypePlayedLastTurnGainEnergyRelicSO : RelicSO
 {
-    [SerializeField] private CardView.ViewType cardType;
+    [SerializeField] private CardType cardType;
     [SerializeField] private int amount;
-    public CardView.ViewType CardType => cardType;
+    public CardType CardType => cardType;
     public int Amount => amount;
     public override RelicInstance CreateInstance(EventBus eventBus)
     {
@@ -16,7 +16,7 @@ public class NoCardTypePlayedLastTurnGainEnergyRelicSO : RelicSO
 }
 public class NoCardTypePlayedLastTurnGainEnergyRelicInstance : RelicInstance, IPlayerTurnStarted, ICardPlayDeclared
 {
-    private CardView.ViewType cardType;
+    private CardType cardType;
     private int amount;
     private bool usedCard = true;
     public NoCardTypePlayedLastTurnGainEnergyRelicInstance(EventBus eventBus, NoCardTypePlayedLastTurnGainEnergyRelicSO origin) : base(eventBus, origin)
@@ -59,7 +59,7 @@ public class NoCardTypePlayedLastTurnGainEnergyRelicInstance : RelicInstance, IP
             return;
         }
 
-        if (e.CardView.Type != cardType)
+        if (e.CardView.CardInstance.Origin.Type != cardType)
         {
             return;
         }

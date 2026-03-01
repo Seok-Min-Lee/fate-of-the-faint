@@ -18,7 +18,7 @@ MonoBehaviour:
   description: "\uD798\uC744 1 \uC5BB\uC740 \uCC44\uB85C \uC804\uD22C\uB97C \uC2DC\uC791\uD569\uB2C8\uB2E4."
   flaverText: "\uBA85\uC608\uB85C\uC6B4 \uC804\uD22C\uB97C \uD55C \uC804\uC0AC\uC5D0\uAC8C
     \uC8FC\uC5B4\uC9C4 \uC7A5\uC2DD\uC6A9 \uC720\uBB3C\uC785\uB2C8\uB2E4."
-  rarity: 0
+  rarity: 1
   target: 1
   buff: 0
   value: 1

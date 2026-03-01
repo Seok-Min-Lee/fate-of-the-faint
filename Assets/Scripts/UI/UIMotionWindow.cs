@@ -12,6 +12,7 @@ public enum WindowType
     CardDisplay,
     Map,
     Setting,
+    Relic,
     None
 }
 public enum WindowMode

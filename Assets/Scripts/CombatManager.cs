@@ -61,9 +61,8 @@ public class CombatManager : MonoBehaviour
         );
         relicSystem.Init(
             eventBus: CombatSystem.EventBus,
-            player: playerInstance,
-            enemies: enemyInstances,
-            relics: PlayManager.Instance.CurrentData.Relics
+            relics: PlayManager.Instance.CurrentData.Relics,
+            onClick: (relic) => uiSystem.OnClickRelic(relic)
         );
         cardSystem.Init(
             eventBus: CombatSystem.EventBus, 

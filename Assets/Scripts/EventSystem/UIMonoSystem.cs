@@ -224,6 +224,20 @@ public class UIMonoSystem : BaseMonoSystem
             ));
         });
     }
+    public void OnClickRelic(RelicSO relic)
+    {
+        if (!windowDictionary.TryGetValue(WindowType.Relic, out UIWindow window))
+        {
+            return;
+        }
+
+        ((RelicWindow)window).Bind(relic);
+
+        if (!window.gameObject.activeSelf)
+        {
+            ChangeWindow(WindowType.Relic, WindowMode.Single);
+        }
+    }
     IEnumerator CombatStartedAnimationCor(CombatWindow combatWindow)
     {
         if (sequence != null)
