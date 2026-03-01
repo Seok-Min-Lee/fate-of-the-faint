@@ -50,12 +50,13 @@ public class CardMonoSystem : BaseMonoSystem
         this.cardInstance = cardView.CardInstance;
         this.target = target;
 
-        actionSystem.ExcuteAction(source: this, type: ActionType.PlayerCardPlay, (eventContext, animationContext) =>
+        actionSystem.ExcuteAction(source: this, type: ActionType.PlayerCardPlay, (eventContext, motionContext) =>
         {
             bool existModifier = cardInstanceAll.Any(c => c.ExistModifier);
 
             eventBus.Publish<CardPlayDeclared>(new CardPlayDeclared(
                 context: eventContext,
+                motion: motionContext,
                 cardView: cardView
             ));
 
@@ -63,7 +64,7 @@ public class CardMonoSystem : BaseMonoSystem
 
             eventBus.Publish<EnergyChangeRequested>(new EnergyChangeRequested(
                 context: eventContext,
-                motion: animationContext,
+                motion: motionContext,
                 request: requestContext,
                 amount: -cardInstance.Cost
             ));
@@ -74,7 +75,7 @@ public class CardMonoSystem : BaseMonoSystem
                 DiscardCard(
                     cardView: cardView, 
                     context: eventContext, 
-                    motion: animationContext
+                    motion: motionContext
                 );
             }
             else

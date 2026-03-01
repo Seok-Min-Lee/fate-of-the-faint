@@ -269,12 +269,14 @@ public struct CardCharged : ICombatEvent
 }
 public struct CardPlayDeclared : ICombatEvent
 {
-    public CardPlayDeclared(EventContext context, CardView cardView)
+    public CardPlayDeclared(EventContext context, MotionContext motion, CardView cardView)
     {
         Context = context;
+        Motion = motion;
         CardView = cardView;
     }
     public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
     public CardView CardView { get; private set; }
     public EventMeta Meta => EventMetas.CardPlayDeclared;
 }
@@ -575,7 +577,7 @@ public struct EnemyIntentDecided : ICombatEvent
 }
 public struct RelicActivated : ICombatEvent
 {
-    public RelicActivated(EventContext context, MotionContext motion, RelicEntry source)
+    public RelicActivated(EventContext context, MotionContext motion, RelicInstance source)
     {
         Context = context;
         Motion = motion;
@@ -583,6 +585,6 @@ public struct RelicActivated : ICombatEvent
     }
     public EventContext Context { get; private set; }
     public MotionContext Motion { get; private set; }
-    public RelicEntry Source { get; private set; }
+    public RelicInstance Source { get; private set; }
     public EventMeta Meta => EventMetas.RelicActivated;
 }

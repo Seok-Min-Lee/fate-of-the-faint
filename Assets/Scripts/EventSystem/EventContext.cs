@@ -10,6 +10,10 @@ public class EventContext
         Turn = turn;
         Combat = combat;
     }
+    public EventContext OverwriteNew(object source)
+    {
+        return new EventContext(source, this.Action, this.Turn, this.Combat);
+    }
     // 이벤트 자체 식별
     public Guid EventId { get; private set; }
 

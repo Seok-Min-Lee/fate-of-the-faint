@@ -78,13 +78,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9b7a469380fca194fa051b99fd5d7828, type: 2}
   - {fileID: 11400000, guid: 9ebb45b6d8ff5d44e86a2f200b8a309c, type: 2}
   relics:
-  - {fileID: 11400000, guid: 2deb1dae0e1f30f40bed4a73c6a1c6bf, type: 2}
-  - {fileID: 11400000, guid: d9b3d2733ddd4c54797955b717304cdc, type: 2}
-  - {fileID: 11400000, guid: 607accebd480c4f4fb338e33be2cd163, type: 2}
-  - {fileID: 11400000, guid: 15ea03a17c4492f44aecc22d510a9bc3, type: 2}
-  - {fileID: 11400000, guid: f78b85ee9c828e644a037af711afa767, type: 2}
-  - {fileID: 11400000, guid: 06fdb18f7536b4a46ae7598f71db0fd7, type: 2}
-  - {fileID: 11400000, guid: 04ec35142193cfa489e513055b5c0c5f, type: 2}
-  - {fileID: 11400000, guid: 76c8dfd67b5de854989c3c05c7710920, type: 2}
-  - {fileID: 11400000, guid: ebf26ecdd2b19a1498ea2fce646974a9, type: 2}
+  - {fileID: 11400000, guid: 7c5d5ed3a8d24e643813b7f5c1fbc497, type: 2}
+  - {fileID: 11400000, guid: d02f2f51816f52b49b7663d49f72776b, type: 2}
+  - {fileID: 11400000, guid: bfbcd7e99613cad408d30baac35534c2, type: 2}
+  - {fileID: 11400000, guid: 22d5e1df7cf8c8e458f139e2f0749c68, type: 2}
+  - {fileID: 11400000, guid: caeb9855a205a5b46a9da6ef05f85690, type: 2}
+  - {fileID: 11400000, guid: e7591711c389d5e49a25278677111350, type: 2}
+  - {fileID: 11400000, guid: 3f02aa99384048d43b850f2a7a42ef8e, type: 2}
+  - {fileID: 11400000, guid: f0dac4e2bac0e6946a6704cc3d2ccc84, type: 2}
+  - {fileID: 11400000, guid: a679a1ed55c72e2458c080b823862c24, type: 2}
   potions: []

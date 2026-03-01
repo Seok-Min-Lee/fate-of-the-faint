@@ -28,15 +28,15 @@
         "atk_double"
     ],
     "relicIds": [
-        "Rel_Normal_2",
-        "Rel_Normal_12",
-        "Rel_Normal_13",
-        "Rel_Normal_19",
-        "Rel_Normal_23",
-        "Rel_Rare_15",
-        "Rel_Rare_35",
-        "Rel_Special_2",
-        "Rel_Special_21"
+        "Bag of Marbles",
+        "Vajra",
+        "Centennial Puzzle",
+        "Art of War",
+        "Nunchaku",
+        "Akabeko",
+        "Orichalcum",
+        "Happy Flower",
+        "Gremlin Horn"
     ],
     "potionIds": []
 }

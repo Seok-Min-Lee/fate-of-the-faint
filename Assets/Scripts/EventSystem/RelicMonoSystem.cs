@@ -1,23 +1,41 @@
 ﻿using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 public class RelicMonoSystem : BaseMonoSystem
 {
     [SerializeField] private RelicViewPool pool;
-    private List<RelicEntry> relics;
+    private List<RelicInstance> relicAll;
+    private List<RegularRelicInstance> regularRelics = new List<RegularRelicInstance>();
 
     private EventBus eventBus;
     private PlayerInstance player;
     private List<EnemyInstance> enemies = new List<EnemyInstance>();
-    public void Init(EventBus eventBus, PlayerInstance player, IEnumerable<EnemyInstance> enemies, IEnumerable<RelicEntry> relics)
+    public void Init(EventBus eventBus, PlayerInstance player, IEnumerable<EnemyInstance> enemies, IEnumerable<RelicSO> relics)
     {
         this.eventBus = eventBus;
         this.player = player;
         this.enemies = new List<EnemyInstance>(enemies);
 
-        this.relics = new List<RelicEntry>(relics);
-        pool.CreateViews(relics);
+        relicAll = new List<RelicInstance>();
+        foreach(RelicSO so in relics)
+        {
+            RelicInstance instance = so.CreateInstance(eventBus);
+
+            if (instance is RegularRelicInstance)
+            {
+                regularRelics.Add(instance as RegularRelicInstance);
+            }
+            else
+            {
+                instance.Register();
+            }
+
+            relicAll.Add(instance);
+        }
+
+        pool.CreateViews(relicAll);
 
         foreach (RelicView view in pool.Actives)
         {
@@ -32,12 +50,12 @@ public class RelicMonoSystem : BaseMonoSystem
         }
 
         ActivateRelic(
-            trigger: RelicTrigger.CombatStarted, 
-            triggerValue: eventBus.PublishCounter[typeof(CombatStarted)],
-            context: e.Context, 
+            trigger: RelicTriggerEvent.CombatStarted,
+            context: e.Context,
             motion: e.Motion
         );
     }
+
     public void OnCombatEnded(CombatEnded e)
     {
         if (e.Context.Combat.state != CombatState.Combat)
@@ -46,8 +64,7 @@ public class RelicMonoSystem : BaseMonoSystem
         }
 
         ActivateRelic(
-            trigger: RelicTrigger.CombatEnded,
-            triggerValue: eventBus.PublishCounter[typeof(CombatEnded)],
+            trigger: RelicTriggerEvent.CombatEnded,
             context: e.Context,
             motion: e.Motion
         );
@@ -60,8 +77,7 @@ public class RelicMonoSystem : BaseMonoSystem
         }
 
         ActivateRelic(
-            trigger: RelicTrigger.PlayerTurnStarted,
-            triggerValue: eventBus.PublishCounter[typeof(PlayerTurnStarted)],
+            trigger: RelicTriggerEvent.PlayerTurnStarted,
             context: e.Context,
             motion: e.Motion
         );
@@ -74,8 +90,7 @@ public class RelicMonoSystem : BaseMonoSystem
         }
 
         ActivateRelic(
-            trigger: RelicTrigger.PlayerTurnEnded,
-            triggerValue: eventBus.PublishCounter[typeof(PlayerTurnEnded)],
+            trigger: RelicTriggerEvent.PlayerTurnEnded,
             context: e.Context,
             motion: e.Motion
         );
@@ -88,8 +103,7 @@ public class RelicMonoSystem : BaseMonoSystem
         }
 
         ActivateRelic(
-            trigger: RelicTrigger.EnemyTurnStarted,
-            triggerValue: eventBus.PublishCounter[typeof(EnemyTurnStarted)],
+            trigger: RelicTriggerEvent.EnemyTurnStarted,
             context: e.Context,
             motion: e.Motion
         );
@@ -102,8 +116,7 @@ public class RelicMonoSystem : BaseMonoSystem
         }
 
         ActivateRelic(
-            trigger: RelicTrigger.EnemyTurnEnded,
-            triggerValue: eventBus.PublishCounter[typeof(EnemyTurnEnded)],
+            trigger: RelicTriggerEvent.EnemyTurnEnded,
             context: e.Context,
             motion: e.Motion
         );
@@ -116,8 +129,7 @@ public class RelicMonoSystem : BaseMonoSystem
         }
 
         ActivateRelic(
-            trigger: RelicTrigger.ActionStarted,
-            triggerValue: eventBus.PublishCounter[typeof(ActionStarted)],
+            trigger: RelicTriggerEvent.ActionStarted,
             context: e.Context,
             motion: e.Motion
         );
@@ -130,8 +142,7 @@ public class RelicMonoSystem : BaseMonoSystem
         }
 
         ActivateRelic(
-            trigger: RelicTrigger.ActionEnded,
-            triggerValue: eventBus.PublishCounter[typeof(ActionEnded)],
+            trigger: RelicTriggerEvent.ActionEnded,
             context: e.Context,
             motion: e.Motion
         );
@@ -144,8 +155,7 @@ public class RelicMonoSystem : BaseMonoSystem
         }
 
         ActivateRelic(
-            trigger: RelicTrigger.AttackPlayed,
-            triggerValue: eventBus.PublishCounter[typeof(AttackPlayed)],
+            trigger: RelicTriggerEvent.AttackPlayed,
             context: e.Context,
             motion: e.Motion
         );
@@ -158,8 +168,7 @@ public class RelicMonoSystem : BaseMonoSystem
         }
 
         ActivateRelic(
-            trigger: RelicTrigger.SkillPlayed,
-            triggerValue: eventBus.PublishCounter[typeof(SkillPlayed)],
+            trigger: RelicTriggerEvent.SkillPlayed,
             context: e.Context,
             motion: e.Motion
         );
@@ -172,8 +181,7 @@ public class RelicMonoSystem : BaseMonoSystem
         }
 
         ActivateRelic(
-            trigger: RelicTrigger.PowerPlayed,
-            triggerValue: eventBus.PublishCounter[typeof(PowerPlayed)],
+            trigger: RelicTriggerEvent.PowerPlayed,
             context: e.Context,
             motion: e.Motion
         );
@@ -186,8 +194,7 @@ public class RelicMonoSystem : BaseMonoSystem
         }
 
         ActivateRelic(
-            trigger: RelicTrigger.CardDrawed,
-            triggerValue: eventBus.PublishCounter[typeof(CardDrawed)],
+            trigger: RelicTriggerEvent.CardDrawed,
             context: e.Context,
             motion: e.Motion
         );
@@ -200,8 +207,7 @@ public class RelicMonoSystem : BaseMonoSystem
         }
 
         ActivateRelic(
-            trigger: RelicTrigger.CardDiscarded,
-            triggerValue: eventBus.PublishCounter[typeof(CardDiscarded)],
+            trigger: RelicTriggerEvent.CardDiscarded,
             context: e.Context,
             motion: e.Motion
         );
@@ -214,8 +220,7 @@ public class RelicMonoSystem : BaseMonoSystem
         }
 
         ActivateRelic(
-            trigger: RelicTrigger.CardDiscarded,
-            triggerValue: eventBus.PublishCounter[typeof(CardDiscarded)],
+            trigger: RelicTriggerEvent.CardDiscarded,
             context: e.Context,
             motion: e.Motion
         );
@@ -228,8 +233,7 @@ public class RelicMonoSystem : BaseMonoSystem
         }
 
         ActivateRelic(
-            trigger: RelicTrigger.CardCharged,
-            triggerValue: eventBus.PublishCounter[typeof(CardCharged)],
+            trigger: RelicTriggerEvent.CardCharged,
             context: e.Context,
             motion: e.Motion
         );
@@ -242,8 +246,7 @@ public class RelicMonoSystem : BaseMonoSystem
         }
 
         ActivateRelic(
-            trigger: RelicTrigger.DeathDeclared,
-            triggerValue: eventBus.PublishCounter[typeof(DeathDeclared)],
+            trigger: RelicTriggerEvent.DeathDeclared,
             context: e.Context,
             motion: e.Motion
         );
@@ -256,15 +259,10 @@ public class RelicMonoSystem : BaseMonoSystem
         }
 
         ActivateRelic(
-            trigger: RelicTrigger.DamageRequested,
-            triggerValue: eventBus.PublishCounter[typeof(DamageRequested)],
+            trigger: RelicTriggerEvent.DamageRequested,
             context: e.Context,
             motion: e.Motion
         );
-        //if (e.Damage.Source == player)
-        //{
-        //    e.Damage.Add(relic.strength, relic);
-        //}
     }
     public void OnHpChanged(HpChanged e)
     {
@@ -274,124 +272,38 @@ public class RelicMonoSystem : BaseMonoSystem
         }
 
         ActivateRelic(
-            trigger: RelicTrigger.HpChanged,
-            triggerValue: eventBus.PublishCounter[typeof(HpChanged)],
+            trigger: RelicTriggerEvent.HpChanged,
             context: e.Context,
             motion: e.Motion
         );
     }
-    private void ActivateRelic(RelicTrigger trigger, int triggerValue, EventContext context, MotionContext motion)
+    private void ActivateRelic(RelicTriggerEvent trigger, EventContext context, MotionContext motion)
     {
-        for (int i = 0; i < relics.Count; i++)
-        {
-            RelicSO origin = relics[i].Origin;
+        //for (int i = 0; i < regularRelics.Count; i++)
+        //{
+        //    RegularRelicSO origin = regularRelics[i].Origin as RegularRelicSO;
 
-            if (origin.Trigger == trigger)
-            {
-                eventBus.Publish<RelicActivated>(new RelicActivated(
-                    context: CreateContext(context),
-                    motion: motion,
-                    source: relics[i]
-                ));
-                Debug.Log(origin.Effect.ToString());
+        //    if (origin.TriggerEvent == trigger)
+        //    {
+        //        List<EntityInstance> targets = new List<EntityInstance>();
+        //        switch (origin.Target)
+        //        {
+        //            case RelicTarget.Player:
+        //                targets.Add(player);
+        //                break;
+        //            case RelicTarget.EnemyAll:
+        //                targets.AddRange(enemies);
+        //                break;
+        //            default:
+        //                break;
+        //        }
 
-                //
-                List<EntityInstance> targets = new List<EntityInstance>();
-                if (origin.Target == RelicTarget.Enemy)
-                {
-                    targets.AddRange(enemies);
-                }
-                else
-                {
-                    targets.Add(player);
-                }
-
-                //
-                for (int j = 0; j < targets.Count; j++)
-                {
-                    int startAmount;
-                    switch (origin.Effect)
-                    {
-                        case RelicEffect.Hp:
-                            startAmount = targets[j].CurrentHp;
-                            targets[j].SetCurrentHp(startAmount + origin.Value);
-
-                            eventBus.Publish<HpChanged>(new HpChanged(
-                                context: CreateContext(context),
-                                motion: motion,
-                                target: targets[j],
-                                startAmount: startAmount,
-                                endAmount: targets[j].CurrentHp
-                            ));
-                            break;
-                        case RelicEffect.Block:
-                            startAmount = targets[j].Block;
-                            targets[j].SetBlock(startAmount + origin.Value);
-
-                            eventBus.Publish<BlockChanged>(new BlockChanged(
-                                context: CreateContext(context),
-                                motion: motion,
-                                target: targets[j],
-                                startAmount: startAmount,
-                                endAmount: targets[j].Block
-                            ));
-                            break;
-                        case RelicEffect.Strength:
-                            startAmount = targets[j].Getbuff(BuffType.Strength);
-                            targets[j].ApplyBuff(BuffType.Strength, origin.Value);
-
-                            eventBus.Publish<BuffChanged>(new BuffChanged(
-                                context: CreateContext(context),
-                                motion: motion,
-                                target: targets[j],
-                                type: BuffType.Strength,
-                                startAmount: startAmount,
-                                endAmount: targets[j].Getbuff(BuffType.Strength)
-                            ));
-                            break;
-                        case RelicEffect.Weak:
-                            startAmount = targets[j].Getbuff(BuffType.Weak);
-                            targets[j].ApplyBuff(BuffType.Weak, origin.Value);
-
-                            eventBus.Publish<BuffChanged>(new BuffChanged(
-                                context: CreateContext(context),
-                                motion: motion,
-                                target: targets[j],
-                                type: BuffType.Weak,
-                                startAmount: startAmount,
-                                endAmount: targets[j].Getbuff(BuffType.Weak)
-                            ));
-                            break;
-                        case RelicEffect.Vulnable:
-                            startAmount = targets[j].Getbuff(BuffType.Vulnerable);
-                            targets[j].ApplyBuff(BuffType.Vulnerable, origin.Value);
-
-                            eventBus.Publish<BuffChanged>(new BuffChanged(
-                                context: CreateContext(context),
-                                motion: motion,
-                                target: targets[j],
-                                type: BuffType.Vulnerable,
-                                startAmount: startAmount,
-                                endAmount: targets[j].Getbuff(BuffType.Vulnerable)
-                            ));
-                            break;
-                        case RelicEffect.DrawCard:
-                            eventBus.Publish<DrawCardDeclared>(new DrawCardDeclared(
-                                context: context,
-                                motion: motion,
-                                amount: origin.Value
-                            ));
-                            break;
-                        case RelicEffect.GainEnergy:
-                            eventBus.Publish<GainEnergyDeclared>(new GainEnergyDeclared(
-                                context: context,
-                                motion: motion,
-                                amount: origin.Value
-                            ));
-                            break;
-                    }
-                }
-            }
-        }
+        //        regularRelics[i].Activate(
+        //            context: context,
+        //            motion: motion,
+        //            targets: targets
+        //        );
+        //    }
+        //}
     }
 }

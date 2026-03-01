@@ -9,7 +9,13 @@ public class CombatSystem : BaseSystem
 {
     public CombatSystem()
     {
-        CombatContext = new CombatContext(combatId: 0, source: this);
+        //CombatContext = new CombatContext(combatId: 0, source: this);
+        //CombatContext = new CombatContext(
+        //    combatId: 0,
+        //    source: this,
+        //    player: player,
+        //    enemies: enemies.Values
+        //);
 
         TurnSystem = new TurnSystem(EventBus);
         ActionSystem = new ActionSystem(eventBus: EventBus, combatSystem: this);
@@ -292,7 +298,7 @@ public class CombatSystem : BaseSystem
             return;
         }
 
-        ActionSystem.ExcuteAction(source: enemy, type: ActionType.EnemyAct, (eventContext, animationContext) =>
+        ActionSystem.ExcuteAction(source: enemy, type: ActionType.EnemyAct, (eventContext, motionContext) =>
         {
             IntentEffect[] effects = enemy.NextAction.Effects;
 
@@ -302,14 +308,14 @@ public class CombatSystem : BaseSystem
                 case EffectType.Attack:
                     EventBus.Publish<AttackPlayed>(new AttackPlayed(
                         context: eventContext,
-                        motion: animationContext,
+                        motion: motionContext,
                         source: enemy
                     )); 
                     break;
                 default:
                     EventBus.Publish<SkillPlayed>(new SkillPlayed(
                         context: eventContext,
-                        motion: animationContext,
+                        motion: motionContext,
                         source: enemy
                     ));
                     break;
@@ -342,7 +348,7 @@ public class CombatSystem : BaseSystem
                         case EffectType.Attack:
                             EventBus.Publish<AttackDeclared>(new AttackDeclared(
                                 context: eventContext,
-                                motion: animationContext,
+                                motion: motionContext,
                                 source: enemy,
                                 target: targets[i],
                                 amount: effect.value,
@@ -352,7 +358,7 @@ public class CombatSystem : BaseSystem
                         case EffectType.Block:
                             EventBus.Publish<BlockDeclared>(new BlockDeclared(
                                 context: eventContext,
-                                motion: animationContext,
+                                motion: motionContext,
                                 source: enemy,
                                 target: targets[i],
                                 amount: effect.value
@@ -361,7 +367,7 @@ public class CombatSystem : BaseSystem
                         case EffectType.Strengthen:
                             EventBus.Publish<BuffDeclared>(new BuffDeclared(
                                 context: eventContext,
-                                motion: animationContext,
+                                motion: motionContext,
                                 source: enemy,
                                 target: targets[i],
                                 type: BuffType.Strength,
@@ -371,7 +377,7 @@ public class CombatSystem : BaseSystem
                         case EffectType.Weaken:
                             EventBus.Publish<BuffDeclared>(new BuffDeclared(
                                 context: eventContext,
-                                motion: animationContext,
+                                motion: motionContext,
                                 source: enemy,
                                 target: targets[i],
                                 type: BuffType.Weak,
@@ -381,7 +387,7 @@ public class CombatSystem : BaseSystem
                         case EffectType.Vulnerable:
                             EventBus.Publish<BuffDeclared>(new BuffDeclared(
                                 context: eventContext,
-                                motion: animationContext,
+                                motion: motionContext,
                                 source: enemy,
                                 target: targets[i],
                                 type: BuffType.Vulnerable,
@@ -654,7 +660,12 @@ public class CombatSystem : BaseSystem
     }
     public void CombatStart()
     {
-        CombatContext = new CombatContext(combatId: 0, source: this);
+        CombatContext = new CombatContext(
+            combatId: 0, 
+            source: this,
+            player: player,
+            enemies: enemies.Values
+        );
 
         EventContext eventContext = new EventContext(
             source: this,
@@ -698,16 +709,22 @@ public class CombatSystem : BaseSystem
 
 public class CombatContext
 {
-    public CombatContext(int combatId, object source)
+    public CombatContext(int combatId, object source, EntityInstance player, IEnumerable<EntityInstance> enemies)
     {
         CombatId = combatId;
         Source = source;
+        Player = player;
+        this.enemies = new List<EntityInstance>(enemies);
 
         state = CombatState.Wait;
     }
     public int CombatId { get; set; }
     public object Source { get; private set; }
+    public EntityInstance Player { get; private set; }
+
     public CombatState state;
+    public IReadOnlyList<EntityInstance> Enemies => enemies.Where(e => !e.IsDead).ToList();
+    private List<EntityInstance> enemies;
 }
 public enum CombatState
 {

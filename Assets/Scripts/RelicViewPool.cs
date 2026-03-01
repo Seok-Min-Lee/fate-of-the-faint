@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class RelicViewPool : GameObjectPool<RelicView>
 {
-    public List<RelicView> CreateViews(IEnumerable<RelicEntry> samples)
+    public List<RelicView> CreateViews(IEnumerable<RelicInstance> samples)
     {
         List<RelicView> views = new List<RelicView>();
 
-        foreach (RelicEntry sample in samples)
+        foreach (RelicInstance sample in samples)
         {
             RelicView view = Pop();
             view.Init(sample);

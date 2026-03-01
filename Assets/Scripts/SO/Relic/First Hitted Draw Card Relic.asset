@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eff7587af5f415e46b19dbdbf6410a3d, type: 3}
+  m_Name: First Hitted Draw Card Relic
+  m_EditorClassIdentifier: Assembly-CSharp::FirstHittedDrawCardRelicSO
+  id: Centennial Puzzle
+  displayName: "\uBC31\uB144\uD37C\uC990"
+  icon: {fileID: 1704671363, guid: 451b12996821ada4cab14730504cccc0, type: 3}
+  description: "\uB9E4 \uC804\uD22C\uC5D0\uC11C \uCC98\uC74C \uD53C\uD574\uB97C \uC785\uC744
+    \uB54C \uCE74\uB4DC\uB97C 3\uC7A5 \uBF51\uC2B5\uB2C8\uB2E4."
+  flaverText: "\uD37C\uC990\uC744 \uD478\uB294 \uC21C\uAC04 \uB2F9\uC2E0\uC758 \uAC00\uC2B4\uC5D0
+    \uAC15\uD55C \uC628\uAE30\uAC00 \uB290\uAEF4\uC9D1\uB2C8\uB2E4."
+  rarity: 1
+  value: 3

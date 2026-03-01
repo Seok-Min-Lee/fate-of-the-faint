@@ -6,9 +6,9 @@ using UnityEngine.UI;
 public class RelicView : MonoBehaviour
 {
     [SerializeField] private Image image;
-    public RelicEntry Instance { get; private set; }
+    public RelicInstance Instance { get; private set; }
     private Sequence sequence;
-    public void Init(RelicEntry instance)
+    public void Init(RelicInstance instance)
     {
         Instance = instance;
         image.sprite = instance.Origin.Icon;
