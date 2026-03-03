@@ -601,7 +601,7 @@ public struct RelicActivated : ICombatEvent
 }
 public struct RelicAdded : ICombatEvent
 {
-    public RelicAdded(EventContext context, MotionContext motion, RelicInstance source)
+    public RelicAdded(EventContext context, MotionContext motion, RelicSO source)
     {
         Context = context;
         Motion = motion;
@@ -609,6 +609,19 @@ public struct RelicAdded : ICombatEvent
     }
     public EventContext Context { get; private set; }
     public MotionContext Motion { get; private set; }
-    public RelicInstance Source { get; private set; }
+    public RelicSO Source { get; private set; }
     public EventMeta Meta => EventMetas.RelicAdded;
+}
+public struct CardAdded : ICombatEvent
+{
+    public CardAdded(EventContext context, MotionContext motion, CardSO source)
+    {
+        Context = context;
+        Motion = motion;
+        Source = source;
+    }
+    public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
+    public CardSO Source { get; private set; }
+    public EventMeta Meta => EventMetas.CardAdded;
 }

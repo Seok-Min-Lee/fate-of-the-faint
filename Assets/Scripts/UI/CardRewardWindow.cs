@@ -1,10 +1,14 @@
 ﻿using DG.Tweening;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CardRewardWindow : UIWindow
 {
+    [SerializeField] private CardMonoSystem cardSystem;
+
     [SerializeField] private CardDisplayViewPool pool;
     [SerializeField] private HorizontalLayoutGroup rewardGroupLayout;
     [SerializeField] private RectTransform selectButton;
@@ -12,37 +16,26 @@ public class CardRewardWindow : UIWindow
     [SerializeField] private GameObject skipButton;
     [SerializeField] private Transform icon;
 
-    private List<CardDisplayView> views = new List<CardDisplayView>();
-    private List<CardSO> candidates = new List<CardSO>();
     private CardDisplayView selectedView;
-    public bool IsSelected { get; private set; } = true;
 
-    public void Init()
+    private Action endProcess;
+    public void Init(IEnumerable<CardSO> candidates,  Action endProcess)
     {
-        if (!IsSelected)
-        {
-            return;
-        }
-        IsSelected = false;
+        this.endProcess = endProcess;
 
-        int count = PlayManager.Instance.CurrentData.RewardCardOptionCount;
-        candidates = Utils.PickRandom<CardSO>(PlayManager.Instance.Catalog.CardList, count);
-
-        for (int i = 0; i < candidates.Count; i++)
+        int count = candidates.Count();
+        for (int i = 0; i < count; i++)
         {
             CardDisplayView view = pool.Pop();
 
             view.Init(
                 id: i,
                 hoverScale: 1.25f,
-                origin: candidates[i],
+                origin: candidates.ElementAt(i),
                 parent: rewardGroupLayout.transform,
-                isButton: true
+                isButton: true,
+                onClick: () => OnCardSelected(view)
             );
-
-            view.Button.onClick.AddListener(() => OnCardSelected(view));
-
-            views.Add(view);
         }
         rewardGroupLayout.enabled = true;
 
@@ -53,8 +46,6 @@ public class CardRewardWindow : UIWindow
     }
     public void OnClickSelect()
     {
-        PlayManager.Instance.CurrentData.AddCard(selectedView.Origin);
-
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() =>
         {
@@ -62,72 +53,70 @@ public class CardRewardWindow : UIWindow
             skipButton.SetActive(false);
             selectButton.gameObject.SetActive(false);
         });
-        sequence.Append(selectedView.transform.DOMove(icon.transform.position, 0.5f).SetEase(Ease.OutSine));
-        sequence.Join(selectedView.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InSine));
+        sequence.Append(selectedView.Select(icon.transform.position));
         sequence.AppendCallback(() =>
         {
             pool.Push(selectedView);
-            selectedView.Button.onClick.RemoveAllListeners();
-
-            candidates.Remove(selectedView.Origin);
-            views.Remove(selectedView);
+            cardSystem.AddCard(selectedView.Origin);
             selectedView = null;
 
             nextButton.SetActive(true);
+
+            endProcess?.Invoke();
         });
     }
     public void OnClickReset()
     {
-        for (int i = 0; i < views.Count; i++)
+        // 전체 Hover Cancel, Hold Cancel
+        for (int i = 0; i < pool.Actives.Count; i++)
         {
-            views[i].transform.localScale = Vector3.one;
+            pool.Actives[i].HoverCancel();
+            pool.Actives[i].HoldCancel();
         }
 
-        if (selectedView != null)
-        {
-            selectedView.IsIgnorePointer = false;
-        }
         selectedView = null;
 
+        // 선택 버튼 Hide
         selectButton.DOAnchorPos(new Vector2(450, 150), 0.5f);
     }
     public void OnClickSkip()
     {
+        ClearViews();
         ChangeWindow?.Invoke(WindowType.CardRewards, WindowMode.Revert);
     }
     public void OnClickNext()
     {
-        IsSelected = true;
-
-        for (int i = 0; i < views.Count; i++)
-        {
-            pool.Push(views[i]);
-            views[i].Button.onClick.RemoveAllListeners();
-        }
-        views.Clear();
-
-        selectedView = null;
-
+        ClearViews();
         ChangeWindow?.Invoke(WindowType.Victory, WindowMode.Single);
     }
     private void OnCardSelected(CardDisplayView view)
     {
-        for (int i = 0; i < views.Count; i++)
+        // 선택한 것 외에 Hover Cancel
+        for (int i = 0; i < pool.Actives.Count; i++)
         {
-            if (view.Id != views[i].Id)
+            if (view.Id != pool.Actives[i].Id)
             {
-                views[i].transform.localScale = Vector3.one;
+                pool.Actives[i].HoverCancel();
             }
         }
 
-        if (selectedView != null)
+        // Hold 업데이트
+        selectedView?.HoldCancel();
+        selectedView = view;
+        selectedView.Hold();
+
+        // 선택 버튼 Show
+        selectButton.DOAnchorPos(new Vector2(150, 150), 0.5f);
+    }
+    private void ClearViews()
+    {
+        List<CardDisplayView> views = new List<CardDisplayView>(pool.Actives);
+
+        for (int i = 0; i < views.Count; i++)
         {
-            selectedView.IsIgnorePointer = false;
+            pool.Push(views[i]);
         }
 
-        selectedView = view;
-        selectedView.IsIgnorePointer = true;
-
-        selectButton.DOAnchorPos(new Vector2(150, 150), 0.5f);
+        selectedView = null;
     }
 }

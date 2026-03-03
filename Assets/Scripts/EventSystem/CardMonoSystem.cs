@@ -506,4 +506,14 @@ public class CardMonoSystem : BaseMonoSystem
         discardPileText.text = discardPile.Count.ToString();
         exhaustPileText.text = exhaustPile.Count.ToString();
     }
+    public void AddCard(CardSO card)
+    {
+        PlayManager.Instance.CurrentData.AddCard(card);
+
+        //eventBus.Publish<CardAdded>(new CardAdded(
+        //    context: new EventContext(this, null, null, null), 
+        //    motion: null,
+        //    source: card
+        //));
+    }
 }

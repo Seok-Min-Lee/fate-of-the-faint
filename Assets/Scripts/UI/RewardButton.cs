@@ -19,7 +19,7 @@ public class RewardButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     [SerializeField] private Color textColorDefault;
 
     private Action<RewardButton> onClick;
-    public void Init(Transform parent, Sprite sprite, string text, Action<RewardButton> onClick)
+    public virtual void Init(Transform parent, Sprite sprite, string text, Action<RewardButton> onClick)
     {
         this.onClick = onClick;
         transform.parent = parent;

@@ -16,35 +16,13 @@ public class VictoryWindow : UIMotionWindow
     [SerializeField] private Transform rewardParent;
     [SerializeField] private TextMeshProUGUI tipText;
 
-    [SerializeField] private RewardPreset[] rewardPresets;
+    [SerializeField] private Sprite cardIcon;
+    [SerializeField] private Sprite goldIcon;
 
+    private Dictionary<RewardButton, List<CardSO>> cardSampleDic = new Dictionary<RewardButton, List<CardSO>>();
     private void Awake()
     {
         _handler.Add(MotionKey.WindowShow, Show);
-    }
-    private RewardButton latestButton;
-    private void OnEnable()
-    {
-        if (latestButton != null && cardRewardWindow.IsSelected)
-        {
-            rewardButtonPool.Push(latestButton);
-            latestButton = null;
-        }
-    }
-    public void OnClickGoldButton(RewardButton button)
-    {
-        rewardButtonPool.Push(button);
-    }
-    public void OnClickRelicButton(RewardButton button, RelicSO relic)
-    {
-        relicSystem.AddRelic(relic);
-        rewardButtonPool.Push(button);
-    }
-    public void OnClickCardButton(RewardButton button)
-    {
-        latestButton = button;
-        cardRewardWindow.Init();
-        ChangeWindow(WindowType.CardRewards, WindowMode.Single);
     }
     public void OnClickNext()
     {
@@ -73,12 +51,36 @@ public class VictoryWindow : UIMotionWindow
         return sequence;
     }
 
+    public void OnClickGoldButton(RewardButton button)
+    {
+        rewardButtonPool.Push(button);
+    }
+    public void OnClickRelicButton(RewardButton button, RelicSO relic)
+    {
+        relicSystem.AddRelic(relic);
+        rewardButtonPool.Push(button);
+    }
+    public void OnClickCardButton(RewardButton button)
+    {
+        if (!cardSampleDic.TryGetValue(button, out List<CardSO> samples))
+        {
+            return;
+        }
+
+        cardRewardWindow.Init(samples, () => SelectCard(button));
+        ChangeWindow(WindowType.CardRewards, WindowMode.Single);
+    }
     private void AddReward()
     {
-        AddRewardCard();
-        AddRelicReward();
+        AddGoldRewardButton();
+        AddCardRewardButton();
+        AddRelicRewardButton();
     }
-    private void AddRewardCard()
+    private void AddGoldRewardButton()
+    {
+
+    }
+    private void AddCardRewardButton()
     {
         //if (UnityEngine.Random.Range(0, 10) == 0)
         //{
@@ -87,18 +89,19 @@ public class VictoryWindow : UIMotionWindow
 
         RewardButton button = rewardButtonPool.Pop(); 
 
-        RewardPreset preset = rewardPresets[1];
-
-        Action<RewardButton> onClick = (button) => OnClickCardButton(button);
-
         button.Init(
             parent: rewardParent,
-            sprite: preset.image,
-            text: preset.name,
-            onClick: onClick
+            sprite: cardIcon,
+            text: "카드 선택",
+            onClick: (button) => OnClickCardButton(button)
         );
+
+        int count = PlayManager.Instance.CurrentData.RewardCardOptionCount;
+        List<CardSO> samples = Utils.PickRandom<CardSO>(PlayManager.Instance.Catalog.CardList, count);
+
+        cardSampleDic.Add(button, samples);
     }
-    private void AddRelicReward()
+    private void AddRelicRewardButton()
     {
         //if (UnityEngine.Random.Range(0, 10) == 0)
         //{
@@ -115,7 +118,6 @@ public class VictoryWindow : UIMotionWindow
         {
             return;
         }
-
         RelicSO reward = candidates[UnityEngine.Random.Range(0, candidates.Count)];
 
         RewardButton button = rewardButtonPool.Pop();
@@ -127,17 +129,9 @@ public class VictoryWindow : UIMotionWindow
             onClick: (button) => OnClickRelicButton(button, reward)
         );
     }
-}
-[Serializable]
-public struct RewardPreset
-{
-    public enum Type
+    private void SelectCard(RewardButton button)
     {
-        Gold,
-        Card,
-        Relic
+        cardSampleDic.Remove(button);
+        rewardButtonPool.Push(button);
     }
-    public Type type;
-    public Sprite image;
-    public string name;
 }

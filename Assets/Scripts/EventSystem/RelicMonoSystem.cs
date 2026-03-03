@@ -49,7 +49,7 @@ public class RelicMonoSystem : BaseMonoSystem
         eventBus.Publish<RelicAdded>(new RelicAdded(
             context: new EventContext(this, null, null, null),
             motion: null,
-            source: newInstance
+            source: relic
         ));
     }
 }

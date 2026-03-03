@@ -5582,6 +5582,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardRewardWindow
   type: 3
+  cardSystem: {fileID: 28270240}
   pool: {fileID: 1340658814}
   rewardGroupLayout: {fileID: 1434446879}
   selectButton: {fileID: 933725526}
