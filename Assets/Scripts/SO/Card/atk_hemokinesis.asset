@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3cca72567dd0a84c857b9f8729cf2b8, type: 3}
+  m_Name: atk_hemokinesis
+  m_EditorClassIdentifier: Assembly-CSharp::CardSO
+  id: atk_hemokinesis
+  name: "\uD608\uB958"
+  description: "\uCCB4\uB825\uC744 2 \uC783\uC2B5\uB2C8\uB2E4. \uD53C\uD574\uB97C
+    15 \uC90D\uB2C8\uB2E4."
+  image: {fileID: -1011728316, guid: f01289aada2552542adfb37b1b95436c, type: 3}
+  isExhausted: 0
+  type: 0
+  rarity: 1
+  target: 1
+  cost: 1
+  effects:
+  - targetType: 1
+    effectType: 0
+    repeat: 1
+    value: 15
+  - targetType: 0
+    effectType: 0
+    repeat: 1
+    value: 2
+  upgradeCard: {fileID: 0}

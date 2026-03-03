@@ -245,7 +245,18 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField] private TextMeshProUGUI name;
     [SerializeField] private TextMeshProUGUI desc;
     [SerializeField] private CardArt[] arts;
-
+    public CanvasGroup CanvasGroup 
+    {
+        get 
+        {
+            if (_canvasGroup == null)
+            {
+                _canvasGroup = GetComponent<CanvasGroup>();
+            }
+            return _canvasGroup;
+        }
+    }
+    private CanvasGroup _canvasGroup;
     public CardInstance CardInstance { get; private set; }
     public CardMonoSystem CardSystem { get; private set; }
 
@@ -313,6 +324,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             transform.position = cardPlayConfig.DrawArea.transform.position;
             transform.rotation = Quaternion.Euler(0, 0, -90);
             transform.localScale = Vector3.zero;
+            CanvasGroup.alpha = 1f;
 
             gameObject.SetActive(true);
         });
@@ -343,6 +355,28 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         sequence.Append(transform.DOMove(cardPlayConfig.DiscardArea.position, 0.3333f).SetEase(Ease.OutSine));
         sequence.Join(transform.DOScale(Vector3.zero, 0.3333f).SetEase(Ease.OutSine));
         sequence.Join(transform.DORotate(new Vector3(0, 0, -90), 0.3333f).SetEase(Ease.OutSine));
+        sequence.AppendCallback(() =>
+        {
+            isUsable = true;
+            gameObject.SetActive(false);
+        });
+
+        return sequence;
+    }
+    public Sequence Exhaust()
+    {
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+
+        sequence.AppendCallback(() => 
+        {
+            isUsable = false;
+        });
+        sequence.Append(transform.DOLocalMoveY(transform.localPosition.y + 150, 0.5f).SetEase(Ease.OutSine));
+        sequence.Join(CanvasGroup.DOFade(0, 0.5f).SetEase(Ease.OutSine));
         sequence.AppendCallback(() =>
         {
             isUsable = true;

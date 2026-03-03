@@ -1578,6 +1578,7 @@ GameObject:
   - component: {fileID: 303806457069819902}
   - component: {fileID: 7139560910230700095}
   - component: {fileID: -7832233825955742045}
+  - component: {fileID: 954427871828606430}
   m_Layer: 5
   m_Name: Card Combat View
   m_TagString: Untagged
@@ -1675,7 +1676,6 @@ MonoBehaviour:
     zoom: 0.3
   container: {fileID: 0}
   preventCardInteraction: 0
-  type: 0
   effectGO: {fileID: 6093068214214537985}
   cost: {fileID: 5574962006694371880}
   name: {fileID: 4856709307807490056}
@@ -1701,6 +1701,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!225 &954427871828606430
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7457746064626439576}
+  m_Enabled: 1
+  m_Alpha: 0.48
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &8138821102139773113
 GameObject:
   m_ObjectHideFlags: 0

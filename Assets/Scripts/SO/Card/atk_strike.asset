@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: atk_strike
   m_EditorClassIdentifier: Assembly-CSharp::CardSO
   id: atk_strike
-  name: "\uB2E8\uC77C \uACF5\uACA9"
-  description: "\uB2E8\uC77C \uC801 \uD53C\uD574 5"
-  image: {fileID: 181299945, guid: feb56837674cabc448f6b2f814049aed, type: 3}
+  name: "\uD0C0\uACA9"
+  description: "\uD53C\uD574\uB97C 6 \uC90D\uB2C8\uB2E4."
+  image: {fileID: 652979983, guid: ea8c628429d8bff40a33b6e9f157043c, type: 3}
+  isExhausted: 0
   type: 0
   rarity: 0
   target: 1
@@ -24,5 +25,5 @@ MonoBehaviour:
   - targetType: 1
     effectType: 0
     repeat: 1
-    value: 5
+    value: 6
   upgradeCard: {fileID: 0}

@@ -1,5 +1,4 @@
 ﻿using DG.Tweening;
-using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +17,7 @@ public class CardMonoSystem : BaseMonoSystem
 
     [SerializeField] private TextMeshProUGUI drawPileText;
     [SerializeField] private TextMeshProUGUI discardPileText;
+    [SerializeField] private TextMeshProUGUI exhaustPileText;
 
     private List<CardInstance> cardInstanceAll = new List<CardInstance>();
     private List<CardInstance> drawPile = new List<CardInstance>();
@@ -72,11 +72,22 @@ public class CardMonoSystem : BaseMonoSystem
             // 
             if (requestContext.isResult)
             {
-                DiscardCard(
-                    cardView: cardView, 
-                    context: eventContext, 
-                    motion: motionContext
-                );
+                if (cardView.CardInstance.Origin.IsExhausted)
+                {
+                    ExhaustCard(
+                        cardView: cardView,
+                        context: eventContext,
+                        motion: motionContext
+                    );
+                }
+                else
+                {
+                    DiscardCard(
+                        cardView: cardView,
+                        context: eventContext,
+                        motion: motionContext
+                    );
+                }
             }
             else
             {
@@ -378,7 +389,24 @@ public class CardMonoSystem : BaseMonoSystem
             context: CreateContext(context),
             motion: motion
         ));
-	}
+    }
+    private void ExhaustCard(CardView cardView, EventContext context, MotionContext motion)
+    {
+        // Instance
+        hand.Remove(cardView.CardInstance);
+        exhaustPile.Add(cardView.CardInstance);
+        // Animation
+        motion.AddTask(new MotionTask(
+            priority: MotionPriority.Card,
+            command: () => ExhaustCardCor(cardView),
+            source: this
+        ));
+        // Event
+        eventBus.Publish<CardExhausted>(new CardExhausted(
+            context: CreateContext(context),
+            motion: motion
+        ));
+    }
     private void ChargeCard(EventContext context, MotionContext motion)
     {
         if (drawPile.Count > 0)
@@ -427,6 +455,16 @@ public class CardMonoSystem : BaseMonoSystem
 		cardViewPool.Push(cardView);
 		UpdateUI();
     }
+
+    IEnumerator ExhaustCardCor(CardView cardView)
+    {
+        cardHand.DestroyCard(cardView);
+
+        yield return cardView.Exhaust().WaitForCompletion();
+
+        cardViewPool.Push(cardView);
+        UpdateUI();
+    }
     IEnumerator DiscardCardsCor(IEnumerable<CardView> views)
     {
         List<CardView> copies = new List<CardView>(views);
@@ -466,5 +504,6 @@ public class CardMonoSystem : BaseMonoSystem
     {
         drawPileText.text = drawPile.Count.ToString();
         discardPileText.text = discardPile.Count.ToString();
+        exhaustPileText.text = exhaustPile.Count.ToString();
     }
 }

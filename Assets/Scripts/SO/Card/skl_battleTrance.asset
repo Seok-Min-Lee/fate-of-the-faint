@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3cca72567dd0a84c857b9f8729cf2b8, type: 3}
+  m_Name: skl_battleTrance
+  m_EditorClassIdentifier: Assembly-CSharp::CardSO
+  id: skl_battleTrance
+  name: "\uC804\uD22C \uCD5C\uBA74"
+  description: "\uCE74\uB4DC\uB97C 3\uC7A5 \uBF51\uC2B5\uB2C8\uB2E4. \uC774\uBC88
+    \uD134 \uB3D9\uC548 \uB354 \uC774\uC0C1 \uCE74\uB4DC\uB97C \uBF51\uC744 \uC218
+    \uC5C6\uC2B5\uB2C8\uB2E4."
+  image: {fileID: -674357495, guid: 96bf6d1f28104524aa9159cafa7f98ab, type: 3}
+  isExhausted: 0
+  type: 1
+  rarity: 1
+  target: 3
+  cost: 0
+  effects:
+  - targetType: 0
+    effectType: 2
+    repeat: 1
+    value: 3
+  upgradeCard: {fileID: 0}

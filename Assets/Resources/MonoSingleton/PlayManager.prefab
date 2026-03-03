@@ -66,17 +66,22 @@ MonoBehaviour:
   players:
   - {fileID: 11400000, guid: d20128742e8b7f845ba84946cce70854, type: 2}
   cards:
-  - {fileID: 11400000, guid: 37683b4b98647c04abba072a7568b5d0, type: 2}
-  - {fileID: 11400000, guid: 83ee8e93c43591345830bd0f01439b05, type: 2}
-  - {fileID: 11400000, guid: 1c0121fe95eeb5c408098a0970a2710d, type: 2}
-  - {fileID: 11400000, guid: 8e3a3f2aaaacd5848bd3787b18f7e8d3, type: 2}
-  - {fileID: 11400000, guid: b9092ae4827364b4a927709a7bec7660, type: 2}
-  - {fileID: 11400000, guid: 78c997820496bc146b3acb4aa1a04058, type: 2}
-  - {fileID: 11400000, guid: cb0129a8410730c4aab3c28d4af99208, type: 2}
-  - {fileID: 11400000, guid: 8f68c601939657a4eacc7f98abb28ce9, type: 2}
-  - {fileID: 11400000, guid: 37bb6af784b05c14698084c58d43b3cb, type: 2}
-  - {fileID: 11400000, guid: 9b7a469380fca194fa051b99fd5d7828, type: 2}
-  - {fileID: 11400000, guid: 9ebb45b6d8ff5d44e86a2f200b8a309c, type: 2}
+  - {fileID: 11400000, guid: 0731cba24fc0d284ca5caf46ca6886cc, type: 2}
+  - {fileID: 11400000, guid: 4b24cfe9bfd39d1498c328cc32b844b7, type: 2}
+  - {fileID: 11400000, guid: 5898338a7094ecb468b4cd411522d4d4, type: 2}
+  - {fileID: 11400000, guid: 0afecb6b8e45ae746ae6f9cf001d9a92, type: 2}
+  - {fileID: 11400000, guid: d1cfe3184835ac942b108fb52eadb87c, type: 2}
+  - {fileID: 11400000, guid: f85d3f13fc21dfd44b16abd9757de825, type: 2}
+  - {fileID: 11400000, guid: b6b4516a781f20f46ab7ccdb5f14e632, type: 2}
+  - {fileID: 11400000, guid: dd613453b1e868a40a3a6ca4f03e7f0d, type: 2}
+  - {fileID: 11400000, guid: 8b485d5c828c2c84c8c46795f98cb006, type: 2}
+  - {fileID: 11400000, guid: 27847cfa54965d841884e7828d6b71dc, type: 2}
+  - {fileID: 11400000, guid: 8f140006cf0ee8045ba942cc85bdfc64, type: 2}
+  - {fileID: 11400000, guid: ab31891a8b5eea74996d897f5cd60081, type: 2}
+  - {fileID: 11400000, guid: bf7c1cbc6d52e03479d4824236695965, type: 2}
+  - {fileID: 11400000, guid: a6845b41946461b45a40f068c899b2e2, type: 2}
+  - {fileID: 11400000, guid: 4ab7155ad1187434ebdb77040d59342a, type: 2}
+  - {fileID: 11400000, guid: 480c749e546c3a04d983778b13da3501, type: 2}
   relics:
   - {fileID: 11400000, guid: 7c5d5ed3a8d24e643813b7f5c1fbc497, type: 2}
   - {fileID: 11400000, guid: d02f2f51816f52b49b7663d49f72776b, type: 2}

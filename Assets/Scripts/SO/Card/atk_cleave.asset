@@ -13,16 +13,17 @@ MonoBehaviour:
   m_Name: atk_cleave
   m_EditorClassIdentifier: Assembly-CSharp::CardSO
   id: atk_cleave
-  name: "\uC804\uCCB4 \uACF5\uACA9"
-  description: "\uC801 \uC804\uCCB4 \uD53C\uD574 7"
-  image: {fileID: -1910036739, guid: feb56837674cabc448f6b2f814049aed, type: 3}
+  name: "\uC808\uB2E8"
+  description: "\uC801 \uC804\uCCB4\uC5D0\uAC8C \uD53C\uD574\uB97C 8 \uC90D\uB2C8\uB2E4."
+  image: {fileID: -939110500, guid: ea8c628429d8bff40a33b6e9f157043c, type: 3}
+  isExhausted: 0
   type: 0
   rarity: 0
   target: 2
-  cost: 2
+  cost: 1
   effects:
   - targetType: 2
     effectType: 0
     repeat: 1
-    value: 7
+    value: 8
   upgradeCard: {fileID: 0}

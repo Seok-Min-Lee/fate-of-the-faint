@@ -13,15 +13,16 @@ MonoBehaviour:
   m_Name: skl_defend
   m_EditorClassIdentifier: Assembly-CSharp::CardSO
   id: skl_defend
-  name: "\uBC29\uC5B4"
-  description: "\uBC29\uC5B4 5"
-  image: {fileID: 969798469, guid: feb56837674cabc448f6b2f814049aed, type: 3}
+  name: "\uC218\uBE44"
+  description: "\uBC29\uC5B4\uB3C4\uB97C 5 \uC5BB\uC2B5\uB2C8\uB2E4."
+  image: {fileID: -2060557703, guid: 690e52a8b5a287e44869ff8d3a4a441b, type: 3}
+  isExhausted: 0
   type: 1
   rarity: 0
-  target: 0
+  target: 3
   cost: 1
   effects:
-  - target: 0
+  - targetType: 0
     effectType: 1
     repeat: 1
     value: 5

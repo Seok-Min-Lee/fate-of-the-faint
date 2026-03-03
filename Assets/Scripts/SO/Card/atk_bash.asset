@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3cca72567dd0a84c857b9f8729cf2b8, type: 3}
+  m_Name: atk_bash
+  m_EditorClassIdentifier: Assembly-CSharp::CardSO
+  id: atk_bash
+  name: "\uAC15\uD0C0"
+  description: "\uD53C\uD574\uB97C 8 \uC90D\uB2C8\uB2E4. \uCDE8\uC57D\uC744 2 \uBD80\uC5EC\uD569\uB2C8\uB2E4."
+  image: {fileID: -1042017291, guid: ea8c628429d8bff40a33b6e9f157043c, type: 3}
+  isExhausted: 0
+  type: 0
+  rarity: 0
+  target: 1
+  cost: 2
+  effects:
+  - targetType: 1
+    effectType: 0
+    repeat: 1
+    value: 8
+  - targetType: 1
+    effectType: 7
+    repeat: 1
+    value: 2
+  upgradeCard: {fileID: 0}

@@ -10,6 +10,8 @@ public class CardSO : ScriptableObject
     [SerializeField] private string description;
     [SerializeField] private Sprite image;
 
+    [SerializeField] private bool isExhausted;
+
     [Header("Classification")]
     [SerializeField] private CardType type;
     [SerializeField] private CardRarity rarity;
@@ -28,6 +30,7 @@ public class CardSO : ScriptableObject
     public string Name => name;
     public string Description => description;
     public Sprite Image => image;
+    public bool IsExhausted => isExhausted;
     public CardType Type => type;
     public CardRarity Rarity => rarity;
     public TargetType Target => target;
