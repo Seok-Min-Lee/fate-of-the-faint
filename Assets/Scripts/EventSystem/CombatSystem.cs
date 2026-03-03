@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class CombatSystem : BaseSystem
 {
@@ -25,11 +23,11 @@ public class CombatSystem : BaseSystem
     private UIMonoSystem uiSystem;
     private CameraMonoSystem cameraSystem;
     private RelicMonoSystem relicSystem;
+    private GoldMonoSystem goldSystem;
 
     private PlayerInstance player;
     private Dictionary<Guid, EnemyInstance> enemies;
     public IReadOnlyList<EnemyInstance> liveEnemies => enemies.Values.Where(e => !e.IsDead).ToList();
-
     private Queue<Action> actionRequestQueue = new Queue<Action>();
     public void Init(
         DamageSystem damageSystem,
@@ -40,6 +38,7 @@ public class CombatSystem : BaseSystem
         CameraMonoSystem cameraSystem,
         MotionMonoSystem animationSystem,
         RelicMonoSystem relicSystem,
+        GoldMonoSystem goldSystem,
         PlayerInstance player,
         IEnumerable<EnemyInstance> enemies
     )
@@ -55,6 +54,7 @@ public class CombatSystem : BaseSystem
         this.cameraSystem = cameraSystem;
         this.AnimationSystem = animationSystem;
         this.relicSystem = relicSystem;
+        this.goldSystem = goldSystem;
 
         TurnSystem.Init(enemies, animationSystem);
     }
@@ -529,6 +529,8 @@ public class CombatSystem : BaseSystem
 
             if (instance.CurrentHp <= 0)
             {
+                e.Context.Combat.AddGold(((EnemyInstance)instance)?.GoldReward ?? 0);
+
                 EventBus.Publish<DeathDeclared>(new DeathDeclared(
                     context: CreateContext(e.Context),
                     motion: e.Motion,
@@ -670,11 +672,17 @@ public class CombatContext
         Player = player;
         this.enemies = new List<EntityInstance>(enemies);
 
+        GoldReward = 0;
         state = CombatState.Wait;
+    }
+    public void AddGold(int amount)
+    {
+        GoldReward += amount;
     }
     public int CombatId { get; set; }
     public object Source { get; private set; }
     public EntityInstance Player { get; private set; }
+    public int GoldReward { get; private set; }
 
     public CombatState state;
     public IReadOnlyList<EntityInstance> Enemies => enemies.Where(e => !e.IsDead).ToList();

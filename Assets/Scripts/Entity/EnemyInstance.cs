@@ -5,16 +5,17 @@ public class EnemyInstance : EntityInstance
 {
     // Identity / Static Data
     public EnemySO Data { get; }
+    public int GoldReward { get; }
     public EnemyActionSO NextAction { get; private set; }
-
     private readonly Dictionary<string, int> actionCooldowns;
     private readonly Queue<string> recentActionKeys;
 
     // ctor
-    public EnemyInstance(EnemySO data, int maxHp)
+    public EnemyInstance(EnemySO data, int maxHp, int goldReward)
     {
         Id = Guid.NewGuid();
         Data = data;
+        GoldReward = goldReward;
 
         MaxHp = maxHp;
         CurrentHp = maxHp;

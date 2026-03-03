@@ -625,3 +625,18 @@ public struct CardAdded : ICombatEvent
     public CardSO Source { get; private set; }
     public EventMeta Meta => EventMetas.CardAdded;
 }
+public struct GoldChanged : ICombatEvent
+{
+    public GoldChanged(EventContext context, MotionContext motion, int startAmount, int endAmount)
+    {
+        Context = context;
+        Motion = motion;
+        StartAmount = startAmount;
+        EndAmount = endAmount;
+    }
+    public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
+    public int StartAmount { get; private set; }
+    public int EndAmount { get; private set; }
+    public EventMeta Meta => EventMetas.GoldChanged;
+}

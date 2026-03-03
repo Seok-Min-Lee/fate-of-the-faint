@@ -23,6 +23,6 @@ MonoBehaviour:
   baseStrength: 0
   aiPolicy: {fileID: 11400000, guid: 8c87ba47a15226d498ae4afebfb8224e, type: 2}
   goldReward:
-    min: 0
-    max: 0
+    min: 10
+    max: 20
   rareRelicChance: 0

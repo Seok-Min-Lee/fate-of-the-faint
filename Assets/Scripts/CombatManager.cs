@@ -11,6 +11,8 @@ public class CombatManager : MonoBehaviour
     [SerializeField] private RelicMonoSystem relicSystem;
     [SerializeField] private MotionMonoSystem animationSystem;
     [SerializeField] private CameraMonoSystem cameraSystem;
+    [SerializeField] private GoldMonoSystem goldSystem;
+
     [SerializeField] private PlayerView playerPrefab;
     [SerializeField] private EntityBuffViewPool entityBuffPool;
     [SerializeField] private DamageTextPool damageTextPool;
@@ -51,6 +53,7 @@ public class CombatManager : MonoBehaviour
             max: playerInstance.Energy
         );
         animationSystem.Init(CombatSystem.EventBus);
+        goldSystem.Init(CombatSystem.EventBus);
         cameraSystem.Init(
             eventBus: CombatSystem.EventBus, 
             player: playerInstance
@@ -78,6 +81,7 @@ public class CombatManager : MonoBehaviour
             cardSystem: cardSystem, 
             uiSystem: uiSystem, 
             relicSystem: relicSystem,
+            goldSystem: goldSystem,
             animationSystem: animationSystem,
             cameraSystem: cameraSystem,
             player: playerInstance,
@@ -128,7 +132,8 @@ public class CombatManager : MonoBehaviour
             {
                 enemies.Add(new EnemyInstance(
                     data: detail.origin,
-                    maxHp: detail.origin.maxHpRange.Roll()
+                    maxHp: detail.origin.maxHpRange.Roll(),
+                    goldReward: detail.origin.goldReward.Roll()
                 ));
             }
         }

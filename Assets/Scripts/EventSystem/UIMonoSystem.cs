@@ -102,6 +102,7 @@ public class UIMonoSystem : BaseMonoSystem
             windowDictionary.TryGetValue(WindowType.Victory, out window))
         {
             VictoryWindow victoryWindow = window as VictoryWindow;
+            victoryWindow.Init(e.Context.Combat.GoldReward);
 
             e.Motion.AddTask(new MotionTask(
                 priority: MotionPriority.Window,

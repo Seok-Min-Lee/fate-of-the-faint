@@ -8,6 +8,7 @@ using UnityEngine;
 public class VictoryWindow : UIMotionWindow
 {
     [SerializeField] private RelicMonoSystem relicSystem;
+    [SerializeField] private GoldMonoSystem goldSystem;
     [SerializeField] private CardRewardWindow cardRewardWindow;
 
     [SerializeField] private CanvasGroup dimmedCG;
@@ -38,7 +39,6 @@ public class VictoryWindow : UIMotionWindow
             dimmedCG.alpha = 0f;
             contentCG.alpha = 0f;
             tipText.text = string.Empty;
-            AddReward();
         });
         sequence.Append(dimmedCG.DOFade(1f, 1f));
         sequence.Append(contentCG.DOFade(1f, 0.5f));
@@ -51,16 +51,17 @@ public class VictoryWindow : UIMotionWindow
         return sequence;
     }
 
-    public void OnClickGoldButton(RewardButton button)
+    public void OnClickGoldReward(RewardButton button, int amount)
     {
         rewardButtonPool.Push(button);
+        goldSystem.Add(amount);
     }
-    public void OnClickRelicButton(RewardButton button, RelicSO relic)
+    public void OnClickRelicReward(RewardButton button, RelicSO relic)
     {
         relicSystem.AddRelic(relic);
         rewardButtonPool.Push(button);
     }
-    public void OnClickCardButton(RewardButton button)
+    public void OnClickCardReward(RewardButton button)
     {
         if (!cardSampleDic.TryGetValue(button, out List<CardSO> samples))
         {
@@ -70,15 +71,27 @@ public class VictoryWindow : UIMotionWindow
         cardRewardWindow.Init(samples, () => SelectCard(button));
         ChangeWindow(WindowType.CardRewards, WindowMode.Single);
     }
-    private void AddReward()
+    public void Init(int gold)
     {
-        AddGoldRewardButton();
+        AddGoldRewardButton(gold);
         AddCardRewardButton();
         AddRelicRewardButton();
     }
-    private void AddGoldRewardButton()
+    private void AddGoldRewardButton(int amount)
     {
+        if (amount <= 0)
+        {
+            return;
+        }
 
+        RewardButton button = rewardButtonPool.Pop();
+
+        button.Init(
+            parent: rewardParent,
+            sprite: cardIcon,
+            text: $"{amount} 골드",
+            onClick: (button) => OnClickGoldReward(button, amount)
+        );
     }
     private void AddCardRewardButton()
     {
@@ -93,7 +106,7 @@ public class VictoryWindow : UIMotionWindow
             parent: rewardParent,
             sprite: cardIcon,
             text: "카드 선택",
-            onClick: (button) => OnClickCardButton(button)
+            onClick: (button) => OnClickCardReward(button)
         );
 
         int count = PlayManager.Instance.CurrentData.RewardCardOptionCount;
@@ -126,7 +139,7 @@ public class VictoryWindow : UIMotionWindow
             parent: rewardParent,
             sprite: reward.Icon,
             text: reward.DisplayName,
-            onClick: (button) => OnClickRelicButton(button, reward)
+            onClick: (button) => OnClickRelicReward(button, reward)
         );
     }
     private void SelectCard(RewardButton button)
