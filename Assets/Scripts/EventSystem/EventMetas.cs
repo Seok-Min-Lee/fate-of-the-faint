@@ -41,6 +41,7 @@
     public static readonly EventMeta AnimationEnded = new EventMeta("AnimationEnded", EventCategory.UI); 
     public static readonly EventMeta EnemyIntentDecided = new EventMeta("EnemyIntentDecided", EventCategory.Status);
     public static readonly EventMeta RelicActivated = new EventMeta("RelicActivated", EventCategory.Status);
+    public static readonly EventMeta RelicAdded = new EventMeta("RelicAdded", EventCategory.Status);
 }
 public readonly struct EventMeta
 {

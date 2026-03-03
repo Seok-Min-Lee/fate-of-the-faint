@@ -1,11 +1,13 @@
 ﻿using DG.Tweening;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
 public class VictoryWindow : UIMotionWindow
 {
+    [SerializeField] private RelicMonoSystem relicSystem;
     [SerializeField] private CardRewardWindow cardRewardWindow;
 
     [SerializeField] private CanvasGroup dimmedCG;
@@ -33,8 +35,9 @@ public class VictoryWindow : UIMotionWindow
     {
         rewardButtonPool.Push(button);
     }
-    public void OnClickRelicButton(RewardButton button)
+    public void OnClickRelicButton(RewardButton button, RelicSO relic)
     {
+        relicSystem.AddRelic(relic);
         rewardButtonPool.Push(button);
     }
     public void OnClickCardButton(RewardButton button)
@@ -72,40 +75,57 @@ public class VictoryWindow : UIMotionWindow
 
     private void AddReward()
     {
-        int num = UnityEngine.Random.Range(1, 4);
-
-        for (int i = 0; i < num; i++)
-        {
-            RewardButton button = rewardButtonPool.Pop();
-
-            //RewardPreset preset = rewardPresets[UnityEngine.Random.Range(0, rewardPresets.Length)];
-            RewardPreset preset = rewardPresets[1];
-
-            Action<RewardButton> onClick = null;
-            switch (preset.type)
-            {
-                case RewardPreset.Type.Gold:
-                    onClick = (button) => OnClickGoldButton(button); 
-                    break;
-                case RewardPreset.Type.Card:
-                    onClick = (button) => OnClickCardButton(button);
-                    break;
-                case RewardPreset.Type.Relic:
-                    onClick = (button) => OnClickRelicButton(button);
-                    break;
-            }
-
-            button.Init(
-                parent: rewardParent,
-                sprite: preset.image,
-                text: preset.name,
-                onClick: onClick
-            );
-        }
+        AddRewardCard();
+        AddRelicReward();
     }
-    public void Charge(RewardButton button)
+    private void AddRewardCard()
     {
-        rewardButtonPool.Push(button);
+        //if (UnityEngine.Random.Range(0, 10) == 0)
+        //{
+        //    return;
+        //}
+
+        RewardButton button = rewardButtonPool.Pop(); 
+
+        RewardPreset preset = rewardPresets[1];
+
+        Action<RewardButton> onClick = (button) => OnClickCardButton(button);
+
+        button.Init(
+            parent: rewardParent,
+            sprite: preset.image,
+            text: preset.name,
+            onClick: onClick
+        );
+    }
+    private void AddRelicReward()
+    {
+        //if (UnityEngine.Random.Range(0, 10) == 0)
+        //{
+        //    return;
+        //}
+
+        //
+        HashSet<RelicSO> hashset = PlayManager.Instance.CurrentData.Relics.ToHashSet();
+        List<RelicSO> candidates = PlayManager.Instance.Catalog.RelicList
+                                   .Where(candidate => !hashset.Contains(candidate))
+                                   .ToList();
+
+        if (candidates.Count == 0)
+        {
+            return;
+        }
+
+        RelicSO reward = candidates[UnityEngine.Random.Range(0, candidates.Count)];
+
+        RewardButton button = rewardButtonPool.Pop();
+
+        button.Init(
+            parent: rewardParent,
+            sprite: reward.Icon,
+            text: reward.DisplayName,
+            onClick: (button) => OnClickRelicButton(button, reward)
+        );
     }
 }
 [Serializable]

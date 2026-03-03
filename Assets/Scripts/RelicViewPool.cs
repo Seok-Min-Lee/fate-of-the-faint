@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 
 public class RelicViewPool : GameObjectPool<RelicView>
@@ -16,5 +17,12 @@ public class RelicViewPool : GameObjectPool<RelicView>
         }
 
         return views;
+    }
+    public RelicView CreateView(RelicInstance instance)
+    {
+        RelicView view = Pop();
+        view.Init(instance, simplePopup);
+
+        return view;
     }
 }

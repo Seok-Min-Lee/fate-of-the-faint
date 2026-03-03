@@ -7,9 +7,11 @@ public class RelicMonoSystem : BaseMonoSystem
     private List<RelicInstance> relics;
 
     private EventBus eventBus;
+    private Action<RelicSO> onClick;
     public void Init(EventBus eventBus, IEnumerable<RelicSO> relics, Action<RelicSO> onClick)
     {
         this.eventBus = eventBus;
+        this.onClick = onClick;
 
         this.relics = new List<RelicInstance>();
         foreach(RelicSO so in relics)
@@ -26,5 +28,28 @@ public class RelicMonoSystem : BaseMonoSystem
             view.AddListener(onClick);
             eventBus.Subscribe<RelicActivated>(view.OnRelicActivated);
         }
+    }
+
+    public void AddRelic(RelicSO relic)
+    {
+        //
+        PlayManager.Instance.CurrentData.AddRelic(relic);
+
+        //
+        RelicInstance newInstance = relic.CreateInstance(eventBus);
+        newInstance.Register();
+        relics.Add(newInstance);
+
+        //
+        RelicView newView = pool.CreateView(newInstance);
+        newView.AddListener(onClick);
+        eventBus.Subscribe<RelicActivated>(newView.OnRelicActivated);
+
+        //
+        eventBus.Publish<RelicAdded>(new RelicAdded(
+            context: new EventContext(this, null, null, null),
+            motion: null,
+            source: newInstance
+        ));
     }
 }

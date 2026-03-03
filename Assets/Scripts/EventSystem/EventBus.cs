@@ -599,3 +599,16 @@ public struct RelicActivated : ICombatEvent
     public RelicInstance Source { get; private set; }
     public EventMeta Meta => EventMetas.RelicActivated;
 }
+public struct RelicAdded : ICombatEvent
+{
+    public RelicAdded(EventContext context, MotionContext motion, RelicInstance source)
+    {
+        Context = context;
+        Motion = motion;
+        Source = source;
+    }
+    public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
+    public RelicInstance Source { get; private set; }
+    public EventMeta Meta => EventMetas.RelicAdded;
+}
