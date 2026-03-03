@@ -48,7 +48,7 @@ public class CardPlayCountTriggerRelicInstance : RelicInstance, ICardPlayDeclare
             Activate(e.Context, e.Motion, () =>
             {
                 EventBus.Publish<EnergyChangeRequested>(new EnergyChangeRequested(
-                    context: e.Context.OverwriteNew(this),
+                    context: e.Context.RewriteNew(this),
                     request: new RequestContext(this),
                     motion: e.Motion,
                     amount: amount

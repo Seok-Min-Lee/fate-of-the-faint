@@ -78,7 +78,7 @@ public class TurnSystem : BaseSystem
         e.Request.isResult = true;
 
         eventBus.Publish<PlayerTurnEnded>(new PlayerTurnEnded(
-            context: CreateContext(e.Context),
+            context: e.Context.RewriteNew(this),
             motion: e.Motion
         ));
     }

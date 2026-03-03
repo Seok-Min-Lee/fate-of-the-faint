@@ -58,7 +58,7 @@ public class CombatStartedBuffRelicInstance : RelicInstance, ICombatStarted
             targets[i].ApplyBuff(buff, value);
 
             EventBus.Publish<BuffChanged>(new BuffChanged(
-                context: e.Context.OverwriteNew(this),
+                context: e.Context.RewriteNew(this),
                 motion: e.Motion,
                 target: targets[i],
                 type: buff,

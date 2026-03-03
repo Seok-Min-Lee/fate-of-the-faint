@@ -10,7 +10,7 @@ public class EventContext
         Turn = turn;
         Combat = combat;
     }
-    public EventContext OverwriteNew(object source)
+    public EventContext RewriteNew(object source)
     {
         return new EventContext(source, this.Action, this.Turn, this.Combat);
     }

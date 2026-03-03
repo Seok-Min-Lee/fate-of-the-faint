@@ -26,7 +26,7 @@ public class MotionMonoSystem : BaseMonoSystem
     private IEnumerator PlayCor(EventContext context)
     {
         IsPlaying = true;
-        eventBus.Publish<AnimationStarted>(new AnimationStarted(CreateContext(context)));
+        eventBus.Publish<AnimationStarted>(new AnimationStarted(context.RewriteNew(this)));
 
         while (queue.Count > 0)
         {
@@ -34,7 +34,7 @@ public class MotionMonoSystem : BaseMonoSystem
             yield return motion();
         }
 
-        eventBus.Publish<AnimationEnded>(new AnimationEnded(CreateContext(context)));
+        eventBus.Publish<AnimationEnded>(new AnimationEnded(context.RewriteNew(this)));
         IsPlaying = false;
     }
     private void EnqueueAfterSort(MotionContext motion)

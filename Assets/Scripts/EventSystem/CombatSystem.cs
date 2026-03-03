@@ -99,6 +99,7 @@ public class CombatSystem : BaseSystem
         EventBus.Subscribe<PlayerTurnEnded>(uiSystem.OnPlayerTurnEnded);
         EventBus.Subscribe<EnemyTurnStarted>(uiSystem.OnEnemyTurnStarted);
         EventBus.Subscribe<EnergyChanged>(uiSystem.OnEnergyChanged);
+        EventBus.Subscribe<HpChanged>(uiSystem.OnHpChanged);
 
         EventBus.Subscribe<CombatEnded>(cardSystem.OnCombatEnded);
         EventBus.Subscribe<PlayerTurnStarted>(cardSystem.OnPlayerTurnStarted);
@@ -137,6 +138,7 @@ public class CombatSystem : BaseSystem
         EventBus.Unsubscribe<PlayerTurnEnded>(uiSystem.OnPlayerTurnEnded);
         EventBus.Unsubscribe<EnemyTurnStarted>(uiSystem.OnEnemyTurnStarted);
         EventBus.Unsubscribe<EnergyChanged>(uiSystem.OnEnergyChanged);
+        EventBus.Unsubscribe<HpChanged>(uiSystem.OnHpChanged);
 
         EventBus.Unsubscribe<CombatEnded>(cardSystem.OnCombatEnded);
         EventBus.Unsubscribe<PlayerTurnStarted>(cardSystem.OnPlayerTurnStarted);
@@ -162,7 +164,7 @@ public class CombatSystem : BaseSystem
             player.SetBlock(0);
 
             EventBus.Publish<BlockChanged>(new BlockChanged(
-                context: CreateContext(e.Context),
+                context: e.Context.RewriteNew(this),
                 motion: e.Motion,
                 target: player,
                 startAmount: beforeBlock,
@@ -177,7 +179,7 @@ public class CombatSystem : BaseSystem
             int startAmount = player.Getbuff(type);
             player.ApplyBuff(type, -1);
             EventBus.Publish<BuffChanged>(new BuffChanged(
-                context: CreateContext(e.Context),
+                context: e.Context.RewriteNew(this),
                 motion: e.Motion,
                 target: player,
                 type: type,
@@ -192,7 +194,7 @@ public class CombatSystem : BaseSystem
             enemy.DecideNextAction(new System.Random());
 
             EventBus.Publish<EnemyIntentDecided>(new EnemyIntentDecided(
-                context: CreateContext(e.Context),
+                context: e.Context.RewriteNew(this),
                 motion: e.Motion,
                 source: enemy
             ));
@@ -214,7 +216,7 @@ public class CombatSystem : BaseSystem
                 enemy.SetBlock(0);
 
                 EventBus.Publish<BlockChanged>(new BlockChanged(
-                    context: CreateContext(e.Context),
+                    context: e.Context.RewriteNew(this),
                     motion: e.Motion,
                     target: enemy,
                     startAmount: beforeBlock,
@@ -229,7 +231,7 @@ public class CombatSystem : BaseSystem
                 int startAmount = enemy.Getbuff(type);
                 enemy.ApplyBuff(type, -1);
                 EventBus.Publish<BuffChanged>(new BuffChanged(
-                    context: CreateContext(e.Context),
+                    context: e.Context.RewriteNew(this),
                     motion: e.Motion,
                     target: enemy,
                     type: type,
@@ -505,7 +507,7 @@ public class CombatSystem : BaseSystem
                 instance.SetBlock(Mathf.Max(0, instance.Block - e.Amount));
 
                 EventBus.Publish<BlockChanged>(new BlockChanged(
-                    context: CreateContext(e.Context),
+                    context: e.Context.RewriteNew(this),
                     motion: e.Motion,
                     target: instance,
                     startAmount: beforeBlock,
@@ -519,7 +521,7 @@ public class CombatSystem : BaseSystem
                 instance.SetCurrentHp(Mathf.Max(0, instance.CurrentHp - damage));
 
                 EventBus.Publish<HpChanged>(new HpChanged(
-                    context: CreateContext(e.Context),
+                    context: e.Context.RewriteNew(this),
                     motion: e.Motion,
                     target: instance,
                     startAmount: beforeHp,
@@ -532,7 +534,7 @@ public class CombatSystem : BaseSystem
                 e.Context.Combat.AddGold(((EnemyInstance)instance)?.GoldReward ?? 0);
 
                 EventBus.Publish<DeathDeclared>(new DeathDeclared(
-                    context: CreateContext(e.Context),
+                    context: e.Context.RewriteNew(this),
                     motion: e.Motion,
                     target: instance
                 ));
@@ -607,7 +609,7 @@ public class CombatSystem : BaseSystem
         instance.AddBlock(e.Amount);
 
         EventBus.Publish<BlockChanged>(new BlockChanged(
-            context: CreateContext(e.Context),
+            context: e.Context.RewriteNew(this),
             motion: e.Motion,
             target: instance,
             startAmount: beforeBlock,

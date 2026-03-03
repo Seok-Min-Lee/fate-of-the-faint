@@ -24,7 +24,7 @@ public class EnergySystem : BaseSystem
         EnergyContext energyContext = new EnergyContext(amount: MaxEnergy - Energy, source: this);
 
         eventBus.Publish<EnergyChargeRequested>(new EnergyChargeRequested(
-            context: CreateContext(e.Context),
+            context: e.Context.RewriteNew(this),
             motion: e.Motion,
             energy: energyContext
         ));
@@ -67,7 +67,7 @@ public class EnergySystem : BaseSystem
         );
 
         eventBus.Publish(new EnergyResolved(
-            context: CreateContext(e.Context), 
+            context: e.Context.RewriteNew(this), 
             motion: e.Motion
         ));
     }
@@ -90,7 +90,7 @@ public class EnergySystem : BaseSystem
         Energy += amount;
 
         eventBus.Publish<EnergyChanged>(new EnergyChanged(
-            context: CreateContext(context),
+            context: context.RewriteNew(this),
             motion: motion,
             startAmount: startAmount, 
             endAmount: Energy,

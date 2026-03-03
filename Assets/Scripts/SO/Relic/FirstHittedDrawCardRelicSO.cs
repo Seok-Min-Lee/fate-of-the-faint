@@ -50,7 +50,7 @@ public class FirstHittedDrawCardRelicInstance : RelicInstance, ICombatStarted, I
         Activate(e.Context, e.Motion, () =>
         {
             EventBus.Publish<DrawCardDeclared>(new DrawCardDeclared(
-                context: e.Context.OverwriteNew(this),
+                context: e.Context.RewriteNew(this),
                 motion: e.Motion,
                 amount: value
             ));

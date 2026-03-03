@@ -18,7 +18,7 @@ public abstract class RelicInstance
     protected void Activate(EventContext context, MotionContext motion, Action action)
     {
         EventBus.Publish<RelicActivated>(new RelicActivated(
-            context: context.OverwriteNew(this),
+            context: context.RewriteNew(this),
             motion: motion,
             source: this
         ));

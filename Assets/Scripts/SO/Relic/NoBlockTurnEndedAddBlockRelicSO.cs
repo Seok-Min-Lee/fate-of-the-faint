@@ -41,7 +41,7 @@ public class NoBlockThisTurnRelicInstance : RelicInstance, IPlayerTurnEnded
             player.SetBlock(startAmount + amount);
 
             EventBus.Publish<BlockChanged>(new BlockChanged(
-                context: e.Context.OverwriteNew(this),
+                context: e.Context.RewriteNew(this),
                 motion: e.Motion,
                 target: player,
                 startAmount: startAmount,

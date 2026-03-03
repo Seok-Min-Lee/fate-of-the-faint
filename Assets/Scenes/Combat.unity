@@ -4585,8 +4585,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UIMonoSystem
   windowParent: {fileID: 2052917263}
   energy: {fileID: 1854831585}
-  drawPile: {fileID: 1685359260}
-  discardPile: {fileID: 1657250199}
+  hpText: {fileID: 843749909}
 --- !u!114 &606307827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6445,6 +6444,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2587156182966324022, guid: d71fb8fdd7564124591ae9173367da6e, type: 3}
   m_PrefabInstance: {fileID: 835910068}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &843749909 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2196207809315391573, guid: 0b734837de7870443ad40a029f88a3ed, type: 3}
+  m_PrefabInstance: {fileID: 5301783699880551696}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1001 &866831011
 PrefabInstance:
   m_ObjectHideFlags: 0

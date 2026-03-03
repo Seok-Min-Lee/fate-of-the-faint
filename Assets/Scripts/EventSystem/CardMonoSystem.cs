@@ -132,7 +132,7 @@ public class CardMonoSystem : BaseMonoSystem
         }
 
         ClearCardHand(
-            context: CreateContext(e.Context), 
+            context: e.Context.RewriteNew(this), 
             motion: e.Motion
         );
 
@@ -145,7 +145,7 @@ public class CardMonoSystem : BaseMonoSystem
             return;
         }
 
-        EventContext context = CreateContext(e.Context);
+        EventContext context = e.Context.RewriteNew(this);
 
         // Motion Play
         switch (cardInstance.Origin.Type)
@@ -223,7 +223,7 @@ public class CardMonoSystem : BaseMonoSystem
                 {
                     EntityInstance target = targets[i];
 
-                    context = CreateContext(e.Context);
+                    context = e.Context.RewriteNew(this);
 
                     if (ce.effectType == EffectType.Attack)
                     {
@@ -294,7 +294,7 @@ public class CardMonoSystem : BaseMonoSystem
             return;
         }
 
-        EventContext context = CreateContext(e.Context);
+        EventContext context = e.Context.RewriteNew(this);
 
         for (int i = 0; i < e.Amount; i++)
         {
@@ -345,7 +345,7 @@ public class CardMonoSystem : BaseMonoSystem
 
         // Event
         eventBus.Publish<CardDrawed>(new CardDrawed(
-            context: CreateContext(context),
+            context: context.RewriteNew(this),
             motion: motion
         ));
     }
@@ -364,7 +364,7 @@ public class CardMonoSystem : BaseMonoSystem
 
         // Event
         eventBus.Publish<CardDiscarded>(new CardDiscarded(
-            context: CreateContext(context),
+            context: context.RewriteNew(this),
             motion: motion
         ));
     }
@@ -386,7 +386,7 @@ public class CardMonoSystem : BaseMonoSystem
 
 		// Event
 		eventBus.Publish<CardDiscarded>(new CardDiscarded(
-            context: CreateContext(context),
+            context: context.RewriteNew(this),
             motion: motion
         ));
     }
@@ -403,7 +403,7 @@ public class CardMonoSystem : BaseMonoSystem
         ));
         // Event
         eventBus.Publish<CardExhausted>(new CardExhausted(
-            context: CreateContext(context),
+            context: context.RewriteNew(this),
             motion: motion
         ));
     }
@@ -420,7 +420,7 @@ public class CardMonoSystem : BaseMonoSystem
         UpdateUI();
 
         eventBus.Publish<CardCharged>(new CardCharged(
-            context: CreateContext(context),
+            context: context.RewriteNew(this),
             motion: motion
         ));
     }

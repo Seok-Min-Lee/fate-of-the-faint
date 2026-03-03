@@ -22,7 +22,7 @@ public class DamageSystem : BaseSystem
             target: e.Target
         );
 
-        EventContext eventContext = base.CreateContext(e.Context);
+        EventContext eventContext = e.Context.RewriteNew(this);
         eventBus.Publish<DamageRequested>(new DamageRequested(
             context: eventContext,
             motion: e.Motion,
@@ -31,7 +31,7 @@ public class DamageSystem : BaseSystem
 
         int sum = damage.Calculate();
 
-        eventContext = base.CreateContext(e.Context);
+        eventContext = e.Context.RewriteNew(this);
         eventBus.Publish<DamageResolved>(new DamageResolved(
             context: eventContext,
             motion: e.Motion,
