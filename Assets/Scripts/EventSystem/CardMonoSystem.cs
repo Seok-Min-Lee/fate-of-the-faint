@@ -10,6 +10,7 @@ public class CardMonoSystem : BaseMonoSystem
     private EventBus eventBus;
     private CombatSystem combatSystem;
     private ActionSystem actionSystem;
+    private PowerSystem powerSystem;
     private EntityInstance player;
 
     [SerializeField] private CardContainer cardHand;
@@ -31,6 +32,7 @@ public class CardMonoSystem : BaseMonoSystem
         EventBus eventBus,
         CombatSystem combatSystem,
         ActionSystem actionSystem,
+        PowerSystem powerSystem,
         IEnumerable<CardInstance> cardInstances,
         EntityInstance player
     )
@@ -38,6 +40,7 @@ public class CardMonoSystem : BaseMonoSystem
         this.eventBus = eventBus;
         this.combatSystem = combatSystem;
         this.actionSystem = actionSystem;
+        this.powerSystem = powerSystem;
         this.player = player;
 
         cardInstanceAll.AddRange(cardInstances);
@@ -170,7 +173,8 @@ public class CardMonoSystem : BaseMonoSystem
                     motion: e.Motion,
                     source: player
                 ));
-                break;
+                PowerCardPlay(cardInstance);
+                return;
         }
 
         // Effect Process
@@ -321,6 +325,17 @@ public class CardMonoSystem : BaseMonoSystem
         {
             view.ModifiyCost();
         }
+    }
+    private void PowerCardPlay(CardInstance cardInstance)
+    {
+        PowerCardSO powerCardSO = cardInstance.Origin as PowerCardSO;
+        
+        if (powerCardSO == null)
+        {
+            return;
+        }
+
+        powerSystem.AddPower(powerCardSO);
     }
     private void DrawCard(EventContext context, MotionContext motion)
     {

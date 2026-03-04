@@ -640,3 +640,29 @@ public struct GoldChanged : ICombatEvent
     public int EndAmount { get; private set; }
     public EventMeta Meta => EventMetas.GoldChanged;
 }
+public struct PowerAdded : ICombatEvent
+{
+    public PowerAdded(EventContext context, MotionContext motion, PowerInstance source)
+    {
+        Context = context;
+        Motion = motion;
+        Source = source;
+    }
+    public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
+    public PowerInstance Source { get; private set; }
+    public EventMeta Meta => EventMetas.PowerAdded;
+}
+public struct PowerActivated : ICombatEvent
+{
+    public PowerActivated(EventContext context, MotionContext motion, PowerInstance source)
+    {
+        Context = context;
+        Motion = motion;
+        Source = source;
+    }
+    public EventContext Context { get; private set; }
+    public MotionContext Motion { get; private set; }
+    public PowerInstance Source { get; private set; }
+    public EventMeta Meta => EventMetas.PowerActivated;
+}

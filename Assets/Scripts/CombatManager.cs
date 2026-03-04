@@ -52,6 +52,7 @@ public class CombatManager : MonoBehaviour
             eventBus: CombatSystem.EventBus, 
             max: playerInstance.Energy
         );
+        PowerSystem powerSystem = new PowerSystem(CombatSystem.EventBus);
         animationSystem.Init(CombatSystem.EventBus);
         goldSystem.Init(CombatSystem.EventBus);
         cameraSystem.Init(
@@ -71,6 +72,7 @@ public class CombatManager : MonoBehaviour
             eventBus: CombatSystem.EventBus, 
             combatSystem: CombatSystem,
             actionSystem: CombatSystem.ActionSystem,
+            powerSystem: powerSystem,
             cardInstances: cardInstance, 
             player: playerInstance
         );
@@ -78,6 +80,7 @@ public class CombatManager : MonoBehaviour
             damageSystem: damageSystem, 
             buffSystem: buffSystem,
             energySystem: energySystem, 
+            powerSystem: powerSystem,
             cardSystem: cardSystem, 
             uiSystem: uiSystem, 
             relicSystem: relicSystem,

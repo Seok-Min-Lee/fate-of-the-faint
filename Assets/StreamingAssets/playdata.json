@@ -25,7 +25,8 @@
         "skl_ghostlyArmor",
         "skl_intimidate",
         "skl_seeingRed",
-        "skl_shockwave"
+        "skl_shockwave",
+        "pwr_metallicize"
     ],
     "relicIds": [
         "Bag of Marbles",

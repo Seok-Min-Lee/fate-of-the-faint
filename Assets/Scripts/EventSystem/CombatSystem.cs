@@ -21,6 +21,7 @@ public class CombatSystem : BaseSystem
     private EnergySystem energySystem;
     private CardMonoSystem cardSystem;
     private UIMonoSystem uiSystem;
+    private PowerSystem powerSystem;
     private CameraMonoSystem cameraSystem;
     private RelicMonoSystem relicSystem;
     private GoldMonoSystem goldSystem;
@@ -33,6 +34,7 @@ public class CombatSystem : BaseSystem
         DamageSystem damageSystem,
         BuffSystem buffSystem,
         EnergySystem energySystem, 
+        PowerSystem powerSystem,
         CardMonoSystem cardSystem, 
         UIMonoSystem uiSystem,
         CameraMonoSystem cameraSystem,
@@ -49,6 +51,7 @@ public class CombatSystem : BaseSystem
         this.damageSystem = damageSystem;
         this.buffSystem = buffSystem;
         this.energySystem = energySystem;
+        this.powerSystem = powerSystem;
         this.cardSystem = cardSystem;
         this.uiSystem = uiSystem;
         this.cameraSystem = cameraSystem;
@@ -93,6 +96,8 @@ public class CombatSystem : BaseSystem
         EventBus.Subscribe<EnergyChangeRequested>(energySystem.OnEnergyChangeRequested);
         EventBus.Subscribe<GainEnergyDeclared>(energySystem.OnGainEnergyDeclared);
 
+        EventBus.Subscribe<CombatEnded>(powerSystem.OnCombatEnded);
+
         EventBus.Subscribe<CombatStarted>(uiSystem.OnCombatStarted);
         EventBus.Subscribe<CombatEnded>(uiSystem.OnCombatEnded);
         EventBus.Subscribe<PlayerTurnStarted>(uiSystem.OnPlayerTurnStarted);
@@ -125,12 +130,14 @@ public class CombatSystem : BaseSystem
         EventBus.Unsubscribe<ActionEnded>(TurnSystem.OnActionEnded);
 
         EventBus.Unsubscribe<AttackDeclared>(damageSystem.OnAttackDeclared);
-
+        
         EventBus.Unsubscribe<BuffDeclared>(buffSystem.OnBuffDeclared);
 
         EventBus.Unsubscribe<PlayerTurnStarted>(energySystem.OnPlayerTurnStarted);
         EventBus.Unsubscribe<EnergyChangeRequested>(energySystem.OnEnergyChangeRequested);
         EventBus.Unsubscribe<GainEnergyDeclared>(energySystem.OnGainEnergyDeclared);
+
+        EventBus.Unsubscribe<CombatEnded>(powerSystem.OnCombatEnded);
 
         EventBus.Unsubscribe<CombatStarted>(uiSystem.OnCombatStarted);
         EventBus.Unsubscribe<CombatEnded>(uiSystem.OnCombatEnded);

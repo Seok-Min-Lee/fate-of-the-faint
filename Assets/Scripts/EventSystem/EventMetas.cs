@@ -44,6 +44,8 @@
     public static readonly EventMeta RelicAdded = new EventMeta("RelicAdded", EventCategory.Status);
     public static readonly EventMeta CardAdded = new EventMeta("CardAdded", EventCategory.Status);
     public static readonly EventMeta GoldChanged = new EventMeta("GoldChanged", EventCategory.Status);
+    public static readonly EventMeta PowerAdded = new EventMeta("PowerAdded", EventCategory.Status);
+    public static readonly EventMeta PowerActivated = new EventMeta("PowerActivated", EventCategory.Status);
 }
 public readonly struct EventMeta
 {
