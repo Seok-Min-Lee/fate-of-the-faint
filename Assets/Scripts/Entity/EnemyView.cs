@@ -148,7 +148,7 @@ public class EnemyView : EntityView, ITargetable
 
         EnemyInstance enemy = instance as EnemyInstance;
         Sprite icon = enemy.NextAction.IntentIcon;
-        string text = enemy.NextAction.Effects[0].value.ToString();
+        string text = enemy.NextAction.Effects[0].Value.ToString();
 
         e.Motion.AddTask(new MotionTask(
             priority: MotionPriority.Actor,

@@ -18,10 +18,7 @@ MonoBehaviour:
   intentIcon: {fileID: 1603510916, guid: a169860f858f7644c82f92e9157da230, type: 3}
   intentDescription: EnemyAction_A_Attack
   effects:
-  - targetType: 1
-    effectType: 0
-    repeat: 1
-    value: 17
+  - {fileID: 11400000, guid: 1105463c9a20bd54991eca38e04a588f, type: 2}
   weight: 10
   cooldownTurns: 0
   maxConsecutive: 0

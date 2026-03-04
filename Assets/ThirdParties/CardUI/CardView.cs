@@ -221,7 +221,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         // 1) 아직 라치 안 됐고, PlayArea에 닿으면 라치!
         if (!targetingLatched && 
-            CardInstance.Origin.Target == TargetType.EnemySingle &&
+            CardInstance.Origin.ExistTarget &&
             Utils.ExistPointInRect(point: eventData.position, rect: cardPlayConfig.PlayArea))
         {
             targetingLatched = true;
@@ -288,9 +288,23 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             color: cardInstance.ExistModifier ? Color.green : Color.white
         );
 
+        int typeIndex;
+        if (cardInstance.Origin is AttackCardSO)
+        {
+            typeIndex = 0;
+        }
+        else if (cardInstance.Origin is SkillCardSO)
+        {
+            typeIndex = 1;
+        }
+        else
+        {
+            typeIndex = 2;
+        }
+
         for (int i = 0; i < arts.Length; i++)
         {
-            if (i == (int)cardInstance.Origin.Type)
+            if (i == typeIndex)
             {
                 arts[i].Activate(cardInstance.Origin.Image);
             }

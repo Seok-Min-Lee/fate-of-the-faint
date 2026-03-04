@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95c01d86be2ae19438c70da14931110e, type: 3}
+  m_Name: Attack Card Play Counting Gain Energy Relic
+  m_EditorClassIdentifier: Assembly-CSharp::CardTypePlayCountingGainEnergyRelicSO
+  id: Nunchaku
+  displayName: "\uC30D\uC808\uACE4"
+  icon: {fileID: 195513901, guid: 451b12996821ada4cab14730504cccc0, type: 3}
+  description: "\uACF5\uACA9 \uCE74\uB4DC\uB97C 10\uC7A5 \uC0AC\uC6A9\uD560 \uB54C\uB9C8\uB2E4
+    1\uC758 \uC5D0\uB108\uC9C0\uB97C \uC5BB\uC2B5\uB2C8\uB2E4."
+  flaverText: "\uC88B\uC740 \uD6C8\uB828 \uB3C4\uAD6C\uC785\uB2C8\uB2E4. \uC0AC\uC6A9\uC790\uC758
+    \uC790\uC138\uB97C \uBC14\uB85C\uC7A1\uACE0 \uBBFC\uCCA9\uC131\uC744 \uD5A5\uC0C1\uC2DC\uD0B5\uB2C8\uB2E4."
+  rarity: 1
+  cardType: 0
+  timing: 10
+  amount: 1

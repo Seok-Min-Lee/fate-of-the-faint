@@ -9,21 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3cca72567dd0a84c857b9f8729cf2b8, type: 3}
+  m_Script: {fileID: 11500000, guid: a83c342e46f11764aa9d597e2e63a98a, type: 3}
   m_Name: skl_ghostlyArmor
-  m_EditorClassIdentifier: Assembly-CSharp::CardSO
+  m_EditorClassIdentifier: Assembly-CSharp::SkillCardSO
   id: skl_ghostlyArmor
   name: "\uC720\uB839 \uAC11\uC637"
   description: "\uBC29\uC5B4\uB3C4\uB97C 10 \uC5BB\uC2B5\uB2C8\uB2E4. \uD718\uBC1C\uC131."
   image: {fileID: -485592729, guid: 96bf6d1f28104524aa9159cafa7f98ab, type: 3}
   isExhausted: 1
-  type: 1
+  existTarget: 0
   rarity: 1
-  target: 3
   cost: 1
-  effects:
-  - targetType: 0
-    effectType: 1
-    repeat: 1
-    value: 10
   upgradeCard: {fileID: 0}
+  effects:
+  - {fileID: 11400000, guid: 153418662c6e3bb498b7e1950d086808, type: 2}

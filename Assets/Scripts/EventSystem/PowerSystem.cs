@@ -1,6 +1,4 @@
-﻿using NUnit.Framework;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 public class PowerSystem : BaseSystem, ICombatEnded
 {
@@ -30,5 +28,17 @@ public class PowerSystem : BaseSystem, ICombatEnded
             motion: null,
             source: newInstance
         ));
+    }
+    public bool ExistPower<T>() where T : PowerInstance
+    {
+        for (int i = 0; i < powers.Count; i++)
+        {
+            if (powers[i] is T)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

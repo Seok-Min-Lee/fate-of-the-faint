@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3cca72567dd0a84c857b9f8729cf2b8, type: 3}
+  m_Script: {fileID: 11500000, guid: a83c342e46f11764aa9d597e2e63a98a, type: 3}
   m_Name: skl_battleTrance
-  m_EditorClassIdentifier: Assembly-CSharp::CardSO
+  m_EditorClassIdentifier: Assembly-CSharp::SkillCardSO
   id: skl_battleTrance
   name: "\uC804\uD22C \uCD5C\uBA74"
   description: "\uCE74\uB4DC\uB97C 3\uC7A5 \uBF51\uC2B5\uB2C8\uB2E4. \uC774\uBC88
@@ -19,13 +19,9 @@ MonoBehaviour:
     \uC5C6\uC2B5\uB2C8\uB2E4."
   image: {fileID: -674357495, guid: 96bf6d1f28104524aa9159cafa7f98ab, type: 3}
   isExhausted: 0
-  type: 1
+  existTarget: 0
   rarity: 1
-  target: 3
   cost: 0
-  effects:
-  - targetType: 0
-    effectType: 2
-    repeat: 1
-    value: 3
   upgradeCard: {fileID: 0}
+  effects:
+  - {fileID: 11400000, guid: e7f2b362ed1dc6b4db2564d8f6ab3ef6, type: 2}

@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "SKL_", menuName = "Scriptable Objects/CardSO/Skill Card")]
+[CreateAssetMenu(fileName = "skl_", menuName = "Scriptable Objects/CardSO/Skill Card")]
 public class SkillCardSO : CardSO
 {
-    
+    [Header("Effects")]
+    [SerializeField] private EffectSO[] effects;
+    public EffectSO[] Effects => effects;
 }

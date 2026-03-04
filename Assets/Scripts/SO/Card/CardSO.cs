@@ -1,8 +1,10 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Card_", menuName = "Scriptable Objects/CardSO")]
-public class CardSO : ScriptableObject
+public abstract class CardSO : ScriptableObject
 {
     [Header("Identity")]
     [SerializeField] private string id;
@@ -11,17 +13,12 @@ public class CardSO : ScriptableObject
     [SerializeField] private Sprite image;
 
     [SerializeField] private bool isExhausted;
-
+    [SerializeField] private bool existTarget;
     [Header("Classification")]
-    [SerializeField] private CardType type;
     [SerializeField] private CardRarity rarity;
-    [SerializeField] private TargetType target;
 
     [Header("Cost")]
     [SerializeField] private int cost; 
-
-    [Header("Effects")]
-    [SerializeField] private CardEffect[] effects;
 
     [Header("Upgrade")]
     [SerializeField] private CardSO upgradeCard;
@@ -31,26 +28,10 @@ public class CardSO : ScriptableObject
     public string Description => description;
     public Sprite Image => image;
     public bool IsExhausted => isExhausted;
-    public CardType Type => type;
+    public bool ExistTarget => existTarget;
     public CardRarity Rarity => rarity;
-    public TargetType Target => target;
     public int Cost => cost;
-    public CardEffect[] Effects => effects;
     public CardSO UpgradeCard => upgradeCard;
-}
-[Serializable]
-public struct CardEffect
-{
-    public TargetType targetType;
-    public EffectType effectType;
-    public int repeat;
-    public int value;
-}
-public enum CardType
-{
-    Attack,
-    Skill,
-    Power
 }
 public enum CardRarity
 {
@@ -60,7 +41,7 @@ public enum CardRarity
 }
 public enum TargetType
 {
-    Self,
+    Player,
     EnemySingle,
     EnemyAll,
     None

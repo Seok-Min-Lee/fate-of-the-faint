@@ -9,25 +9,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3cca72567dd0a84c857b9f8729cf2b8, type: 3}
+  m_Script: {fileID: 11500000, guid: d121485eec2da754db88153e0554ec16, type: 3}
   m_Name: atk_bash
-  m_EditorClassIdentifier: Assembly-CSharp::CardSO
+  m_EditorClassIdentifier: Assembly-CSharp::AttackCardSO
   id: atk_bash
   name: "\uAC15\uD0C0"
   description: "\uD53C\uD574\uB97C 8 \uC90D\uB2C8\uB2E4. \uCDE8\uC57D\uC744 2 \uBD80\uC5EC\uD569\uB2C8\uB2E4."
   image: {fileID: -1042017291, guid: ea8c628429d8bff40a33b6e9f157043c, type: 3}
   isExhausted: 0
-  type: 0
+  existTarget: 1
   rarity: 0
-  target: 1
-  cost: 2
+  cost: 1
+  upgradeCard: {fileID: 11400000, guid: 2da699a9e0f08aa4dae4966aba23a620, type: 2}
   effects:
-  - targetType: 1
-    effectType: 0
-    repeat: 1
-    value: 8
-  - targetType: 1
-    effectType: 7
-    repeat: 1
-    value: 2
-  upgradeCard: {fileID: 0}
+  - {fileID: 11400000, guid: 9185dd516fb08b24f9148719f83e9c20, type: 2}
+  - {fileID: 11400000, guid: 9229bc0a56947f74fa1d7f9859cec031, type: 2}

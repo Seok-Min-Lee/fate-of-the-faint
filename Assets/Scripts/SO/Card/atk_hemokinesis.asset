@@ -9,26 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3cca72567dd0a84c857b9f8729cf2b8, type: 3}
+  m_Script: {fileID: 11500000, guid: d121485eec2da754db88153e0554ec16, type: 3}
   m_Name: atk_hemokinesis
-  m_EditorClassIdentifier: Assembly-CSharp::CardSO
+  m_EditorClassIdentifier: Assembly-CSharp::AttackCardSO
   id: atk_hemokinesis
   name: "\uD608\uB958"
   description: "\uCCB4\uB825\uC744 2 \uC783\uC2B5\uB2C8\uB2E4. \uD53C\uD574\uB97C
     15 \uC90D\uB2C8\uB2E4."
   image: {fileID: -1011728316, guid: f01289aada2552542adfb37b1b95436c, type: 3}
   isExhausted: 0
-  type: 0
+  existTarget: 1
   rarity: 1
-  target: 1
   cost: 1
+  upgradeCard: {fileID: 11400000, guid: a06e7289ea27fcb4ca70c2e50f183789, type: 2}
   effects:
-  - targetType: 1
-    effectType: 0
-    repeat: 1
-    value: 15
-  - targetType: 0
-    effectType: 0
-    repeat: 1
-    value: 2
-  upgradeCard: {fileID: 0}
+  - {fileID: 11400000, guid: d87899cb7acd5464a82f2c63857f5896, type: 2}
+  - {fileID: 11400000, guid: 674634c6e0a263d4c880995ab3033e7d, type: 2}

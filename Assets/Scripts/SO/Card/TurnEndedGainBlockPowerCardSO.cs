@@ -1,21 +1,20 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "PWR_TurnEndedGainBlock_", menuName = "Scriptable Objects/CardSO/Turn Ended Gain Block Power Card")]
+[CreateAssetMenu(fileName = "pwr_turnEndedGainBlock_", menuName = "Scriptable Objects/CardSO/Turn Ended Gain Block Power Card")]
 public class TurnEndedGainBlockPowerCardSO : PowerCardSO
 {
     [SerializeField] private int amount;
     public int Amount => amount;
     public override PowerInstance CreateInstance(EventBus eventBus) 
     {
-        return new TurnEndedGainBlockPowerCardInstance(eventBus, this);
+        return new TurnEndedGainBlockPowerInstance(eventBus, this);
     }
 }
 
-public class TurnEndedGainBlockPowerCardInstance : PowerInstance, IPlayerTurnEnded
+public class TurnEndedGainBlockPowerInstance : PowerInstance, IPlayerTurnEnded
 {
     private readonly int amount;
-    public TurnEndedGainBlockPowerCardInstance(EventBus eventBus, TurnEndedGainBlockPowerCardSO origin) : base(eventBus, origin)
+    public TurnEndedGainBlockPowerInstance(EventBus eventBus, TurnEndedGainBlockPowerCardSO origin) : base(eventBus, origin)
     {
         amount = origin.Amount;
     }

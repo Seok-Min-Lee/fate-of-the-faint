@@ -9,21 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3cca72567dd0a84c857b9f8729cf2b8, type: 3}
+  m_Script: {fileID: 11500000, guid: d121485eec2da754db88153e0554ec16, type: 3}
   m_Name: atk_strike
-  m_EditorClassIdentifier: Assembly-CSharp::CardSO
+  m_EditorClassIdentifier: Assembly-CSharp::AttackCardSO
   id: atk_strike
   name: "\uD0C0\uACA9"
   description: "\uD53C\uD574\uB97C 6 \uC90D\uB2C8\uB2E4."
   image: {fileID: 652979983, guid: ea8c628429d8bff40a33b6e9f157043c, type: 3}
   isExhausted: 0
-  type: 0
+  existTarget: 1
   rarity: 0
-  target: 1
   cost: 1
-  effects:
-  - targetType: 1
-    effectType: 0
-    repeat: 1
-    value: 6
   upgradeCard: {fileID: 0}
+  effects:
+  - {fileID: 11400000, guid: 238b26a19061d5643b7b1cb65c688842, type: 2}

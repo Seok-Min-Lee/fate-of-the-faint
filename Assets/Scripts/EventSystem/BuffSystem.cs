@@ -41,7 +41,7 @@ public class BuffSystem : BaseSystem
 }
 public class BuffContext
 {
-    public BuffContext(BuffType type, int amount, EntityInstance source, EntityInstance target)
+    public BuffContext(BuffType type, int amount, object source, object target)
     {
         Type = type;
         Amount = amount;
@@ -51,8 +51,8 @@ public class BuffContext
     }
     public BuffType Type { get; private set; }
     public int Amount { get; private set; }
-    public EntityInstance Source { get; private set; }
-    public EntityInstance Target { get; private set; }
+    public object Source { get; private set; }
+    public object Target { get; private set; }
     public List<object> Modifiers { get; private set; }
     public void Add(int value, object source)
     {

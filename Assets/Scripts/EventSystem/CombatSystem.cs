@@ -165,7 +165,7 @@ public class CombatSystem : BaseSystem
         }
 
         // Block Clear
-        if (player.Block > 0)
+        if (player.Block > 0 && !powerSystem.ExistPower<TurnStartedRemainBlockPowerInstance>())
         {
             int beforeBlock = player.Block;
             player.SetBlock(0);
@@ -263,17 +263,16 @@ public class CombatSystem : BaseSystem
 
         ActionSystem.ExcuteAction(source: enemy, type: ActionType.EnemyAct, (eventContext, motionContext) =>
         {
-            IntentEffect[] effects = enemy.NextAction.Effects;
-
-            // Motion Play
-            switch (effects[0].effectType)
+            // 애니메이션 재생
+            switch (enemy.NextAction.IntentType)
             {
-                case EffectType.Attack:
+                case IntentType.Attack:
+                case IntentType.AttackBlock:
                     EventBus.Publish<AttackPlayed>(new AttackPlayed(
                         context: eventContext,
                         motion: motionContext,
                         source: enemy
-                    )); 
+                    ));
                     break;
                 default:
                     EventBus.Publish<SkillPlayed>(new SkillPlayed(
@@ -284,83 +283,46 @@ public class CombatSystem : BaseSystem
                     break;
             }
 
-            // Effect Process
-            foreach (IntentEffect effect in effects)
+            List<Action> applies = new List<Action>();
+            foreach (EnemyEffectSO effect in enemy.NextAction.Effects)
             {
+                // 타겟 설정
                 List<EntityInstance> targets = new List<EntityInstance>();
-                switch (effect.targetType)
+                switch (effect.TargetType)
                 {
                     case IntentTarget.Player:
-                        targets.Add(player);
+                        targets.Add(eventContext.Combat.Player);
                         break;
                     case IntentTarget.Self:
                         targets.Add(enemy);
                         break;
-                    case IntentTarget.Member:
-                        //targets.Add(target);
-                        break;
                     case IntentTarget.MemberAll:
-                        //targets.AddRange(combatSystem.liveEnemies);
+                        targets.AddRange(eventContext.Combat.Enemies);
                         break;
                 }
 
-                for (int i = 0; i < targets.Count; i++)
+                // 효과 처리 로직 가져오기
+                Action apply = effect.Apply(
+                    eventBus: EventBus, 
+                    context: eventContext, 
+                    motion: motionContext, 
+                    source: enemy, 
+                    targets: targets
+                );
+
+                // 오류 체크
+                if (apply == null)
                 {
-                    switch (effect.effectType)
-                    {
-                        case EffectType.Attack:
-                            EventBus.Publish<AttackDeclared>(new AttackDeclared(
-                                context: eventContext,
-                                motion: motionContext,
-                                source: enemy,
-                                target: targets[i],
-                                amount: effect.value,
-                                repeat: effect.repeat
-                            ));
-                            break;
-                        case EffectType.Block:
-                            EventBus.Publish<BlockDeclared>(new BlockDeclared(
-                                context: eventContext,
-                                motion: motionContext,
-                                source: enemy,
-                                target: targets[i],
-                                amount: effect.value
-                            ));
-                            break;
-                        case EffectType.Strengthen:
-                            EventBus.Publish<BuffDeclared>(new BuffDeclared(
-                                context: eventContext,
-                                motion: motionContext,
-                                source: enemy,
-                                target: targets[i],
-                                type: BuffType.Strength,
-                                amount: effect.value
-                            ));
-                            break;
-                        case EffectType.Weaken:
-                            EventBus.Publish<BuffDeclared>(new BuffDeclared(
-                                context: eventContext,
-                                motion: motionContext,
-                                source: enemy,
-                                target: targets[i],
-                                type: BuffType.Weak,
-                                amount: effect.value
-                            ));
-                            break;
-                        case EffectType.Vulnerable:
-                            EventBus.Publish<BuffDeclared>(new BuffDeclared(
-                                context: eventContext,
-                                motion: motionContext,
-                                source: enemy,
-                                target: targets[i],
-                                type: BuffType.Vulnerable,
-                                amount: effect.value
-                            ));
-                            break;
-                        default:
-                            return;
-                    }
+                    throw new InvalidOperationException("Effect Apply returned null Action");
                 }
+
+                applies.Add(apply);
+            }
+
+            // 효과 로직 실행
+            foreach (Action apply in applies)
+            {
+                apply.Invoke();
             }
         });
     }
@@ -439,7 +401,7 @@ public class CombatSystem : BaseSystem
         }
 
         EnemyInstance enemy;
-        if (e.Damage.Source.Id == player.Id)
+        if(e.Damage.Source is PlayerInstance)
         {
             if (player.Buffs.TryGetValue(key: BuffType.Strength, value: out int strength))
             {
@@ -450,8 +412,10 @@ public class CombatSystem : BaseSystem
                 e.Damage.Multiply(0.5f, player);
             }
         }
-        else if (enemies.TryGetValue(key: e.Damage.Source.Id, value: out enemy))
+        else if (e.Damage.Source is EnemyInstance)
         {
+            enemy = e.Damage.Source as EnemyInstance;
+
             if (enemy.Buffs.TryGetValue(key: BuffType.Strength, value: out int strength))
             {
                 e.Damage.Add(strength, enemy);
@@ -461,15 +425,17 @@ public class CombatSystem : BaseSystem
                 e.Damage.Multiply(0.5f, enemy);
             }
         }
-        else if (e.Damage.Target.Id == player.Id)
+        if (e.Damage.Target is PlayerInstance)
         {
             if (player.Buffs.ContainsKey(BuffType.Vulnerable))
             {
                 e.Damage.Multiply(1.5f, player);
             }
         }
-        else if (enemies.TryGetValue(key: e.Damage.Target.Id, value: out enemy))
+        else if (e.Damage.Target is EnemyInstance)
         {
+            enemy = e.Damage.Target as EnemyInstance;
+
             if (enemy.Buffs.ContainsKey(BuffType.Vulnerable))
             {
                 e.Damage.Multiply(1.5f, player);
@@ -484,13 +450,13 @@ public class CombatSystem : BaseSystem
         }
 
         EntityInstance instance = null;
-        if (e.Target == player)
+        if (e.Target is PlayerInstance player)
         {
             instance = player;
         }
-        else if (enemies.ContainsKey(e.Target.Id))
+        else if (e.Target is EnemyInstance enemy)
         {
-            instance = enemies[e.Target.Id];
+            instance = enemies[enemy.Id];
         }
         else
         {
@@ -557,13 +523,13 @@ public class CombatSystem : BaseSystem
         }
 
         EntityInstance instance = null;
-        if (e.Target == player)
+        if (e.Target is PlayerInstance player)
         {
             instance = player;
         }
-        else if (enemies.ContainsKey(e.Target.Id))
+        else if (e.Target is EnemyInstance enemy)
         {
-            instance = enemies[e.Target.Id];
+            instance = enemy;
         }
         else
         {
@@ -599,11 +565,11 @@ public class CombatSystem : BaseSystem
         }
 
         EntityInstance instance;
-        if (e.Source == player)
+        if (e.Source is PlayerInstance)
         {
             instance = player;
         }
-        else if (enemies.TryGetValue(e.Source.Id, out EnemyInstance enemy) && !enemy.IsDead)
+        else if (e.Source is EnemyInstance enemy)
         {
             instance = enemy;
         }

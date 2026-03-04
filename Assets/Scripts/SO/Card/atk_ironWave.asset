@@ -9,26 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3cca72567dd0a84c857b9f8729cf2b8, type: 3}
+  m_Script: {fileID: 11500000, guid: d121485eec2da754db88153e0554ec16, type: 3}
   m_Name: atk_ironWave
-  m_EditorClassIdentifier: Assembly-CSharp::CardSO
+  m_EditorClassIdentifier: Assembly-CSharp::AttackCardSO
   id: atk_ironWave
   name: "\uCCA0\uC758 \uD30C\uB3D9"
   description: "\uBC29\uC5B4\uB3C4\uB97C 5 \uC5BB\uC2B5\uB2C8\uB2E4. \uD53C\uD574\uB97C
     5 \uC90D\uB2C8\uB2E4."
   image: {fileID: 1690573421, guid: ea8c628429d8bff40a33b6e9f157043c, type: 3}
   isExhausted: 0
-  type: 0
+  existTarget: 1
   rarity: 0
-  target: 1
   cost: 1
+  upgradeCard: {fileID: 11400000, guid: 8bdc826a08236ee47a5bb7b4c5f32bd8, type: 2}
   effects:
-  - targetType: 1
-    effectType: 0
-    repeat: 1
-    value: 5
-  - targetType: 0
-    effectType: 1
-    repeat: 1
-    value: 5
-  upgradeCard: {fileID: 0}
+  - {fileID: 11400000, guid: 955400f1eb9ed764a830dba7ebace385, type: 2}
+  - {fileID: 11400000, guid: edaec85366ef0174b85f4f31234873d0, type: 2}

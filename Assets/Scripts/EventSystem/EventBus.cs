@@ -335,7 +335,7 @@ public struct PowerPlayed : ICombatEvent
 }
 public struct AttackDeclared : ICombatEvent
 {
-    public AttackDeclared(EventContext context, MotionContext motion, EntityInstance source, EntityInstance target, int amount, int repeat)
+    public AttackDeclared(EventContext context, MotionContext motion, object source, object target, int amount, int repeat)
     {
         Context = context;
         Motion = motion;
@@ -346,15 +346,15 @@ public struct AttackDeclared : ICombatEvent
     }
     public EventContext Context { get; private set; }
     public MotionContext Motion { get; private set; }
-    public EntityInstance Source { get; private set; }
-    public EntityInstance Target { get; private set; }
+    public object Source { get; private set; }
+    public object Target { get; private set; }
     public int Amount { get; private set; }
     public int Repeat { get; private set; }
     public EventMeta Meta => EventMetas.AttackDeclared;
 }
 public struct BlockDeclared : ICombatEvent
 {
-    public BlockDeclared(EventContext context, MotionContext motion, EntityInstance source, EntityInstance target, int amount)
+    public BlockDeclared(EventContext context, MotionContext motion, object source, object target, int amount)
     {
         Context = context;
         Motion = motion;
@@ -364,8 +364,8 @@ public struct BlockDeclared : ICombatEvent
     }
     public EventContext Context { get; private set; }
     public MotionContext Motion { get; private set; }
-    public EntityInstance Source { get; private set; }
-    public EntityInstance Target { get; private set; }
+    public object Source { get; private set; }
+    public object Target { get; private set; }
     public int Amount { get; private set; }
     public EventMeta Meta => EventMetas.BlockDeclared;
 }
@@ -410,7 +410,7 @@ public struct ModifyCostDeclared : ICombatEvent
 }
 public struct BuffDeclared : ICombatEvent
 {
-    public BuffDeclared(EventContext context, MotionContext motion, EntityInstance source, EntityInstance target, BuffType type, int amount)
+    public BuffDeclared(EventContext context, MotionContext motion, object source, object target, BuffType type, int amount)
     {
         Context = context;
         Motion = motion;
@@ -421,8 +421,8 @@ public struct BuffDeclared : ICombatEvent
     }
     public EventContext Context { get; private set; }
     public MotionContext Motion { get; private set; }
-    public EntityInstance Source { get; private set; }
-    public EntityInstance Target { get; private set; }
+    public object Source { get; private set; }
+    public object Target { get; private set; }
     public BuffType Type { get; private set; }
     public int Amount { get ; private set; }
     public EventMeta Meta => EventMetas.BuffDeclared;
@@ -442,7 +442,7 @@ public struct DamageRequested : ICombatEvent
 }
 public struct DamageResolved : ICombatEvent
 {
-    public DamageResolved(EventContext context, MotionContext motion, EntityInstance source, EntityInstance target, int amount, int repeat)
+    public DamageResolved(EventContext context, MotionContext motion, object source, object target, int amount, int repeat)
     {
         Context = context;
         Motion = motion;
@@ -453,8 +453,8 @@ public struct DamageResolved : ICombatEvent
     }
     public EventContext Context { get; private set; }
     public MotionContext Motion { get; private set; }
-    public EntityInstance Source { get; private set; }
-    public EntityInstance Target { get; private set; }
+    public object Source { get; private set; }
+    public object Target { get; private set; }
     public int Amount { get; private set; }
     public int Repeat { get; private set; }
     public EventMeta Meta => EventMetas.DamageResolved;
@@ -472,7 +472,7 @@ public struct BuffRequested : ICombatEvent
 }
 public struct BuffResolved : ICombatEvent
 {
-    public BuffResolved(EventContext context, MotionContext motion, EntityInstance source, EntityInstance target, BuffType type, int amount)
+    public BuffResolved(EventContext context, MotionContext motion, object source, object target, BuffType type, int amount)
     {
         Context = context;
         Motion = motion;
@@ -483,8 +483,8 @@ public struct BuffResolved : ICombatEvent
     }
     public EventContext Context { get; private set; }
     public MotionContext Motion { get; private set; }
-    public EntityInstance Source { get; private set; }
-    public EntityInstance Target { get; private set; }
+    public object Source { get; private set; }
+    public object Target { get; private set; }
     public BuffType Type { get; private set; }
     public int Amount { get; private set; }
     public EventMeta Meta => EventMetas.BuffResolved;

@@ -9,21 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3cca72567dd0a84c857b9f8729cf2b8, type: 3}
+  m_Script: {fileID: 11500000, guid: d121485eec2da754db88153e0554ec16, type: 3}
   m_Name: atk_cleave
-  m_EditorClassIdentifier: Assembly-CSharp::CardSO
+  m_EditorClassIdentifier: Assembly-CSharp::AttackCardSO
   id: atk_cleave
   name: "\uC808\uB2E8"
   description: "\uC801 \uC804\uCCB4\uC5D0\uAC8C \uD53C\uD574\uB97C 8 \uC90D\uB2C8\uB2E4."
   image: {fileID: -939110500, guid: ea8c628429d8bff40a33b6e9f157043c, type: 3}
   isExhausted: 0
-  type: 0
+  existTarget: 0
   rarity: 0
-  target: 2
   cost: 1
+  upgradeCard: {fileID: 11400000, guid: 1e99d613a77b1cd498841354e5ff1715, type: 2}
   effects:
-  - targetType: 2
-    effectType: 0
-    repeat: 1
-    value: 8
-  upgradeCard: {fileID: 0}
+  - {fileID: 11400000, guid: 914b4fa8172a3e844b1fad31ac50dd08, type: 2}

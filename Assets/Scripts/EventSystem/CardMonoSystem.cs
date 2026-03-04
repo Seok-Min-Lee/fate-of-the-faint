@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,8 @@ using UnityEngine;
 public class CardMonoSystem : BaseMonoSystem
 {
     private EventBus eventBus;
-    private CombatSystem combatSystem;
     private ActionSystem actionSystem;
     private PowerSystem powerSystem;
-    private EntityInstance player;
 
     [SerializeField] private CardContainer cardHand;
     [SerializeField] private CardViewPool cardViewPool;
@@ -30,18 +29,14 @@ public class CardMonoSystem : BaseMonoSystem
     private ITargetable target;
     public void Init(
         EventBus eventBus,
-        CombatSystem combatSystem,
         ActionSystem actionSystem,
         PowerSystem powerSystem,
-        IEnumerable<CardInstance> cardInstances,
-        EntityInstance player
+        IEnumerable<CardInstance> cardInstances
     )
     {
         this.eventBus = eventBus;
-        this.combatSystem = combatSystem;
         this.actionSystem = actionSystem;
         this.powerSystem = powerSystem;
-        this.player = player;
 
         cardInstanceAll.AddRange(cardInstances);
         drawPile.AddRange(Utils.Shuffle(cardInstances));
@@ -151,144 +146,49 @@ public class CardMonoSystem : BaseMonoSystem
         EventContext context = e.Context.RewriteNew(this);
 
         // Motion Play
-        switch (cardInstance.Origin.Type)
+        if (cardInstance.Origin is AttackCardSO)
         {
-            case CardType.Attack:
-                eventBus.Publish<AttackPlayed>(new AttackPlayed(
-                    context: context,
-                    motion: e.Motion,
-                    source: player
-                ));
-                break;
-            case CardType.Skill:
-                eventBus.Publish<SkillPlayed>(new SkillPlayed(
-                    context: context,
-                    motion: e.Motion,
-                    source: player
-                ));
-                break;
-            case CardType.Power:
-                eventBus.Publish<PowerPlayed>(new PowerPlayed(
-                    context: context,
-                    motion: e.Motion,
-                    source: player
-                ));
-                PowerCardPlay(cardInstance);
-                return;
+            eventBus.Publish<AttackPlayed>(new AttackPlayed(
+                context: context,
+                motion: e.Motion,
+                source: context.Combat.Player
+            ));
+
+            AttackCardSO cardSO = cardInstance.Origin as AttackCardSO;
+
+            ApplyEffects(
+                context: e.Context,
+                motion: e.Motion,
+                effects: cardSO.Effects
+            );
         }
-
-        // Effect Process
-        foreach (CardEffect ce in cardInstance.Origin.Effects)
+        else if (cardInstance.Origin is SkillCardSO)
         {
-            // Target
-            List<EntityInstance> targets = new List<EntityInstance>();
-            switch (ce.targetType)
-            {
-                case TargetType.Self:
-                    targets.Add(player);
-                    break;
-                case TargetType.EnemySingle:
-                    targets.Add(target.Instance);
-                    break;
-                case TargetType.EnemyAll:
-                    targets.AddRange(combatSystem.liveEnemies);
-                    break;
-            }
+            eventBus.Publish<SkillPlayed>(new SkillPlayed(
+                context: context,
+                motion: e.Motion,
+                source: context.Combat.Player
+            ));
 
-            //
-            if (ce.effectType == EffectType.DrawCard)
-            {
-                eventBus.Publish<DrawCardDeclared>(new DrawCardDeclared(
-                    context: context, 
-                    motion: e.Motion,
-                    amount: ce.value
-                ));
-            }
-            else if (ce.effectType == EffectType.GainEnergy)
-            {
-                // 여기서 EnergyChangeRequest 사용하면 StackOverflow 발생
-                eventBus.Publish<GainEnergyDeclared>(new GainEnergyDeclared(
-                    context: context,
-                    motion: e.Motion,
-                    amount: ce.value
-                ));
-            }
-            else if (ce.effectType == EffectType.ModifyCost)
-            {
-                eventBus.Publish<ModifyCostDeclared>(new ModifyCostDeclared(
-                    context: context, 
-                    scope: CostModificationScope.Action, 
-                    amount: ce.value
-                ));
-            }
-            else
-            {
-                for (int i = 0; i < targets.Count; i++)
-                {
-                    EntityInstance target = targets[i];
+            SkillCardSO cardSO = cardInstance.Origin as SkillCardSO;
 
-                    context = e.Context.RewriteNew(this);
+            ApplyEffects(
+                context: e.Context,
+                motion: e.Motion,
+                effects: cardSO.Effects
+            );
+        }
+        else
+        {
+            eventBus.Publish<PowerPlayed>(new PowerPlayed(
+                context: context,
+                motion: e.Motion,
+                source: context.Combat.Player
+            ));
 
-                    if (ce.effectType == EffectType.Attack)
-                    {
-                        eventBus.Publish<AttackDeclared>(new AttackDeclared(
-                            context: context,
-                            motion: e.Motion,
-                            source: player,
-                            target: target,
-                            amount: ce.value,
-                            repeat: ce.repeat
-                        ));
-                    }
-                    else if (ce.effectType == EffectType.Block)
-                    {
-                        eventBus.Publish<BlockDeclared>(new BlockDeclared(
-                            context: context,
-                            motion: e.Motion,
-                            source: player,
-                            target: player,
-                            amount: ce.value
-                        ));
-                    }
-                    else if (ce.effectType == EffectType.Strengthen)
-                    {
-                        eventBus.Publish<BuffDeclared>(new BuffDeclared(
-                            context: context,
-                            motion: e.Motion,
-                            source: player,
-                            target: target,
-                            type: BuffType.Strength,
-                            amount: ce.value
-                        ));
-                    }
-                    else if (ce.effectType == EffectType.Weaken)
-                    {
-                        eventBus.Publish<BuffDeclared>(new BuffDeclared(
-                            context: context,
-                            motion: e.Motion,
-                            source: player,
-                            target: target,
-                            type: BuffType.Weak,
-                            amount: ce.value
-                        ));
-                    }
-                    else if (ce.effectType == EffectType.Vulnerable)
-                    {
-                        eventBus.Publish<BuffDeclared>(new BuffDeclared(
-                            context: context,
-                            motion: e.Motion,
-                            source: player,
-                            target: target,
-                            type: BuffType.Vulnerable,
-                            amount: ce.value
-                        ));
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-            }
+            PowerCardSO cardSO = cardInstance.Origin as PowerCardSO;
+
+            powerSystem.AddPower(cardSO);
         }
     }
     public void OnDrawCardDeclared(DrawCardDeclared e)
@@ -326,16 +226,60 @@ public class CardMonoSystem : BaseMonoSystem
             view.ModifiyCost();
         }
     }
-    private void PowerCardPlay(CardInstance cardInstance)
+    private void ApplyEffects(IEnumerable<EffectSO> effects, EventContext context, MotionContext motion)
     {
-        PowerCardSO powerCardSO = cardInstance.Origin as PowerCardSO;
-        
-        if (powerCardSO == null)
+        List<Action> applies = new List<Action>();
+
+        foreach (EffectSO effect in effects)
         {
-            return;
+            // 타겟 설정
+            List<EntityInstance> targets = GetTargets(
+                type: effect.TargetType, 
+                context: context
+            );
+
+            // 효과 로직 가져오기
+            Action apply = effect.Apply(
+                eventBus: eventBus, 
+                context: context,
+                motion: motion, 
+                source: context.Combat.Player, 
+                targets: targets
+            );
+
+            // 오류 체크
+            if (apply == null)
+            {
+                throw new InvalidOperationException("Effect Apply returned null Action");
+            }
+
+            applies.Add(apply);
         }
 
-        powerSystem.AddPower(powerCardSO);
+        // 효과 로직 실행
+        foreach (Action apply in applies)
+        {
+            apply.Invoke();
+        }
+    }
+    private List<EntityInstance> GetTargets(TargetType type, EventContext context)
+    {
+        List<EntityInstance> targets = new List<EntityInstance>();
+
+        switch (type)
+        {
+            case TargetType.Player:
+                targets.Add(context.Combat.Player);
+                break;
+            case TargetType.EnemySingle:
+                targets.Add(target.Instance);
+                break;
+            case TargetType.EnemyAll:
+                targets.AddRange(context.Combat.Enemies);
+                break;
+        }
+
+        return targets;
     }
     private void DrawCard(EventContext context, MotionContext motion)
     {

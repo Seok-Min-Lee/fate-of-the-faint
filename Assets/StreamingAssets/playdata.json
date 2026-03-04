@@ -26,18 +26,13 @@
         "skl_intimidate",
         "skl_seeingRed",
         "skl_shockwave",
-        "pwr_metallicize"
+        "pwr_metallicize",
+        "pwr_combust",
+        "pwr_demonForm",
+        "pwr_juggernaut",
+        "pwr_barricade"
     ],
     "relicIds": [
-        "Bag of Marbles",
-        "Vajra",
-        "Centennial Puzzle",
-        "Art of War",
-        "Nunchaku",
-        "Akabeko",
-        "Orichalcum",
-        "Happy Flower",
-        "Gremlin Horn"
     ],
     "potionIds": []
 }

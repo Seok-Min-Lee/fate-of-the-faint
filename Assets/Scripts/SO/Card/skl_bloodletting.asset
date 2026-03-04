@@ -9,26 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3cca72567dd0a84c857b9f8729cf2b8, type: 3}
+  m_Script: {fileID: 11500000, guid: a83c342e46f11764aa9d597e2e63a98a, type: 3}
   m_Name: skl_bloodletting
-  m_EditorClassIdentifier: Assembly-CSharp::CardSO
+  m_EditorClassIdentifier: Assembly-CSharp::SkillCardSO
   id: skl_bloodletting
   name: "\uC0AC\uD608"
   description: "\uC5D0\uB108\uC9C0 2\uAC1C\uB97C \uC5BB\uC2B5\uB2C8\uB2E4. \uCCB4\uB825\uC744
     3 \uC783\uC2B5\uB2C8\uB2E4."
   image: {fileID: 423212681, guid: 96bf6d1f28104524aa9159cafa7f98ab, type: 3}
   isExhausted: 0
-  type: 1
+  existTarget: 0
   rarity: 1
-  target: 3
   cost: 0
-  effects:
-  - targetType: 0
-    effectType: 3
-    repeat: 1
-    value: 2
-  - targetType: 0
-    effectType: 0
-    repeat: 1
-    value: 3
   upgradeCard: {fileID: 0}
+  effects:
+  - {fileID: 11400000, guid: 1e215edc4883b804fa4a1b768e4f197c, type: 2}
+  - {fileID: 11400000, guid: 7f3cc95c3847b0c4e9faef17f68bb299, type: 2}

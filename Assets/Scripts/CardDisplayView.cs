@@ -39,9 +39,23 @@ public class CardDisplayView : MonoBehaviour, IPointerEnterHandler, IPointerExit
         name.text = origin.Name;
         desc.text = origin.Description;
 
+        int typeIndex;
+        if (origin is AttackCardSO)
+        {
+            typeIndex = 0;
+        }
+        else if(origin is SkillCardSO)
+        {
+            typeIndex = 1;
+        }
+        else
+        {
+            typeIndex = 2;
+        }
+
         for (int i = 0; i < arts.Length; i++)
         {
-            if (i == (int)origin.Type)
+            if (i == typeIndex)
             {
                 arts[i].Activate(origin.Image);
             }

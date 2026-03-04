@@ -70,11 +70,9 @@ public class CombatManager : MonoBehaviour
         );
         cardSystem.Init(
             eventBus: CombatSystem.EventBus, 
-            combatSystem: CombatSystem,
             actionSystem: CombatSystem.ActionSystem,
             powerSystem: powerSystem,
-            cardInstances: cardInstance, 
-            player: playerInstance
+            cardInstances: cardInstance
         );
         CombatSystem.Init(
             damageSystem: damageSystem, 

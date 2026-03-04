@@ -272,7 +272,7 @@ public class CardContainer : MonoBehaviour
 
         bool b = false;
         ITargetable target = null;
-        if (currentDraggedCard.CardInstance.Origin.Target == TargetType.EnemySingle)
+        if (currentDraggedCard.CardInstance.Origin.ExistTarget)
         {
             // 라치되었든 아니든, 종료 시점의 타겟을 한 번 확정
             // (타겟팅 라치가 된 카드만 플레이하도록 강제하려면 조건 추가 가능)
