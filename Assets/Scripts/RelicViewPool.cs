@@ -4,6 +4,7 @@ using UnityEngine;
 public class RelicViewPool : GameObjectPool<RelicView>
 {
     [SerializeField] private RelicSimplePopup simplePopup;
+    public RelicSimplePopup SimplePopup => simplePopup;
     public List<RelicView> CreateViews(IEnumerable<RelicInstance> samples)
     {
         List<RelicView> views = new List<RelicView>();

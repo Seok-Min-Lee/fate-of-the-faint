@@ -10,6 +10,7 @@ public static class SceneNames
     public const string HOME = "Home";
     public const string MAP = "Map";
     public const string COMBAT = "Combat";
+    public const string TREASURE = "Treasure";
 }
 public static class AnimationKeys
 {

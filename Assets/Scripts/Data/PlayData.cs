@@ -360,18 +360,6 @@ public class CardEntry
     public int SubId { get; private set; }
     public CardSO Origin { get; private set; }
 }
-//public class RelicEntry
-//{
-//    public RelicEntry(string id, int subId, RelicSO origin)
-//    {
-//        Id = id;
-//        SubId = subId;
-//        Origin = origin;
-//    }
-//    public string Id { get; private set; }
-//    public int SubId { get; private set; }
-//    public RelicSO Origin { get; private set; }
-//}
 public class PotionEntry
 {
     public PotionEntry(string id, int subId, PotionSO origin)

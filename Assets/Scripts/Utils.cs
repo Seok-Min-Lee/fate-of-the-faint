@@ -48,4 +48,18 @@ public static class Utils
         text.maxVisibleCharacters = 0;
         DOTween.To(x => text.maxVisibleCharacters = (int)x, 0f, text.text.Length, duration);
     }
+    public static List<Vector3> GetCircleAlignedPositions(int count, int radius)
+    {
+        List<Vector3> positions = new List<Vector3>();
+        
+        for (int i = 0; i < count; i++)
+        {
+            float angle = i * Mathf.PI * 2f / count;
+
+            Vector3 position = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * radius;
+            positions.Add(position);
+        }
+
+        return positions;
+    }
 }

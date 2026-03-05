@@ -64,14 +64,6 @@ public class MapCtrl : MonoBehaviour
             if (Graph.Adjacency.TryGetValue(LatestNode.Id, out List<int> candidates))
             {
                 success = candidates.Contains(node.Id);
-                //for (int i = 0; i < candidates.Count; i++)
-                //{
-                //    if (node.Id == candidates[i])
-                //    {
-                //        success = true;
-                //        break;
-                //    }
-                //}
             }
         }
 

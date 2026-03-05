@@ -116,6 +116,10 @@ public class MapNodeView : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 {
                     UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.COMBAT);
                 }
+                else if (Node.Type == MapNodeType.Treasure)
+                {
+                    UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.TREASURE);
+                }
 
                 Hide();
                 eventIcon.raycastTarget = false;
