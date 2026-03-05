@@ -8,9 +8,9 @@ public class TurnCountingGainEnergyRelicSO : RelicSO
     [SerializeField] private int amount;
     public int Timing => timing;
     public int Amount => amount;
-    public override RelicInstance CreateInstance(EventBus eventBus)
+    public override RelicInstance CreateInstance()
     {
-        return new TurnCountingGainEnergyRelicInstance(eventBus: eventBus, origin: this);
+        return new TurnCountingGainEnergyRelicInstance(this);
     }
 }
 public class TurnCountingGainEnergyRelicInstance : RelicInstance, IPlayerTurnStarted, IEnergyChargeRequested
@@ -19,13 +19,14 @@ public class TurnCountingGainEnergyRelicInstance : RelicInstance, IPlayerTurnSta
     private int amount = 0;
     private int count = 0;
 
-    public TurnCountingGainEnergyRelicInstance(EventBus eventBus, TurnCountingGainEnergyRelicSO origin) : base(eventBus, origin)
+    public TurnCountingGainEnergyRelicInstance(TurnCountingGainEnergyRelicSO origin) : base(origin)
     {
         timing = origin.Timing;
         amount = origin.Amount;
     }
-    public override void Register()
+    public override void Register(EventBus eventBus)
     {
+        EventBus = eventBus;
         EventBus.Subscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
         EventBus.Subscribe<EnergyChargeRequested>(OnEnergyChargeRequested);
     }

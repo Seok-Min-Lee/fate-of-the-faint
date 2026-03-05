@@ -8,9 +8,9 @@ public class DeathDeclaredGainEnergyAndDrawCardRelicSO : RelicSO
     [SerializeField] private int cardAmount;
     public int EnergyAmount => energyAmount;
     public int CardAmount => cardAmount;
-    public override RelicInstance CreateInstance(EventBus eventBus)
+    public override RelicInstance CreateInstance()
     {
-        return new DeathDeclaredGainEnergyAndDrawCardRelicInstance(eventBus: eventBus, origin: this);
+        return new DeathDeclaredGainEnergyAndDrawCardRelicInstance(this);
     }
 }
 public class DeathDeclaredGainEnergyAndDrawCardRelicInstance : RelicInstance, IDeathDeclared
@@ -18,13 +18,14 @@ public class DeathDeclaredGainEnergyAndDrawCardRelicInstance : RelicInstance, ID
     private int energyAmount = 0;
     private int cardAmount = 0;
 
-    public DeathDeclaredGainEnergyAndDrawCardRelicInstance(EventBus eventBus, DeathDeclaredGainEnergyAndDrawCardRelicSO origin) : base(eventBus, origin)
+    public DeathDeclaredGainEnergyAndDrawCardRelicInstance(DeathDeclaredGainEnergyAndDrawCardRelicSO origin) : base(origin)
     {
         energyAmount = origin.EnergyAmount;
         cardAmount = origin.CardAmount;
     }
-    public override void Register()
+    public override void Register(EventBus eventBus)
     {
+        EventBus = eventBus;
         EventBus.Subscribe<DeathDeclared>(OnDeathDeclared);
     }
     public void OnDeathDeclared(DeathDeclared e)

@@ -34,7 +34,17 @@ public class MapNodeView : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
         eventIcon.sprite = normal;
         eventIcon.raycastTarget = true;
-        visitedIcon.gameObject.SetActive(node.State == MapNodeState.Visited);
+        if (node.State == MapNodeState.Visited)
+        {
+            visitedIcon.gameObject.SetActive(true);
+            visitedIcon.fillAmount = 1;
+            visitedIcon.transform.rotation = Quaternion.Euler(0, 0, UnityEngine.Random.Range(0, 360));
+        }
+        else
+        {
+            visitedIcon.gameObject.SetActive(false);
+            visitedIcon.fillAmount = 0;
+        }
 
         button.interactable = true;
 
@@ -90,15 +100,26 @@ public class MapNodeView : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         if (onClick != null && onClick.Invoke(Node))
         {
-            visitedIcon.gameObject.SetActive(true);
+            Sequence sequence = DOTween.Sequence();
 
-            if (Node.Type == MapNodeType.Combat)
+            sequence.AppendCallback(() =>
             {
-                UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.COMBAT);
-            }
+                visitedIcon.gameObject.SetActive(true);
+                visitedIcon.transform.rotation = Quaternion.Euler(0, 0, UnityEngine.Random.Range(0, 360));
+            });
 
-            Hide();
-            eventIcon.raycastTarget = false;
+            sequence.Append(visitedIcon.DOFillAmount(1f, 0.25f));
+
+            sequence.AppendCallback(() =>
+            {
+                if (Node.Type == MapNodeType.Combat)
+                {
+                    UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.COMBAT);
+                }
+
+                Hide();
+                eventIcon.raycastTarget = false;
+            });
         }
     }
 }

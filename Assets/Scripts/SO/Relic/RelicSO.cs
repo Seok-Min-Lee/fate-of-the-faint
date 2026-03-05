@@ -21,7 +21,7 @@ public abstract class RelicSO : ScriptableObject
     public string Description => description;
     public string FlaverText => flaverText;
     public RelicRarity Rarity => rarity;
-    public abstract RelicInstance CreateInstance(EventBus eventBus);
+    public abstract RelicInstance CreateInstance();
 }
 public enum RelicRarity
 {

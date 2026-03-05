@@ -4,24 +4,23 @@ using UnityEngine;
 public class RelicMonoSystem : BaseMonoSystem
 {
     [SerializeField] private RelicViewPool pool;
-    private List<RelicInstance> relics;
+    private List<RelicInstance> relics => PlayManager.Instance.CurrentData.Relics;
 
     private EventBus eventBus;
-    private Action<RelicSO> onClick;
-    public void Init(EventBus eventBus, IEnumerable<RelicSO> relics, Action<RelicSO> onClick)
+    private Action<RelicView> onClick;
+    private void Start()
+    {
+        pool.CreateViews(relics);
+    }
+    public void Init(EventBus eventBus, Action<RelicView> onClick)
     {
         this.eventBus = eventBus;
         this.onClick = onClick;
 
-        this.relics = new List<RelicInstance>();
-        foreach(RelicSO so in relics)
+        foreach(RelicInstance instance in relics)
         {
-            RelicInstance instance = so.CreateInstance(eventBus);
-            instance.Register();
-            this.relics.Add(instance);
+            instance.Register(eventBus);
         }
-
-        pool.CreateViews(this.relics);
 
         foreach (RelicView view in pool.Actives)
         {
@@ -33,11 +32,9 @@ public class RelicMonoSystem : BaseMonoSystem
     public void AddRelic(RelicSO relic)
     {
         //
-        PlayManager.Instance.CurrentData.AddRelic(relic);
-
-        //
-        RelicInstance newInstance = relic.CreateInstance(eventBus);
-        newInstance.Register();
+        RelicInstance newInstance = relic.CreateInstance();
+        PlayManager.Instance.CurrentData.AddRelic(newInstance);
+        newInstance.Register(eventBus);
         relics.Add(newInstance);
 
         //

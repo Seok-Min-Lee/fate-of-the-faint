@@ -6,21 +6,22 @@ public class FirstHittedDrawCardRelicSO : RelicSO
 {
     [SerializeField] private int value;
     public int Value => value;
-    public override RelicInstance CreateInstance(EventBus eventBus)
+    public override RelicInstance CreateInstance()
     {
-        return new FirstHittedDrawCardRelicInstance(eventBus: eventBus, origin: this);
+        return new FirstHittedDrawCardRelicInstance(this);
     }
 }
 public class FirstHittedDrawCardRelicInstance : RelicInstance, ICombatStarted, IHpChanged
 {
     public bool usedThisCombat { get; private set; } = false;
     public int value;
-    public FirstHittedDrawCardRelicInstance(EventBus eventBus, FirstHittedDrawCardRelicSO origin) : base(eventBus, origin)
+    public FirstHittedDrawCardRelicInstance(FirstHittedDrawCardRelicSO origin) : base(origin)
     {
         value = origin.Value;
     }
-    public override void Register()
+    public override void Register(EventBus eventBus)
     {
+        EventBus = eventBus;
         EventBus.Subscribe<CombatStarted>(OnCombatStarted);
         EventBus.Subscribe<HpChanged>(OnHpChanged);
     }

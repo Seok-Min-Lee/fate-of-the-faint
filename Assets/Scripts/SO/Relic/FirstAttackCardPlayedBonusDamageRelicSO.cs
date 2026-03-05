@@ -6,9 +6,9 @@ public class FirstAttackCardPlayedBonusDamageRelicSO : RelicSO
     [SerializeField] private int amount;
     public int Amount => amount;
 
-    public override RelicInstance CreateInstance(EventBus eventBus)
+    public override RelicInstance CreateInstance()
     {
-        return new FirstAtackCardPlayedBonusDamageRelicInstance(eventBus: eventBus, origin: this);
+        return new FirstAtackCardPlayedBonusDamageRelicInstance(this);
     }
 }
 public class FirstAtackCardPlayedBonusDamageRelicInstance : RelicInstance, ICombatStarted, ICardPlayDeclared, IDamageRequested
@@ -16,13 +16,14 @@ public class FirstAtackCardPlayedBonusDamageRelicInstance : RelicInstance, IComb
     private int amount;
     private bool usedThisCombat = false;
     private bool isPrepared = false;
-    public FirstAtackCardPlayedBonusDamageRelicInstance(EventBus eventBus, FirstAttackCardPlayedBonusDamageRelicSO origin) : base(eventBus, origin)
+    public FirstAtackCardPlayedBonusDamageRelicInstance(FirstAttackCardPlayedBonusDamageRelicSO origin) : base(origin)
     {
         amount = origin.Amount;
     }
 
-    public override void Register()
+    public override void Register(EventBus eventBus)
     {
+        EventBus = eventBus;
         EventBus.Subscribe<CombatStarted>(OnCombatStarted);
         EventBus.Subscribe<CardPlayDeclared>(OnCardPlayDeclared);
         EventBus.Subscribe<DamageRequested>(OnDamageRequested);

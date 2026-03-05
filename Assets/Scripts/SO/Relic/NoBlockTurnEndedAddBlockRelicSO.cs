@@ -5,20 +5,21 @@ public class NoBlockTurnEndedAddBlockRelicSO : RelicSO
 {
     [SerializeField] private int amount;
     public int Amount => amount;
-    public override RelicInstance CreateInstance(EventBus eventBus)
+    public override RelicInstance CreateInstance()
     {
-        return new NoBlockThisTurnRelicInstance(eventBus: eventBus, origin: this);
+        return new NoBlockThisTurnRelicInstance(this);
     }
 }
 public class NoBlockThisTurnRelicInstance : RelicInstance, IPlayerTurnEnded
 {
     private int amount;
-    public NoBlockThisTurnRelicInstance(EventBus eventBus, NoBlockTurnEndedAddBlockRelicSO origin) : base(eventBus, origin)
+    public NoBlockThisTurnRelicInstance(NoBlockTurnEndedAddBlockRelicSO origin) : base(origin)
     {
         amount = origin.Amount;
     }
-    public override void Register()
+    public override void Register(EventBus eventBus)
     {
+        EventBus = eventBus;
         EventBus.Subscribe<PlayerTurnEnded>(OnPlayerTurnEnded);
     }
     public void OnPlayerTurnEnded(PlayerTurnEnded e)

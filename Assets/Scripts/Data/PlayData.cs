@@ -14,7 +14,7 @@ public class PlayData
         RunRngState rngState,
         IEnumerable<int> nodes,
         IEnumerable<CardEntry> cards,
-        IEnumerable<RelicSO> relics,
+        IEnumerable<RelicInstance> relics,
         IEnumerable<PotionEntry> potions
     )
     {
@@ -26,7 +26,7 @@ public class PlayData
         RngState = rngState;
         Nodes = new List<int>(nodes);
         Cards = new List<CardEntry>(cards);
-        Relics = new List<RelicSO>(relics);
+        Relics = new List<RelicInstance>(relics);
         Potions = new List<PotionEntry>(potions);
     }
     // Identity
@@ -44,7 +44,7 @@ public class PlayData
 
     // Inventory
     public List<CardEntry> Cards { get; private set; }
-    public List<RelicSO> Relics { get; private set; }
+    public List<RelicInstance> Relics { get; private set; }
     public List<PotionEntry> Potions { get; private set; }
 
     // Create
@@ -74,7 +74,7 @@ public class PlayData
             }
         }
 
-        List<RelicSO> relics = new List<RelicSO>();
+        List<RelicInstance> relics = new List<RelicInstance>();
         if (player.StartingRelics != null)
         {
             for (int i = 0; i < player.StartingRelics.Count; i++)
@@ -83,7 +83,7 @@ public class PlayData
 
                 if (relic != null)
                 {
-                    relics.Add(relic);
+                    relics.Add(relic.CreateInstance());
                 }
             }
         }
@@ -119,12 +119,12 @@ public class PlayData
             throw new InvalidOperationException("Player not found for id: " + save.playerId);
         }
 
-        List<CardEntry> cardIds = new List<CardEntry>();
+        List<CardEntry> cards = new List<CardEntry>();
         for (int i = 0; i < save.cardIds.Count; i++)
         {
             if (catalog.TryGetCardSO(save.cardIds[i], out CardSO card))
             {
-                cardIds.Add(new CardEntry(
+                cards.Add(new CardEntry(
                     id: card.Id, 
                     subId: i,
                     origin: card
@@ -136,12 +136,12 @@ public class PlayData
             }
         }
 
-        List<RelicSO> relicIds = new List<RelicSO>();
+        List<RelicInstance> relics = new List<RelicInstance>();
         for (int i = 0; i < save.relicIds.Count; i++)
         {
             if (catalog.TryGetRelicSO(save.relicIds[i], out RelicSO relic))
             {
-                relicIds.Add(relic);
+                relics.Add(relic.CreateInstance());
             }
             else
             {
@@ -149,12 +149,12 @@ public class PlayData
             }
         }
 
-        List<PotionEntry> potionIds = new List<PotionEntry>();
+        List<PotionEntry> potions = new List<PotionEntry>();
         for (int i = 0; i < save.potionIds.Count; i++)
         {
             if (catalog.TryGetPotionSO(save.potionIds[i], out PotionSO potion))
             {
-                potionIds.Add(new PotionEntry(
+                potions.Add(new PotionEntry(
                     id: potion.Id,
                     subId: i,
                     origin: potion
@@ -175,9 +175,9 @@ public class PlayData
             rewardCardOptionCount: Math.Max(0, save.rewardCardOptionCount),
             nodes: save.nodes,
             rngState: new RunRngState(save.rng.seed, save.rng.calls),
-            cards: cardIds,
-            relics: relicIds,
-            potions: potionIds
+            cards: cards,
+            relics: relics,
+            potions: potions
         );
 
         return data;
@@ -284,9 +284,9 @@ public class PlayData
         }
     }
 
-    public void AddRelic(RelicSO relicSO)
+    public void AddRelic(RelicInstance relic)
     {
-        Relics.Add(relicSO);
+        Relics.Add(relic);
     }
     public void RemoveRelic(string id)
     {
@@ -295,7 +295,7 @@ public class PlayData
             return;
         }
 
-        foreach (RelicSO relic in Relics)
+        foreach (RelicInstance relic in Relics)
         {
             if (relic.Id.Equals(id))
             {

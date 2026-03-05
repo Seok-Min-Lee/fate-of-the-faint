@@ -122,7 +122,7 @@ public class VictoryWindow : UIMotionWindow
         //}
 
         //
-        HashSet<RelicSO> hashset = PlayManager.Instance.CurrentData.Relics.ToHashSet();
+        HashSet<RelicSO> hashset = PlayManager.Instance.CurrentData.Relics.Select(x => x.Origin).ToHashSet();
         List<RelicSO> candidates = PlayManager.Instance.Catalog.RelicList
                                    .Where(candidate => !hashset.Contains(candidate))
                                    .ToList();

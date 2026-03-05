@@ -5,22 +5,23 @@ public class NoAttackCardPlayedLastTurnGainEnergyRelicSO : RelicSO
 {
     [SerializeField] private int amount;
     public int Amount => amount;
-    public override RelicInstance CreateInstance(EventBus eventBus)
+    public override RelicInstance CreateInstance()
     {
-        return new NoAttackCardPlayedLastTurnGainEnergyRelicInstance(eventBus: eventBus, origin: this);
+        return new NoAttackCardPlayedLastTurnGainEnergyRelicInstance(this);
     }
 }
 public class NoAttackCardPlayedLastTurnGainEnergyRelicInstance : RelicInstance, IEnergyChargeRequested, ICardPlayDeclared
 {
     private int amount;
     private bool usedCard = true;
-    public NoAttackCardPlayedLastTurnGainEnergyRelicInstance(EventBus eventBus, NoAttackCardPlayedLastTurnGainEnergyRelicSO origin) : base(eventBus, origin)
+    public NoAttackCardPlayedLastTurnGainEnergyRelicInstance(NoAttackCardPlayedLastTurnGainEnergyRelicSO origin) : base(origin)
     {
         amount = origin.Amount;
         usedCard = true;
     }
-    public override void Register()
+    public override void Register(EventBus eventBus)
     {
+        EventBus = eventBus;
         EventBus.Subscribe<EnergyChargeRequested>(OnEnergyChargeRequested);
         EventBus.Subscribe<CardPlayDeclared>(OnCardPlayDeclared);
     }

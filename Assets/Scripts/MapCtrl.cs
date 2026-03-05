@@ -61,16 +61,17 @@ public class MapCtrl : MonoBehaviour
         }
         else
         {
-            if (!Graph.Adjacency.TryGetValue(LatestNode.Id, out List<int> candidates))
+            if (Graph.Adjacency.TryGetValue(LatestNode.Id, out List<int> candidates))
             {
-                for (int i = 0; i < candidates.Count; i++)
-                {
-                    if (node.Id == candidates[i])
-                    {
-                        success = true;
-                        break;
-                    }
-                }
+                success = candidates.Contains(node.Id);
+                //for (int i = 0; i < candidates.Count; i++)
+                //{
+                //    if (node.Id == candidates[i])
+                //    {
+                //        success = true;
+                //        break;
+                //    }
+                //}
             }
         }
 

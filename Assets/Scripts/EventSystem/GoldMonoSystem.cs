@@ -6,10 +6,13 @@ public class GoldMonoSystem : BaseMonoSystem
     [SerializeField] private TextMeshProUGUI goldText;
 
     private EventBus eventBus;
+    public void Start()
+    {
+        goldText.text = PlayManager.Instance.CurrentData.Gold.ToString();
+    }
     public void Init(EventBus eventBus)
     {
         this.eventBus = eventBus;
-        goldText.text = PlayManager.Instance.CurrentData.Gold.ToString();
     }
     public void Add(int amount)
     {

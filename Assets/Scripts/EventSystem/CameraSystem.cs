@@ -10,11 +10,9 @@ public class CameraMonoSystem : BaseMonoSystem
     [Range(0, 64)] public int vibrato;
 
     private EventBus eventBus;
-    private PlayerInstance player;
-    public void Init(EventBus eventBus, PlayerInstance player)
+    public void Init(EventBus eventBus)
     {
         this.eventBus = eventBus;
-        this.player = player;
 
         eventBus.Subscribe<AttackDeclared>(OnAttackDeclared);
     }
@@ -30,7 +28,7 @@ public class CameraMonoSystem : BaseMonoSystem
             return;
         }
 
-        if (e.Source == player)
+        if (e.Source is PlayerInstance)
         {
             e.Motion.AddTask(new MotionTask(
                 priority: MotionPriority.Entity,
@@ -39,7 +37,7 @@ public class CameraMonoSystem : BaseMonoSystem
             ));
         }
 
-        if (e.Target == player)
+        if (e.Target is PlayerInstance)
         {
             e.Motion.AddTask(new MotionTask(
                 priority: MotionPriority.Entity,

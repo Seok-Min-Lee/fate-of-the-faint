@@ -2,7 +2,7 @@
     "playerId": "Player_A",
     "currentHp": 100,
     "maxHp": 100,
-    "gold": 0,
+    "gold": 159,
     "rewardCardOptionCount": 3,
     "rng": {
         "seed": 1234,
@@ -30,9 +30,21 @@
         "pwr_combust",
         "pwr_demonForm",
         "pwr_juggernaut",
-        "pwr_barricade"
+        "pwr_barricade",
+        "skl_seeingRed",
+        "atk_hemokinesis",
+        "pwr_metallicize"
     ],
     "relicIds": [
+        "Bag of Marbles",
+        "Vajra",
+        "Centennial Puzzle",
+        "Art of War",
+        "Nunchaku",
+        "Akabeko",
+        "Orichalcum",
+        "Happy Flower",
+        "Gremlin Horn"
     ],
     "potionIds": []
 }

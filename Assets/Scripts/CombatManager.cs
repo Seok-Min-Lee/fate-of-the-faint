@@ -55,17 +55,13 @@ public class CombatManager : MonoBehaviour
         PowerSystem powerSystem = new PowerSystem(CombatSystem.EventBus);
         animationSystem.Init(CombatSystem.EventBus);
         goldSystem.Init(CombatSystem.EventBus);
-        cameraSystem.Init(
-            eventBus: CombatSystem.EventBus, 
-            player: playerInstance
-        );
+        cameraSystem.Init(CombatSystem.EventBus);
         uiSystem.Init(
             eventBus: CombatSystem.EventBus,
             actionSystem: CombatSystem.ActionSystem
         );
         relicSystem.Init(
             eventBus: CombatSystem.EventBus,
-            relics: PlayManager.Instance.CurrentData.Relics,
             onClick: (relic) => uiSystem.OnClickRelic(relic)
         );
         cardSystem.Init(

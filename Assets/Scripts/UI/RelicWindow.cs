@@ -10,12 +10,14 @@ public class RelicWindow : UIWindow
     [SerializeField] private TextMeshProUGUI description;
     [SerializeField] private TextMeshProUGUI flaverText;
 
-    public void Bind(RelicSO relic)
+    public void Bind(RelicView relic)
     {
-        name.text = relic.DisplayName;
-        icon.sprite = relic.Icon;
-        description.text = relic.Description;
-        flaverText.text = relic.FlaverText;
+        RelicSO data = relic.Instance.Origin;
+
+        name.text = data.DisplayName;
+        icon.sprite = data.Icon;
+        description.text = data.Description;
+        flaverText.text = data.FlaverText;
     }
     public void OnClick()
     {

@@ -2,19 +2,19 @@
 
 public abstract class RelicInstance
 {
-    protected readonly EventBus EventBus;
+    protected EventBus EventBus;
     public string Id { get; private set; }
     public RelicSO Origin { get; private set; }
 
-    public RelicInstance(EventBus eventBus, RelicSO origin)
+    public RelicInstance(RelicSO origin)
     {
-        EventBus = eventBus;
+        //EventBus = eventBus;
         Origin = origin;
 
         Id = origin.Id;
     }
 
-    public abstract void Register();
+    public abstract void Register(EventBus eventBus);
     protected void Activate(EventContext context, MotionContext motion, Action action)
     {
         EventBus.Publish<RelicActivated>(new RelicActivated(

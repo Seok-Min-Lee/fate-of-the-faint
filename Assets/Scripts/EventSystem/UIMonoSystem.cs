@@ -241,7 +241,7 @@ public class UIMonoSystem : BaseMonoSystem
             ));
         });
     }
-    public void OnClickRelic(RelicSO relic)
+    public void OnClickRelic(RelicView relic)
     {
         if (!windowDictionary.TryGetValue(WindowType.Relic, out UIWindow window))
         {

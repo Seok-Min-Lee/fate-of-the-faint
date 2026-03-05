@@ -11,7 +11,7 @@ public class RelicView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     public RelicInstance Instance { get; private set; }
     public RelicSimplePopup SimplePopup { get; private set; }
     private Sequence sequence;
-    private Action<RelicSO> onClick;
+    private Action<RelicView> onClick;
     public void Init(RelicInstance instance, RelicSimplePopup simplePopup)
     {
         Instance = instance;
@@ -19,7 +19,7 @@ public class RelicView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         image.sprite = instance.Origin.Icon;
 
     }
-    public void AddListener(Action<RelicSO> onClick)
+    public void AddListener(Action<RelicView> onClick)
     {
         this.onClick = onClick;
     }
@@ -64,6 +64,6 @@ public class RelicView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        onClick?.Invoke(Instance.Origin);
+        onClick?.Invoke(this);
     }
 }

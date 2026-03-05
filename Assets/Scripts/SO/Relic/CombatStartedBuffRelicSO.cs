@@ -10,9 +10,9 @@ public class CombatStartedBuffRelicSO: RelicSO
     public RelicTarget Target => target;
     public BuffType Buff => buff;
     public int Value => value;
-    public override RelicInstance CreateInstance(EventBus eventBus)
+    public override RelicInstance CreateInstance()
     {
-        return new CombatStartedBuffRelicInstance(eventBus: eventBus, origin: this);
+        return new CombatStartedBuffRelicInstance(this);
     }
 }
 
@@ -21,14 +21,15 @@ public class CombatStartedBuffRelicInstance : RelicInstance, ICombatStarted
     private RelicTarget target;
     private BuffType buff;
     private int value;
-    public CombatStartedBuffRelicInstance(EventBus eventBus, CombatStartedBuffRelicSO origin) : base(eventBus, origin)
+    public CombatStartedBuffRelicInstance(CombatStartedBuffRelicSO origin) : base(origin)
     {
         target = origin.Target;
         buff = origin.Buff;
         value = origin.Value;
     }
-    public override void Register()
+    public override void Register(EventBus eventBus)
     {
+        EventBus = eventBus;
         EventBus.Subscribe<CombatStarted>(OnCombatStarted);
     }
     public void OnCombatStarted(CombatStarted e)
