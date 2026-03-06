@@ -1,0 +1,27 @@
+﻿using UnityEngine;
+using UnityEngine.UI;
+
+public class TreasureCtrl : MonoBehaviour
+{
+    [SerializeField] Button button;
+    [SerializeField] TreasurePopup popup;
+    [SerializeField] Button nextButton;
+    private void Start()
+    {
+        nextButton.gameObject.SetActive(false);
+    }
+    public void OnClickBox()
+    {
+        button.interactable = false;
+        popup.Init();
+    }
+    public void OnClickNext()
+    {
+        PlayManager.Instance.SavePlayData();
+        UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
+    }
+    public void ShowNext()
+    {
+        nextButton.gameObject.SetActive(true);
+    }
+}

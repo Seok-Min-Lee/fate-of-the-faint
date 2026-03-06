@@ -17,15 +17,15 @@ MonoBehaviour:
   maxHp: 100
   baseEnergy: 3
   startingCards:
-  - {fileID: 11400000, guid: 1c0121fe95eeb5c408098a0970a2710d, type: 2}
-  - {fileID: 11400000, guid: 1c0121fe95eeb5c408098a0970a2710d, type: 2}
-  - {fileID: 11400000, guid: 1c0121fe95eeb5c408098a0970a2710d, type: 2}
-  - {fileID: 11400000, guid: 1c0121fe95eeb5c408098a0970a2710d, type: 2}
-  - {fileID: 11400000, guid: 1c0121fe95eeb5c408098a0970a2710d, type: 2}
-  - {fileID: 11400000, guid: cb0129a8410730c4aab3c28d4af99208, type: 2}
-  - {fileID: 11400000, guid: cb0129a8410730c4aab3c28d4af99208, type: 2}
-  - {fileID: 11400000, guid: cb0129a8410730c4aab3c28d4af99208, type: 2}
-  - {fileID: 11400000, guid: cb0129a8410730c4aab3c28d4af99208, type: 2}
-  - {fileID: 11400000, guid: cb0129a8410730c4aab3c28d4af99208, type: 2}
+  - {fileID: 11400000, guid: a1111ce95ae739b4ea71b13bd6220426, type: 2}
+  - {fileID: 11400000, guid: a1111ce95ae739b4ea71b13bd6220426, type: 2}
+  - {fileID: 11400000, guid: a1111ce95ae739b4ea71b13bd6220426, type: 2}
+  - {fileID: 11400000, guid: a1111ce95ae739b4ea71b13bd6220426, type: 2}
+  - {fileID: 11400000, guid: a1111ce95ae739b4ea71b13bd6220426, type: 2}
+  - {fileID: 11400000, guid: 260493612638e374fb78f85f439a2a8d, type: 2}
+  - {fileID: 11400000, guid: 260493612638e374fb78f85f439a2a8d, type: 2}
+  - {fileID: 11400000, guid: 260493612638e374fb78f85f439a2a8d, type: 2}
+  - {fileID: 11400000, guid: 260493612638e374fb78f85f439a2a8d, type: 2}
+  - {fileID: 11400000, guid: 260493612638e374fb78f85f439a2a8d, type: 2}
   startingRelics:
   - {fileID: 0}

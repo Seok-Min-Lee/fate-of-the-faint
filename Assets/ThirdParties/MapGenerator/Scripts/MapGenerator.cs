@@ -58,6 +58,7 @@ public struct MapEdge
 [Serializable]
 public sealed class MapGraph
 {
+    public MapNode LatestNode { get; private set; }
     public int Floors { get; private set; }
     public int Width { get; private set; }
     public List<MapNode> Nodes = new ();
@@ -140,6 +141,10 @@ public sealed class MapGraph
         }
 
         return Enumerable.Empty<int>();
+    }
+    public void SetLatestNode(MapNode node)
+    {
+        LatestNode = node;
     }
     public HashSet<int> BFS(int startNodeId)
     {
@@ -290,6 +295,9 @@ public static class MapGenerator
 
             // 5) Assign node types with constraints + targets
             AssignTypes(graph, cfg, rng, startNode.Id, boss.Id);
+
+            //
+            graph.SetLatestNode(startNode);
 
             Debug.Log(attempt);
 

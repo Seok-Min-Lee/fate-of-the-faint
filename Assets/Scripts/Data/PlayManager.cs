@@ -14,7 +14,6 @@ public class PlayManager : MonoSingleton<PlayManager>
     public PlayData CurrentData { get; private set; }
     public GameCatalog Catalog { get; private set; }
     public MapGraph MapGraph { get; private set; }
-    public MapNode LatestNode { get; private set; }
     public bool isLoad { get; private set; }
     private void Awake()
     {
@@ -26,34 +25,39 @@ public class PlayManager : MonoSingleton<PlayManager>
         );
 
         // Play Data Load
+#if UNITY_EDITOR
         CurrentData = PlaySaveDataIO.TryLoadFromFile(out PlaySaveData data) ?
                       PlayData.CreateFromSaveData(data, Catalog) :
                       PlayData.CreateNew(temp_PlaerSO, 1234, Catalog);
 
         // Map Data Load
+        MapGraph = MapDataIO.TryLoadFromFile(out MapData mapData) ?
+                   MapDataConverter.FromSaveData(mapData) :
+                   MapGenerator.Generate(mapConfig);
+#else
+        if (PlaySaveDataIO.TryLoadFromFile(out PlaySaveData data))
+        {
+            CurrentData = PlayData.CreateFromSaveData(data, Catalog);
+        }
         if (MapDataIO.TryLoadFromFile(out MapData mapData))
         {
             MapGraph = MapDataConverter.FromSaveData(mapData);
-            LatestNode = MapGraph.GetNode(mapData.currentNodeId);
         }
-        else
-        {
-            MapGraph = MapGenerator.Generate(mapConfig);
-            LatestNode = null;
-        }
+#endif
 
         isLoad = true;
     }
     public void SavePlayData()
     {
-        PlaySaveDataIO.SaveToFile(CurrentData.ToSaveData());
+        PlaySaveData playSave = CurrentData.ToSaveData();
+        PlaySaveDataIO.SaveToFile(playSave);
+
+        MapData save = MapDataConverter.ToSaveData(MapGraph);
+        MapDataIO.SaveToFile(save);
     }
     public void ClearPlayData()
     {
-        CurrentData = PlayData.ClearData();
-    }
-    public void UpdateLatestNode(MapNode node)
-    {
-        LatestNode = node;
+        CurrentData = PlayData.CreateNew(temp_PlaerSO, 1234, Catalog);
+        MapGraph = MapGenerator.Generate(mapConfig);
     }
 }

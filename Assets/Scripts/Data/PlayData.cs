@@ -182,23 +182,6 @@ public class PlayData
 
         return data;
     }
-    public static PlayData ClearData()
-    {
-        PlayData run = new PlayData(
-            playerId: string.Empty,
-            currentHp: -1,
-            maxHp: -1,
-            gold: -1,
-            rewardCardOptionCount: -1,
-            nodes: null,
-            rngState: null,
-            cards: null,
-            relics: null,
-            potions: null
-        );
-
-        return run;
-    }
 
     // ─────────────────────────────────────────────
     // Save to DTO

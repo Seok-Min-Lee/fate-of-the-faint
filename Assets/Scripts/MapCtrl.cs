@@ -1,7 +1,6 @@
 ﻿using DG.Tweening;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +9,6 @@ public class MapCtrl : MonoBehaviour
     [SerializeField] private MapBootstrap bootstrap;
     [SerializeField] private ScrollRect scrollRect;
     public MapGraph Graph { get; private set; }
-    public MapNode LatestNode { get; private set; }
     private Sequence seq;
     private void Awake()
     {
@@ -22,7 +20,6 @@ public class MapCtrl : MonoBehaviour
 
         // Init
         Graph = PlayManager.Instance.MapGraph;
-        LatestNode = PlayManager.Instance.LatestNode;
 
         bootstrap.Init(Graph);
 
@@ -34,7 +31,7 @@ public class MapCtrl : MonoBehaviour
 
         // View Update
         UpdateNodeStates();
-        ScrollToIndex(LatestNode?.Floor?? 0);
+        ScrollToIndex(Graph.LatestNode?.Floor?? 0);
     }
 #if UNITY_EDITOR
     private void Update()
@@ -46,7 +43,8 @@ public class MapCtrl : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.W))
         {
-            SaveMap();
+            MapData save = MapDataConverter.ToSaveData(Graph);
+            MapDataIO.SaveToFile(save);
         }
     }
 #endif
@@ -55,13 +53,13 @@ public class MapCtrl : MonoBehaviour
         bool success = false;
 
         // Check
-        if (LatestNode == null)
+        if (Graph.LatestNode == null)
         {
             success = node.Floor == 1;
         }
         else
         {
-            if (Graph.Adjacency.TryGetValue(LatestNode.Id, out List<int> candidates))
+            if (Graph.Adjacency.TryGetValue(Graph.LatestNode.Id, out List<int> candidates))
             {
                 success = candidates.Contains(node.Id);
             }
@@ -70,12 +68,10 @@ public class MapCtrl : MonoBehaviour
         // Process
         if (success)
         {
-            LatestNode = node;
+            Graph.SetLatestNode(node);
             node.State = MapNodeState.Visited;
-            PlayManager.Instance.UpdateLatestNode(node);
 
             UpdateNodeStates();
-            SaveMap();
 
             return true;
         }
@@ -86,18 +82,11 @@ public class MapCtrl : MonoBehaviour
     {
         Graph = MapGenerator.Generate(bootstrap.Config);
         bootstrap.Init(Graph);
-
-        PlayManager.Instance.UpdateLatestNode(null);
-    }
-    public void SaveMap()
-    {
-        MapData save = MapDataConverter.ToSaveData(Graph, LatestNode?.Id?? -1);
-        MapDataIO.SaveToFile(save);
     }
     private void UpdateNodeStates()
     {
         // 새 게임 시작인 경우
-        if (LatestNode == null)
+        if (Graph.LatestNode == null)
         {
             foreach (MapNodeView view in bootstrap.Nodes)
             {
@@ -111,12 +100,12 @@ public class MapCtrl : MonoBehaviour
 
         // 바로 다음 노드 하이라이트
         // 갈 수 없는 노드 하이드
-        HashSet<int> possibles = Graph.BFS(LatestNode.Id);
+        HashSet<int> possibles = Graph.BFS(Graph.LatestNode.Id);
         foreach (MapNodeView view in bootstrap.Nodes)
         {
             if (possibles.Contains(view.id))
             {
-                if(view.Node.Floor == LatestNode.Floor + 1)
+                if(view.Node.Floor == Graph.LatestNode.Floor + 1)
                 {
                     view.Highlight();
                 }

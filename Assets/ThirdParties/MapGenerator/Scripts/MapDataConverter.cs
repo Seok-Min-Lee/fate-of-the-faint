@@ -5,7 +5,7 @@ using UnityEngine;
 
 public static class MapDataConverter
 {
-    public static MapData ToSaveData(MapGraph graph, int currentNodeId)
+    public static MapData ToSaveData(MapGraph graph)
     {
         if (graph == null) 
         {
@@ -16,7 +16,7 @@ public static class MapDataConverter
         {
             floors = graph.Floors,
             width = graph.Width,
-            currentNodeId = currentNodeId
+            currentNodeId = graph.LatestNode?.Id ?? -1
         };
 
         data.nodes = graph.Nodes.Select(n => new NodeData
@@ -72,6 +72,10 @@ public static class MapDataConverter
         {
             graph.AddEdge(new MapEdge(ed.fromId, ed.toId));
         }
+
+        //
+        MapNode currentNode = graph.GetNode(data.currentNodeId);
+        graph.SetLatestNode(currentNode);
 
         return graph;
     }

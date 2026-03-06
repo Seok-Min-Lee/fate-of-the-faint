@@ -2,7 +2,7 @@
     "playerId": "Player_A",
     "currentHp": 100,
     "maxHp": 100,
-    "gold": 211,
+    "gold": 17,
     "rewardCardOptionCount": 3,
     "rng": {
         "seed": 1234,
@@ -11,30 +11,18 @@
     "nodes": [],
     "cardIds": [
         "atk_strike",
-        "atk_bash",
-        "atk_cleave",
-        "atk_ironWave",
-        "atk_pommelStrike",
-        "atk_twinStrike",
-        "atk_carnage",
-        "atk_hemokinesis",
+        "atk_strike",
+        "atk_strike",
+        "atk_strike",
+        "atk_strike",
         "skl_defend",
-        "skl_shrugItOff",
-        "skl_battleTrance",
-        "skl_bloodletting",
-        "skl_ghostlyArmor",
-        "skl_intimidate",
-        "skl_seeingRed",
-        "skl_shockwave",
-        "pwr_metallicize",
-        "pwr_combust",
-        "pwr_demonForm",
-        "pwr_juggernaut",
-        "pwr_barricade"
+        "skl_defend",
+        "skl_defend",
+        "skl_defend",
+        "skl_defend",
+        "skl_ghostlyArmor"
     ],
     "relicIds": [
-        "Bag of Marbles",
-        "Vajra",
         "Centennial Puzzle"
     ],
     "potionIds": []
