@@ -7,9 +7,7 @@ using UnityEngine;
 public class AttackEffectSO : EffectSO
 {
     [SerializeField] private int repeat;
-    [SerializeField] private int value;
     public int Repeat => repeat;
-    public int Value => value;
     public override Action Apply(
         EventBus eventBus, 
         EventContext context, 

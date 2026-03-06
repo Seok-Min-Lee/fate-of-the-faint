@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 public class CardDisplayWindow : UIWindow
@@ -7,18 +6,20 @@ public class CardDisplayWindow : UIWindow
     [SerializeField] private CardDisplayViewPool pool;
     [SerializeField] private Transform parent;
 
-    private List<CardDisplayView> views = new List<CardDisplayView>();
-    private Action disabledAction;
-    private void OnEnable()
+    protected List<CardDisplayView> views = new List<CardDisplayView>();
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         int id = 0;
-        foreach (CardSO origin in PlayManager.Instance.CurrentData.Cards.Select(card => card.Origin))
+        foreach (CardEntry entry in PlayManager.Instance.CurrentData.Cards)
         {
             CardDisplayView view = pool.Pop();
 
             view.Init(
                 id: id++,
-                origin: origin,
+                entry: entry,
+                origin: entry.Origin,
                 hoverScale: 1.1f,
                 parent: parent
             );
@@ -34,10 +35,8 @@ public class CardDisplayWindow : UIWindow
         }
 
         views.Clear();
-        disabledAction?.Invoke();
-        disabledAction = null;
     }
-    public void OnClickBack()
+    public void OnClickCancel()
     {
         ChangeWindow(WindowType.CardDisplay, WindowMode.Revert);
     }

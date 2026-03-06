@@ -5,6 +5,7 @@ using UnityEngine;
 
 public enum WindowType
 {
+    //Combat Scene
     Combat,
     Defeat,
     Victory,
@@ -13,6 +14,12 @@ public enum WindowType
     Map,
     Setting,
     Relic,
+    //Rest Scene
+    RestMenu,
+    EnhanceDisplay,
+    EnhancePreview,
+    RestComplete,
+    //
     None
 }
 public enum WindowMode
@@ -34,6 +41,20 @@ public class UIWindow : MonoBehaviour
     [SerializeField] protected WindowType type;
     public WindowType Type => type;
     public Action<WindowType, WindowMode> ChangeWindow;
+
+    protected SideButton[] sideButtions;
+    protected virtual void Awake()
+    {
+        sideButtions = transform.GetComponentsInChildren<SideButton>();
+    }
+
+    protected virtual void OnEnable()
+    {
+        for (int i = 0; i < sideButtions.Length; i++)
+        {
+            sideButtions[i].Show();
+        }
+    }
 }
 public class UIMotionWindow : UIWindow
 {

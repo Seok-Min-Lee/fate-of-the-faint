@@ -11,7 +11,7 @@ public class CardRewardWindow : UIWindow
 
     [SerializeField] private CardDisplayViewPool pool;
     [SerializeField] private HorizontalLayoutGroup rewardGroupLayout;
-    [SerializeField] private RectTransform selectButton;
+    [SerializeField] private SideButton selectButton;
     [SerializeField] private GameObject nextButton;
     [SerializeField] private GameObject skipButton;
     [SerializeField] private Transform icon;
@@ -19,6 +19,10 @@ public class CardRewardWindow : UIWindow
     private CardDisplayView selectedView;
 
     private Action endProcess;
+    protected override void OnEnable()
+    {
+        return;
+    }
     public void Init(IEnumerable<CardSO> candidates,  Action endProcess)
     {
         this.endProcess = endProcess;
@@ -33,7 +37,6 @@ public class CardRewardWindow : UIWindow
                 hoverScale: 1.25f,
                 origin: candidates.ElementAt(i),
                 parent: rewardGroupLayout.transform,
-                isButton: true,
                 onClick: () => OnCardSelected(view)
             );
         }
@@ -41,10 +44,9 @@ public class CardRewardWindow : UIWindow
 
         nextButton.SetActive(false);
         skipButton.SetActive(true);
-        selectButton.gameObject.SetActive(true);
-        selectButton.anchoredPosition = new Vector2(450, 150);
+        selectButton.Hide();
     }
-    public void OnClickSelect()
+    public void OnClickSubmit()
     {
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() =>
@@ -77,7 +79,7 @@ public class CardRewardWindow : UIWindow
         selectedView = null;
 
         // 선택 버튼 Hide
-        selectButton.DOAnchorPos(new Vector2(450, 150), 0.5f);
+        selectButton.Hide();
     }
     public void OnClickSkip()
     {
@@ -106,7 +108,7 @@ public class CardRewardWindow : UIWindow
         selectedView.Hold();
 
         // 선택 버튼 Show
-        selectButton.DOAnchorPos(new Vector2(150, 150), 0.5f);
+        selectButton.Show();
     }
     private void ClearViews()
     {

@@ -1,7 +1,4 @@
-﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "Card_", menuName = "Scriptable Objects/CardSO")]
 public abstract class CardSO : ScriptableObject
@@ -18,9 +15,10 @@ public abstract class CardSO : ScriptableObject
     [SerializeField] private CardRarity rarity;
 
     [Header("Cost")]
-    [SerializeField] private int cost; 
+    [SerializeField] private int cost;
 
     [Header("Upgrade")]
+    [SerializeField] private bool isUpgraded;
     [SerializeField] private CardSO upgradeCard;
 
     public string Id => id;
@@ -31,6 +29,7 @@ public abstract class CardSO : ScriptableObject
     public bool ExistTarget => existTarget;
     public CardRarity Rarity => rarity;
     public int Cost => cost;
+    public bool IsUpgraded => isUpgraded;
     public CardSO UpgradeCard => upgradeCard;
 }
 public enum CardRarity

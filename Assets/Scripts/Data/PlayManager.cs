@@ -47,7 +47,7 @@ public class PlayManager : MonoSingleton<PlayManager>
 
         isLoad = true;
     }
-    public void SavePlayData()
+    public void SaveData()
     {
         PlaySaveData playSave = CurrentData.ToSaveData();
         PlaySaveDataIO.SaveToFile(playSave);

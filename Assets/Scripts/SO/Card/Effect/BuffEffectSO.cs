@@ -7,9 +7,7 @@ using UnityEngine;
 public class BuffEffectSO : EffectSO
 {
     [SerializeField] private BuffType buffType;
-    [SerializeField] private int value;
     public BuffType BuffType => buffType;
-    public int Value => value;
     public override Action Apply(
         EventBus eventBus,
         EventContext context,

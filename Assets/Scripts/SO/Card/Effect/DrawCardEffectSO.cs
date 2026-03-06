@@ -7,8 +7,6 @@ using UnityEngine.UIElements;
 [CreateAssetMenu(fileName = "Draw Card Effect ", menuName = "Scriptable Objects/EffectSO/Draw Card Effect ")]
 public class DrawCardEffectSO : EffectSO
 {
-    [SerializeField] private int value;
-    public int Value => value;
     public override Action Apply(
         EventBus eventBus,
         EventContext context,

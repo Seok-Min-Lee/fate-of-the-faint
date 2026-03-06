@@ -6,8 +6,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Gain Energy Effect ", menuName = "Scriptable Objects/EffectSO/Gain Energy Effect ")]
 public class GainEnergyEffectSO : EffectSO
 {
-    [SerializeField] private int value;
-    public int Value => value;
     public override Action Apply(
         EventBus eventBus,
         EventContext context,

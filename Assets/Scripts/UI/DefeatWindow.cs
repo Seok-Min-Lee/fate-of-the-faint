@@ -8,7 +8,7 @@ public class DefeatWindow : UIMotionWindow
     [SerializeField] private CanvasGroup contentCG;
     [SerializeField] private TextMeshProUGUI headText;
 
-    private void Awake()
+    protected override void Awake()
     {
         _handler.Add(MotionKey.WindowShow, Show);
     }

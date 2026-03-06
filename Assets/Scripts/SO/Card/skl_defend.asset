@@ -20,6 +20,6 @@ MonoBehaviour:
   existTarget: 0
   rarity: 0
   cost: 1
-  upgradeCard: {fileID: 0}
+  upgradeCard: {fileID: 11400000, guid: 019fece273e8c024ca85915b484a2999, type: 2}
   effects:
   - {fileID: 11400000, guid: 955400f1eb9ed764a830dba7ebace385, type: 2}

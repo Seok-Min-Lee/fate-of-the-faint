@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class CardInstance
 {
-    public CardInstance(
-        string instanceId, 
-        CardSO origin
-    ) 
+    public CardInstance(string instanceId, CardEntry entry) 
     {
         InstanceId = instanceId;
-        Origin = origin;
+        Entry = entry;
 
-        Cost = origin.Cost;
+        Cost = Origin.Cost;
     }
     public void AddModification(CostModification modification)
     {
@@ -40,8 +37,9 @@ public class CardInstance
         Cost = Mathf.Max(0, total);
     }
     public string InstanceId { get; private set; }
-    public CardSO Origin { get; private set; }
+    public CardEntry Entry { get; private set; }
     public int Cost { get; private set; }
+    public CardSO Origin => Entry.Origin;
     public bool ExistModifier => costModifications.Count > 0;
     private List<CostModification> costModifications = new List<CostModification>();
 }

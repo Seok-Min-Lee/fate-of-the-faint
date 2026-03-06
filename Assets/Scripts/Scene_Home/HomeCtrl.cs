@@ -44,7 +44,7 @@ public class HomeCtrl : MonoBehaviour
     public void OnClickNewGame()
     {
         PlayManager.Instance.ClearPlayData();
-        PlayManager.Instance.SavePlayData();
+        PlayManager.Instance.SaveData();
         UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
     }
     public void OnClickExit()

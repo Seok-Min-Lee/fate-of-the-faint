@@ -8,7 +8,7 @@ public class CombatWindow : UIMotionWindow
     [SerializeField] private TurnAnnouncer turnAnnouncer;
 
     private Sequence sequence;
-    private void Awake()
+    protected override void Awake()
     {
         _handler.Add(MotionKey.CombatAnnounce, AnnounceCombat);
         _handler.Add(MotionKey.PlayerTurnAnnounce, PlayerTurnAnnounce);

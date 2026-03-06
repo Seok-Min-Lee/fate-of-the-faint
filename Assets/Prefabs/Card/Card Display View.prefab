@@ -2163,7 +2163,8 @@ MonoBehaviour:
   - {fileID: 8817910486407947977}
   - {fileID: 6332712509258971753}
   - {fileID: 7299542741959289864}
-  IsIgnorePointer: 0
+  defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  upgradedColor: {r: 0, g: 1, b: 0.2509804, a: 1}
 --- !u!1 &8837493650789331638
 GameObject:
   m_ObjectHideFlags: 0

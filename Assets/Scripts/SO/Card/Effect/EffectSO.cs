@@ -6,7 +6,9 @@ using UnityEngine;
 public abstract class EffectSO : ScriptableObject
 {
     [SerializeField] protected TargetType targetType;
+    [SerializeField] protected int value;
     public TargetType TargetType => targetType;
+    public int Value => value;
     public abstract Action Apply(
         EventBus eventBus, 
         EventContext context, 

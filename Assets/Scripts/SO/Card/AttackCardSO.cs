@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "atk_", menuName = "Scriptable Objects/CardSO/Attack Card")]
 public class AttackCardSO : CardSO

@@ -8,9 +8,7 @@ using UnityEngine.UIElements;
 public class ModifyCostEffectSO : EffectSO
 {
     [SerializeField] private CostModificationScope range;
-    [SerializeField] private int value;
     public CostModificationScope Range => range;
-    public int Value => value;
     public override Action Apply(
         EventBus eventBus,
         EventContext context,

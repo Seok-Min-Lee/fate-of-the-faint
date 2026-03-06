@@ -243,28 +243,28 @@ public class PlayData
     {
         CardEntry newCard = new CardEntry(
             id: cardSO.Id,
-            subId: Cards.Max(card => card.SubId),
+            subId: Cards.Max(card => card.SubId) + 1,
             origin: cardSO
         );
 
         Cards.Add(newCard);
     }
 
-    public void RemoveCardFromDeck(string id, int subId)
+    public void RemoveCard(string id, int subId)
     {
         if (string.IsNullOrEmpty(id) || subId < 0)
         {
             return;
         }
 
-        foreach (CardEntry card in Cards)
+        CardEntry card = Cards.Where(x => x.Id.Equals(id) && x.SubId == subId).First();
+
+        if (card == null)
         {
-            if (card.Id.Equals(id) && card.SubId == subId)
-            {
-                Cards.Add(card);
-                return;
-            }
+            return;
         }
+
+        Cards.Remove(card);
     }
 
     public void AddRelic(RelicInstance relic)

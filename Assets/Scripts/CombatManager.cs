@@ -43,7 +43,7 @@ public class CombatManager : MonoBehaviour
         List<EnemyInstance> enemyInstances = CreateEnemyInstances();
         List<EnemyView> enemyViews = ConvertEnemyInstanceToView(enemyInstances, playerInstance);
 
-        List<CardInstance> cardInstance = CreateCardInstances(PlayManager.Instance.CurrentData.Cards.Select(x => x.Origin));
+        List<CardInstance> cardInstance = CreateCardInstances(PlayManager.Instance.CurrentData.Cards);
 
         //
         DamageSystem damageSystem = new DamageSystem(CombatSystem.EventBus);
@@ -179,15 +179,15 @@ public class CombatManager : MonoBehaviour
 
         return enemies;
     }
-    private List<CardInstance> CreateCardInstances(IEnumerable<CardSO> samples)
+    private List<CardInstance> CreateCardInstances(IEnumerable<CardEntry> samples)
     {
         List<CardInstance> instances = new List<CardInstance>();
 
-        foreach (CardSO sample in samples)
+        foreach (CardEntry sample in samples)
         {
             instances.Add(new CardInstance(
-                instanceId: sample.Id,
-                origin: sample
+                instanceId: $"{sample.Id}_{sample.SubId}",
+                entry: sample
             ));
         }
 

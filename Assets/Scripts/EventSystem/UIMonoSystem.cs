@@ -20,7 +20,7 @@ public class UIMonoSystem : BaseMonoSystem
     private Sequence sequence;
     private void Awake()
     {
-        foreach (UIWindow window in windowParent.GetComponentsInChildren<UIWindow>(true))
+        foreach (UIWindow window in windowParent.GetComponentsInChildren<UIWindow>())
         {
             if (!windowDictionary.ContainsKey(window.Type))
             {

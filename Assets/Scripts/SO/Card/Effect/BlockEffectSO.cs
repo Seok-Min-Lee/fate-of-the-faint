@@ -6,8 +6,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Block Effect ", menuName = "Scriptable Objects/EffectSO/Block Effect ")]
 public class BlockEffectSO : EffectSO
 {
-    [SerializeField] private int value;
-    public int Value => value;
     public override Action Apply(
         EventBus eventBus,
         EventContext context,
