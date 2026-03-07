@@ -4,26 +4,26 @@
 public abstract class CardSO : ScriptableObject
 {
     [Header("Identity")]
-    [SerializeField] private string id;
-    [SerializeField] private string name;
-    [SerializeField] private string description;
-    [SerializeField] private Sprite image;
+    [SerializeField] protected string id;
+    [SerializeField] protected string name;
+    [SerializeField] protected string description;
+    [SerializeField] protected Sprite image;
 
-    [SerializeField] private bool isExhausted;
-    [SerializeField] private bool existTarget;
+    [SerializeField] protected bool isExhausted;
+    [SerializeField] protected bool existTarget;
     [Header("Classification")]
-    [SerializeField] private CardRarity rarity;
+    [SerializeField] protected CardRarity rarity;
 
     [Header("Cost")]
-    [SerializeField] private int cost;
+    [SerializeField] protected int cost;
 
     [Header("Upgrade")]
-    [SerializeField] private bool isUpgraded;
-    [SerializeField] private CardSO upgradeCard;
+    [SerializeField] protected bool isUpgraded;
+    [SerializeField] protected CardSO upgradeCard;
 
     public string Id => id;
     public string Name => name;
-    public string Description => description;
+    public string Description => GetDescription();
     public Sprite Image => image;
     public bool IsExhausted => isExhausted;
     public bool ExistTarget => existTarget;
@@ -31,6 +31,7 @@ public abstract class CardSO : ScriptableObject
     public int Cost => cost;
     public bool IsUpgraded => isUpgraded;
     public CardSO UpgradeCard => upgradeCard;
+    protected abstract string GetDescription();
 }
 public enum CardRarity
 {

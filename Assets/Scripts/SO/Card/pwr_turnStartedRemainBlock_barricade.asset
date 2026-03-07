@@ -21,5 +21,5 @@ MonoBehaviour:
   existTarget: 0
   rarity: 2
   cost: 3
-  upgradeCard: {fileID: 0}
-  amount: 0
+  isUpgraded: 0
+  upgradeCard: {fileID: 11400000, guid: f594e93b429c2404c844c2a65eee2b69, type: 2}

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillCardSO
   id: skl_defend+
   name: "\uC218\uBE44+"
-  description: "\uBC29\uC5B4\uB3C4\uB97C 8 \uC5BB\uC2B5\uB2C8\uB2E4."
+  description: "\uBC29\uC5B4\uB3C4\uB97C [{0}] \uC5BB\uC2B5\uB2C8\uB2E4."
   image: {fileID: -2060557703, guid: 690e52a8b5a287e44869ff8d3a4a441b, type: 3}
   isExhausted: 0
   existTarget: 0

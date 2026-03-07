@@ -14,14 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillCardSO
   id: skl_bloodletting
   name: "\uC0AC\uD608"
-  description: "\uC5D0\uB108\uC9C0 2\uAC1C\uB97C \uC5BB\uC2B5\uB2C8\uB2E4. \uCCB4\uB825\uC744
-    3 \uC783\uC2B5\uB2C8\uB2E4."
+  description: "\uC5D0\uB108\uC9C0 {0}\uAC1C\uB97C \uC5BB\uC2B5\uB2C8\uB2E4. \uCCB4\uB825\uC744
+    {1} \uC783\uC2B5\uB2C8\uB2E4."
   image: {fileID: 423212681, guid: 96bf6d1f28104524aa9159cafa7f98ab, type: 3}
   isExhausted: 0
   existTarget: 0
   rarity: 1
   cost: 0
-  upgradeCard: {fileID: 0}
+  isUpgraded: 0
+  upgradeCard: {fileID: 11400000, guid: f208681fd85b42d44bad21f1e8a0b3cc, type: 2}
   effects:
   - {fileID: 11400000, guid: 1e215edc4883b804fa4a1b768e4f197c, type: 2}
-  - {fileID: 11400000, guid: 7f3cc95c3847b0c4e9faef17f68bb299, type: 2}
+  - {fileID: 11400000, guid: 81317ad12e4029844a6edbffbc41a335, type: 2}

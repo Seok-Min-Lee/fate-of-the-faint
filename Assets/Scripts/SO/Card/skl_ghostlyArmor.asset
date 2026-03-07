@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillCardSO
   id: skl_ghostlyArmor
   name: "\uC720\uB839 \uAC11\uC637"
-  description: "\uBC29\uC5B4\uB3C4\uB97C 10 \uC5BB\uC2B5\uB2C8\uB2E4. \uD718\uBC1C\uC131."
+  description: "\uBC29\uC5B4\uB3C4\uB97C {0} \uC5BB\uC2B5\uB2C8\uB2E4. \uD718\uBC1C\uC131."
   image: {fileID: -485592729, guid: 96bf6d1f28104524aa9159cafa7f98ab, type: 3}
   isExhausted: 1
   existTarget: 0
   rarity: 1
   cost: 1
-  upgradeCard: {fileID: 0}
+  isUpgraded: 0
+  upgradeCard: {fileID: 11400000, guid: b81fc093f83daa14f83c3905bd5d29cc, type: 2}
   effects:
   - {fileID: 11400000, guid: 153418662c6e3bb498b7e1950d086808, type: 2}

@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TurnEndedEntityDamagePowerCardSO
   id: pwr_combust
   name: "\uC5F0\uC18C"
-  description: "\uD134 \uC885\uB8CC\uC2DC \uCCB4\uB825\uC744 1 \uC783\uACE0 \uC801
-    \uC804\uCCB4\uC5D0\uAC8C \uD53C\uD574\uB97C 5 \uC90D\uB2C8\uB2E4."
+  description: "\uD134 \uC885\uB8CC\uC2DC \uCCB4\uB825\uC744 {0} \uC783\uACE0 \uC801
+    \uC804\uCCB4\uC5D0\uAC8C \uD53C\uD574\uB97C {1} \uC90D\uB2C8\uB2E4."
   image: {fileID: 2117212037, guid: e6b8253a53526f541b05b8edb4be8762, type: 3}
   isExhausted: 1
   existTarget: 0
   rarity: 1
   cost: 1
-  upgradeCard: {fileID: 0}
+  isUpgraded: 0
+  upgradeCard: {fileID: 11400000, guid: f5f0a4b508cacee46b8214e15fd82d04, type: 2}
   playerDamage: 1
   enemyDamage: 5

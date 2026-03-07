@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AttackCardSO
   id: atk_carnage
   name: "\uB300\uD559\uC0B4"
-  description: "\uD53C\uD574\uB97C 20 \uC90D\uB2C8\uB2E4.\uD718\uBC1C\uC131."
+  description: "\uD53C\uD574\uB97C {0} \uC90D\uB2C8\uB2E4. \uD718\uBC1C\uC131."
   image: {fileID: 2006561657, guid: f01289aada2552542adfb37b1b95436c, type: 3}
   isExhausted: 1
   existTarget: 1
   rarity: 1
   cost: 2
-  upgradeCard: {fileID: 11400000, guid: 8a122a29127a26b4da4220b1847cdeaf, type: 2}
+  isUpgraded: 0
+  upgradeCard: {fileID: 11400000, guid: 791f6ccd0407bd041ae3f6e15e3664bf, type: 2}
   effects:
   - {fileID: 11400000, guid: 43f4abc3dd551c5428324ec01b6737d5, type: 2}

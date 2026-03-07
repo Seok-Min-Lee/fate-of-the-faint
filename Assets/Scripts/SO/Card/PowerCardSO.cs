@@ -2,12 +2,10 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PWR_", menuName = "Scriptable Objects/CardSO/Power Card")]
-public class PowerCardSO : CardSO
+public abstract class PowerCardSO : CardSO
 {
-    public virtual PowerInstance CreateInstance(EventBus eventBus) 
-    {
-        return null;
-    }
+    public abstract PowerInstance CreateInstance(EventBus eventBus);
+    //protected abstract string GetDescription();
 }
 public abstract class PowerInstance
 {

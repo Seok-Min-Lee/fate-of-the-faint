@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a83c342e46f11764aa9d597e2e63a98a, type: 3}
+  m_Name: skl_seeingRed+
+  m_EditorClassIdentifier: Assembly-CSharp::SkillCardSO
+  id: skl_seeingRed+
+  name: "\uD608\uC548+"
+  description: "\uC5D0\uB108\uC9C0 [{0}]\uAC1C\uB97C \uC5BB\uC2B5\uB2C8\uB2E4. \uC18C\uBA78."
+  image: {fileID: -298840986, guid: 96bf6d1f28104524aa9159cafa7f98ab, type: 3}
+  isExhausted: 1
+  existTarget: 0
+  rarity: 1
+  cost: 0
+  isUpgraded: 1
+  upgradeCard: {fileID: 0}
+  effects:
+  - {fileID: 11400000, guid: 1e215edc4883b804fa4a1b768e4f197c, type: 2}

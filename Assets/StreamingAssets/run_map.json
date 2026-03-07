@@ -91,7 +91,7 @@
             "extraX": 0.8284769058227539,
             "extraY": 0.4263879060745239,
             "type": 0,
-            "state": 0
+            "state": 1
         },
         {
             "id": 11,
@@ -505,5 +505,5 @@
             "toId": 35
         }
     ],
-    "currentNodeId": 8
+    "currentNodeId": 10
 }

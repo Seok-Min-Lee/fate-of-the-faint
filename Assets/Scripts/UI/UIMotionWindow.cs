@@ -50,6 +50,11 @@ public class UIWindow : MonoBehaviour
 
     protected virtual void OnEnable()
     {
+        if (sideButtions == null || sideButtions.Length == 0)
+        {
+            return;
+        }
+
         for (int i = 0; i < sideButtions.Length; i++)
         {
             sideButtions[i].Show();

@@ -9,6 +9,12 @@ public class TurnEndedGainBlockPowerCardSO : PowerCardSO
     {
         return new TurnEndedGainBlockPowerInstance(eventBus, this);
     }
+    protected override string GetDescription()
+    {
+        return string.Format(description, amount)
+                     .Replace("[", "<color=#00FF40>")
+                     .Replace("]", "</color>");
+    }
 }
 
 public class TurnEndedGainBlockPowerInstance : PowerInstance, IPlayerTurnEnded

@@ -2,7 +2,7 @@
     "playerId": "Player_A",
     "currentHp": 100,
     "maxHp": 100,
-    "gold": 17,
+    "gold": 85,
     "rewardCardOptionCount": 3,
     "rng": {
         "seed": 1234,
@@ -11,19 +11,34 @@
     "nodes": [],
     "cardIds": [
         "atk_strike",
-        "atk_strike",
-        "atk_strike",
-        "atk_strike",
-        "atk_strike",
+        "atk_bash",
+        "atk_bash+",
+        "atk_ironWave",
+        "atk_pommelStrike",
+        "atk_twinStrike",
+        "atk_carnage",
+        "atk_hemokinesis",
         "skl_defend",
-        "skl_defend",
-        "skl_defend",
-        "skl_defend",
+        "skl_shrugItOff",
+        "skl_battleTrance",
+        "skl_bloodletting",
         "skl_ghostlyArmor",
-        "skl_defend+"
+        "skl_intimidate",
+        "skl_seeingRed",
+        "skl_shockwave",
+        "pwr_metallicize",
+        "pwr_combust",
+        "pwr_demonForm",
+        "pwr_juggernaut",
+        "pwr_barricade",
+        "atk_cleave+",
+        "atk_hemokinesis+",
+        "atk_twinStrike"
     ],
     "relicIds": [
-        "Centennial Puzzle"
+        "Centennial Puzzle",
+        "Orichalcum",
+        "Art of War"
     ],
     "potionIds": []
 }

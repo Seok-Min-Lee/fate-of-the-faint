@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillCardSO
   id: skl_intimidate
   name: "\uC704\uC555"
-  description: "\uC801 \uC804\uCCB4\uC5D0\uAC8C \uC57D\uD654\uB97C 1 \uBD80\uC5EC\uD569\uB2C8\uB2E4.
+  description: "\uC801 \uC804\uCCB4\uC5D0\uAC8C \uC57D\uD654\uB97C {0} \uBD80\uC5EC\uD569\uB2C8\uB2E4.
     \uC18C\uBA78."
   image: {fileID: -241792163, guid: 96bf6d1f28104524aa9159cafa7f98ab, type: 3}
   isExhausted: 1
   existTarget: 0
   rarity: 1
   cost: 0
-  upgradeCard: {fileID: 0}
+  isUpgraded: 0
+  upgradeCard: {fileID: 11400000, guid: 7bc92a8c962fe2e47b49927fe2755a36, type: 2}
   effects:
   - {fileID: 11400000, guid: b518e17a10d2f4e4682b0d71c17e4be6, type: 2}

@@ -15,11 +15,12 @@ MonoBehaviour:
   id: pwr_juggernaut
   name: "\uC808\uB300\uC801\uC778 \uD798"
   description: "\uBC29\uC5B4\uB3C4\uB97C \uC5BB\uC744 \uB54C\uB9C8\uB2E4 \uBB34\uC791\uC704
-    \uC801\uC5D0\uAC8C 5\uC758 \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4."
+    \uC801\uC5D0\uAC8C {0}\uC758 \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4."
   image: {fileID: 1630634377, guid: af94f2817ec66c04784d8367b7e53ee2, type: 3}
   isExhausted: 1
   existTarget: 0
   rarity: 2
   cost: 2
-  upgradeCard: {fileID: 0}
+  isUpgraded: 0
+  upgradeCard: {fileID: 11400000, guid: 3113eb2259ad9924abcc4b3ed76c0957, type: 2}
   amount: 5

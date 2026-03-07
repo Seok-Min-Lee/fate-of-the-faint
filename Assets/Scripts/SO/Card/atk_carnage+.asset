@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d121485eec2da754db88153e0554ec16, type: 3}
+  m_Name: atk_carnage+
+  m_EditorClassIdentifier: Assembly-CSharp::AttackCardSO
+  id: atk_carnage+
+  name: "\uB300\uD559\uC0B4+"
+  description: "\uD53C\uD574\uB97C [{0}] \uC90D\uB2C8\uB2E4. \uD718\uBC1C\uC131."
+  image: {fileID: 2006561657, guid: f01289aada2552542adfb37b1b95436c, type: 3}
+  isExhausted: 1
+  existTarget: 1
+  rarity: 1
+  cost: 2
+  isUpgraded: 1
+  upgradeCard: {fileID: 11400000, guid: 8a122a29127a26b4da4220b1847cdeaf, type: 2}
+  effects:
+  - {fileID: 11400000, guid: 2ff0e3311286c7641ac6a9eb0548efea, type: 2}

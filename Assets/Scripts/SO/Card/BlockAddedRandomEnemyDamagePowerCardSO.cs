@@ -10,6 +10,12 @@ public class BlockAddedRandomEnemyDamagePowerCardSO : PowerCardSO
     {
         return new BlockAddedRandomEnemyDamagePowerInstance(eventBus, this);
     }
+    protected override string GetDescription()
+    {
+        return string.Format(description, amount)
+                     .Replace("[", "<color=#00FF40>")
+                     .Replace("]", "</color>");
+    }
 }
 public class BlockAddedRandomEnemyDamagePowerInstance : PowerInstance, IBlockChanged
 {

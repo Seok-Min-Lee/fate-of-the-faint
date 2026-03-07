@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a83c342e46f11764aa9d597e2e63a98a, type: 3}
+  m_Name: skl_shrugItOff+
+  m_EditorClassIdentifier: Assembly-CSharp::SkillCardSO
+  id: skl_shrugItOff+
+  name: "\uD758\uB824\uBCF4\uB0B4\uAE30+"
+  description: "\uBC29\uC5B4\uB3C4\uB97C [{0}] \uC5BB\uC2B5\uB2C8\uB2E4. \uCE74\uB4DC\uB97C
+    {1}\uC7A5 \uBF51\uC2B5\uB2C8\uB2E4."
+  image: {fileID: 1650163060, guid: 690e52a8b5a287e44869ff8d3a4a441b, type: 3}
+  isExhausted: 0
+  existTarget: 0
+  rarity: 0
+  cost: 0
+  isUpgraded: 1
+  upgradeCard: {fileID: 0}
+  effects:
+  - {fileID: 11400000, guid: a884a7c6359db774f9c22cf85cca4b8a, type: 2}
+  - {fileID: 11400000, guid: a394ba5c9702a1347a48e5629b88b147, type: 2}

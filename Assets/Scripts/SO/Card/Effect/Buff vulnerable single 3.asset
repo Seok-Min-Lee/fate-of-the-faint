@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Buff vulnerable single 3
   m_EditorClassIdentifier: Assembly-CSharp::BuffEffectSO
   targetType: 1
+  value: 3
   buffType: 2
-  value: 0

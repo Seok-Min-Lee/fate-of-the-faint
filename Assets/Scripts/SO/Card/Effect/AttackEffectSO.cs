@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "AttackEffectSO", menuName = "Scriptable Objects/EffectSO/Attack Effect ")]
+[CreateAssetMenu(fileName = "Attack ", menuName = "Scriptable Objects/EffectSO/Attack Effect ")]
 public class AttackEffectSO : EffectSO
 {
     [SerializeField] private int repeat;

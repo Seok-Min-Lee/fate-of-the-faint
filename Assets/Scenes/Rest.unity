@@ -119,6 +119,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!224 &85855095 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7873627658280257207, guid: 0b734837de7870443ad40a029f88a3ed, type: 3}
+  m_PrefabInstance: {fileID: 306629206}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &107416428
 GameObject:
   m_ObjectHideFlags: 0
@@ -1128,6 +1133,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RestCompleteWindow
   type: 11
+  pool: {fileID: 986459980153558664}
+  target: {fileID: 85855095}
 --- !u!1001 &736546627
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1337,6 +1344,7 @@ MonoBehaviour:
   type: 10
   pool: {fileID: 986459980153558664}
   parent: {fileID: 1092635509}
+  completeWindow: {fileID: 734693087}
 --- !u!1 &876615938
 GameObject:
   m_ObjectHideFlags: 0

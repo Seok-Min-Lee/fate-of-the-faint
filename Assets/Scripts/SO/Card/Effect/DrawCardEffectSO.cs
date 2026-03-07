@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-[CreateAssetMenu(fileName = "Draw Card Effect ", menuName = "Scriptable Objects/EffectSO/Draw Card Effect ")]
+[CreateAssetMenu(fileName = "Draw Card ", menuName = "Scriptable Objects/EffectSO/Draw Card Effect ")]
 public class DrawCardEffectSO : EffectSO
 {
     public override Action Apply(

@@ -14,14 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AttackCardSO
   id: atk_hemokinesis
   name: "\uD608\uB958"
-  description: "\uCCB4\uB825\uC744 2 \uC783\uC2B5\uB2C8\uB2E4. \uD53C\uD574\uB97C
-    15 \uC90D\uB2C8\uB2E4."
+  description: "\uCCB4\uB825\uC744 {0} \uC783\uC2B5\uB2C8\uB2E4. \uD53C\uD574\uB97C
+    {1} \uC90D\uB2C8\uB2E4."
   image: {fileID: -1011728316, guid: f01289aada2552542adfb37b1b95436c, type: 3}
   isExhausted: 0
   existTarget: 1
   rarity: 1
   cost: 1
-  upgradeCard: {fileID: 11400000, guid: a06e7289ea27fcb4ca70c2e50f183789, type: 2}
+  isUpgraded: 0
+  upgradeCard: {fileID: 11400000, guid: a873337eaf3f9f94f9a8296ba997bb6f, type: 2}
   effects:
-  - {fileID: 11400000, guid: d87899cb7acd5464a82f2c63857f5896, type: 2}
+  - {fileID: 11400000, guid: 751019369f750bd43af814b676a1db77, type: 2}
   - {fileID: 11400000, guid: 674634c6e0a263d4c880995ab3033e7d, type: 2}

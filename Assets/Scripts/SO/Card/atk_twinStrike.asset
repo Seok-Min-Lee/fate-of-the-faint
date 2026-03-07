@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AttackCardSO
   id: atk_twinStrike
   name: "\uC774\uC911 \uD0C0\uACA9"
-  description: "\uD53C\uD574\uB97C 5 \uB9CC\uD07C 2\uBC88 \uC90D\uB2C8\uB2E4."
+  description: "\uD53C\uD574\uB97C {0} \uB9CC\uD07C {1}\uBC88 \uC90D\uB2C8\uB2E4."
   image: {fileID: -84333061, guid: ea8c628429d8bff40a33b6e9f157043c, type: 3}
   isExhausted: 0
   existTarget: 1
   rarity: 0
   cost: 1
-  upgradeCard: {fileID: 0}
+  isUpgraded: 0
+  upgradeCard: {fileID: 11400000, guid: ddb9b9020afb1ed46964afad177fd2bc, type: 2}
   effects:
   - {fileID: 11400000, guid: 229b63f728eb0084ebbbc592598a323f, type: 2}

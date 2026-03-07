@@ -9,6 +9,12 @@ public class TurnStartedGainStrengthPowerCardSO : PowerCardSO
     {
         return new TurnStartedGainStrengthPowerInstance(eventBus, this);
     }
+    protected override string GetDescription()
+    {
+        return string.Format(description, amount)
+                     .Replace("[", "<color=#00FF40>")
+                     .Replace("]", "</color>"); ;
+    }
 }
 public class TurnStartedGainStrengthPowerInstance : PowerInstance, IPlayerTurnStarted
 {

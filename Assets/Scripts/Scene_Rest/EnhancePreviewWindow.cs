@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 
 public class EnhancePreviewWindow : UIWindow
 {
     [SerializeField] private CardDisplayViewPool pool;
     [SerializeField] private Transform parent;
+
+    [SerializeField] private RestCompleteWindow completeWindow;
 
     private CardDisplayView beforeView;
     private CardDisplayView afterView;
@@ -52,6 +55,8 @@ public class EnhancePreviewWindow : UIWindow
         PlayManager.Instance.CurrentData.RemoveCard(beforeView.Entry.Origin.Id, beforeView.Entry.SubId);
         PlayManager.Instance.CurrentData.AddCard(afterView.Origin);
 
+        completeWindow.CompleteEnhance(afterView.Origin);
+        
         ChangeWindow(WindowType.RestComplete, WindowMode.Single);
     }
 }

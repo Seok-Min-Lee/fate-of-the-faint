@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Block Effect ", menuName = "Scriptable Objects/EffectSO/Block Effect ")]
+[CreateAssetMenu(fileName = "Block ", menuName = "Scriptable Objects/EffectSO/Block Effect ")]
 public class BlockEffectSO : EffectSO
 {
     public override Action Apply(

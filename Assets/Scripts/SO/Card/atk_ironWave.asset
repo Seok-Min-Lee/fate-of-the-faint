@@ -14,14 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AttackCardSO
   id: atk_ironWave
   name: "\uCCA0\uC758 \uD30C\uB3D9"
-  description: "\uBC29\uC5B4\uB3C4\uB97C 5 \uC5BB\uC2B5\uB2C8\uB2E4. \uD53C\uD574\uB97C
-    5 \uC90D\uB2C8\uB2E4."
+  description: "\uBC29\uC5B4\uB3C4\uB97C {0} \uC5BB\uC2B5\uB2C8\uB2E4. \uD53C\uD574\uB97C
+    {1} \uC90D\uB2C8\uB2E4."
   image: {fileID: 1690573421, guid: ea8c628429d8bff40a33b6e9f157043c, type: 3}
   isExhausted: 0
   existTarget: 1
   rarity: 0
   cost: 1
-  upgradeCard: {fileID: 11400000, guid: 8bdc826a08236ee47a5bb7b4c5f32bd8, type: 2}
+  isUpgraded: 0
+  upgradeCard: {fileID: 11400000, guid: cf6d9c9424a3d1d4ca041758d31d2ae8, type: 2}
   effects:
   - {fileID: 11400000, guid: 955400f1eb9ed764a830dba7ebace385, type: 2}
   - {fileID: 11400000, guid: edaec85366ef0174b85f4f31234873d0, type: 2}

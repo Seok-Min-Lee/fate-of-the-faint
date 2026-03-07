@@ -14,13 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AttackCardSO
   id: atk_bash
   name: "\uAC15\uD0C0"
-  description: "\uD53C\uD574\uB97C 8 \uC90D\uB2C8\uB2E4. \uCDE8\uC57D\uC744 2 \uBD80\uC5EC\uD569\uB2C8\uB2E4."
+  description: "\uD53C\uD574\uB97C {0} \uC90D\uB2C8\uB2E4. \uCDE8\uC57D\uC744 {1}
+    \uBD80\uC5EC\uD569\uB2C8\uB2E4."
   image: {fileID: -1042017291, guid: ea8c628429d8bff40a33b6e9f157043c, type: 3}
   isExhausted: 0
   existTarget: 1
   rarity: 0
   cost: 1
-  upgradeCard: {fileID: 11400000, guid: 2da699a9e0f08aa4dae4966aba23a620, type: 2}
+  isUpgraded: 0
+  upgradeCard: {fileID: 11400000, guid: 8a2163e9b847f314aaa835c3c876edec, type: 2}
   effects:
   - {fileID: 11400000, guid: 9185dd516fb08b24f9148719f83e9c20, type: 2}
   - {fileID: 11400000, guid: 9229bc0a56947f74fa1d7f9859cec031, type: 2}

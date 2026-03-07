@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AttackCardSO
   id: atk_strike+
   name: "\uD0C0\uACA9+"
-  description: "\uD53C\uD574\uB97C 9 \uC90D\uB2C8\uB2E4."
+  description: "\uD53C\uD574\uB97C [{0}] \uC90D\uB2C8\uB2E4."
   image: {fileID: 652979983, guid: ea8c628429d8bff40a33b6e9f157043c, type: 3}
   isExhausted: 0
   existTarget: 1

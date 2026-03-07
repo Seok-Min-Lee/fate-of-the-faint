@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f69de2240b037314c8bf9b1f391d11ed, type: 3}
+  m_Name: pwr_turnEndedEntityDamage_combust+
+  m_EditorClassIdentifier: Assembly-CSharp::TurnEndedEntityDamagePowerCardSO
+  id: pwr_combust+
+  name: "\uC5F0\uC18C+"
+  description: "\uD134 \uC885\uB8CC\uC2DC \uCCB4\uB825\uC744 {0} \uC783\uACE0 \uC801
+    \uC804\uCCB4\uC5D0\uAC8C \uD53C\uD574\uB97C [{1}] \uC90D\uB2C8\uB2E4."
+  image: {fileID: 2117212037, guid: e6b8253a53526f541b05b8edb4be8762, type: 3}
+  isExhausted: 1
+  existTarget: 0
+  rarity: 1
+  cost: 1
+  isUpgraded: 1
+  upgradeCard: {fileID: 0}
+  playerDamage: 1
+  enemyDamage: 7

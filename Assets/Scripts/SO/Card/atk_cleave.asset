@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AttackCardSO
   id: atk_cleave
   name: "\uC808\uB2E8"
-  description: "\uC801 \uC804\uCCB4\uC5D0\uAC8C \uD53C\uD574\uB97C 8 \uC90D\uB2C8\uB2E4."
+  description: "\uC801 \uC804\uCCB4\uC5D0\uAC8C \uD53C\uD574\uB97C {0} \uC90D\uB2C8\uB2E4."
   image: {fileID: -939110500, guid: ea8c628429d8bff40a33b6e9f157043c, type: 3}
   isExhausted: 0
   existTarget: 0
   rarity: 0
   cost: 1
-  upgradeCard: {fileID: 11400000, guid: 1e99d613a77b1cd498841354e5ff1715, type: 2}
+  isUpgraded: 0
+  upgradeCard: {fileID: 11400000, guid: 735108652998223468f43444c3d7dbf0, type: 2}
   effects:
   - {fileID: 11400000, guid: 914b4fa8172a3e844b1fad31ac50dd08, type: 2}

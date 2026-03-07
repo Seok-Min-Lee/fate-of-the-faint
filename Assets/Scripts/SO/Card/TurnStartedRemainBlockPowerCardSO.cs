@@ -8,6 +8,10 @@ public class TurnStartedRemainBlockPowerCardSO : PowerCardSO
     {
         return new TurnStartedRemainBlockPowerInstance(eventBus, this);
     }
+    protected override string GetDescription()
+    {
+        return description;
+    }
 }
 public class TurnStartedRemainBlockPowerInstance : PowerInstance
 {

@@ -10,17 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4fee119744a5b8e4192978f78d4a9689, type: 3}
-  m_Name: PWR_TurnEndedGainBlock_metallicize
+  m_Name: pwr_TurnEndedGainBlock_metallicize
   m_EditorClassIdentifier: Assembly-CSharp::TurnEndedGainBlockPowerCardSO
   id: pwr_metallicize
   name: "\uAE08\uC18D\uD654"
-  description: "\uD134 \uC885\uB8CC\uC2DC \uBC29\uC5B4\uB3C4\uB97C 3 \uC5BB\uC2B5\uB2C8\uB2E4."
+  description: "\uD134 \uC885\uB8CC\uC2DC \uBC29\uC5B4\uB3C4\uB97C {0} \uC5BB\uC2B5\uB2C8\uB2E4."
   image: {fileID: -1786733641, guid: e6b8253a53526f541b05b8edb4be8762, type: 3}
   isExhausted: 1
-  type: 2
+  existTarget: 0
   rarity: 1
-  target: 3
   cost: 1
-  effects: []
-  upgradeCard: {fileID: 0}
+  isUpgraded: 0
+  upgradeCard: {fileID: 11400000, guid: dca937ce6ed194545bad845408916509, type: 2}
   amount: 3

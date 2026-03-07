@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillCardSO
   id: skl_seeingRed
   name: "\uD608\uC548"
-  description: "\uC5D0\uB108\uC9C0 2\uAC1C\uB97C \uC5BB\uC2B5\uB2C8\uB2E4. \uC18C\uBA78."
+  description: "\uC5D0\uB108\uC9C0 {0}\uAC1C\uB97C \uC5BB\uC2B5\uB2C8\uB2E4. \uC18C\uBA78."
   image: {fileID: -298840986, guid: 96bf6d1f28104524aa9159cafa7f98ab, type: 3}
   isExhausted: 1
   existTarget: 0
   rarity: 1
   cost: 1
-  upgradeCard: {fileID: 0}
+  isUpgraded: 0
+  upgradeCard: {fileID: 11400000, guid: ee2251582ceba2141ad4d57a5bc7d133, type: 2}
   effects:
   - {fileID: 11400000, guid: 1e215edc4883b804fa4a1b768e4f197c, type: 2}

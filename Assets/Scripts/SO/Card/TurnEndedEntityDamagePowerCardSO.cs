@@ -11,6 +11,18 @@ public class TurnEndedEntityDamagePowerCardSO : PowerCardSO
     {
         return new TurnEndedEntityDamagePowerInstance(eventBus, this);
     }
+    protected override string GetDescription()
+    {
+        string[] values = new string[]
+        {
+            playerDamage.ToString(), 
+            enemyDamage.ToString()
+        };
+
+        return string.Format(description, values)
+                     .Replace("[", "<color=#00FF40>")
+                     .Replace("]", "</color>");
+    }
 }
 public class TurnEndedEntityDamagePowerInstance : PowerInstance, IPlayerTurnEnded
 {
