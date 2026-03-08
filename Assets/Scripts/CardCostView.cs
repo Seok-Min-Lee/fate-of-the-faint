@@ -6,8 +6,13 @@ using UnityEngine;
 public class CardCostView : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI text;
+    public TextMeshProUGUI Text => text;
 
     private Sequence sequence;
+    public void Init(string str)
+    {
+        text.text = str;
+    }
     public void Change(string value, Color color)
     {
         if (sequence != null)

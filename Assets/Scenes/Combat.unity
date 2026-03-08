@@ -4356,6 +4356,7 @@ MonoBehaviour:
   relicSystem: {fileID: 3108958426846968672}
   animationSystem: {fileID: 606307827}
   cameraSystem: {fileID: 1551523249}
+  hpSystem: {fileID: 1803899123}
   goldSystem: {fileID: 1836647910}
   playerPrefab: {fileID: 3590264590922241840, guid: 341ee4c7cdddb6146b15246fa7025fa8, type: 3}
   entityBuffPool: {fileID: 606307828}
@@ -12211,6 +12212,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1803899123 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6961815086442779554, guid: 0b734837de7870443ad40a029f88a3ed, type: 3}
+  m_PrefabInstance: {fileID: 5301783699880551696}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4c6f125548cffa4a849acb971e02f2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HpView
 --- !u!1001 &1812283954
 PrefabInstance:
   m_ObjectHideFlags: 0

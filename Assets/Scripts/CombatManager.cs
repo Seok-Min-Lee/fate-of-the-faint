@@ -11,6 +11,7 @@ public class CombatManager : MonoBehaviour
     [SerializeField] private RelicMonoSystem relicSystem;
     [SerializeField] private MotionMonoSystem animationSystem;
     [SerializeField] private CameraMonoSystem cameraSystem;
+    [SerializeField] private HpMonoSystem hpSystem;
     [SerializeField] private GoldMonoSystem goldSystem;
 
     [SerializeField] private PlayerView playerPrefab;
@@ -54,6 +55,7 @@ public class CombatManager : MonoBehaviour
         );
         PowerSystem powerSystem = new PowerSystem(CombatSystem.EventBus);
         animationSystem.Init(CombatSystem.EventBus);
+        hpSystem.Init(CombatSystem.EventBus);
         goldSystem.Init(CombatSystem.EventBus);
         cameraSystem.Init(CombatSystem.EventBus);
         uiSystem.Init(
@@ -78,6 +80,7 @@ public class CombatManager : MonoBehaviour
             cardSystem: cardSystem, 
             uiSystem: uiSystem, 
             relicSystem: relicSystem,
+            hpSystem: hpSystem,
             goldSystem: goldSystem,
             animationSystem: animationSystem,
             cameraSystem: cameraSystem,

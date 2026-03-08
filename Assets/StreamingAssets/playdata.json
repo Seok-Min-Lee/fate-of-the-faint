@@ -1,6 +1,6 @@
 {
     "playerId": "Player_A",
-    "currentHp": 100,
+    "currentHp": 33,
     "maxHp": 100,
     "gold": 85,
     "rewardCardOptionCount": 3,

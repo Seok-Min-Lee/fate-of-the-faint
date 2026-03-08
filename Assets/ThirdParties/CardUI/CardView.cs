@@ -1,13 +1,10 @@
 ﻿using config;
 using DG.Tweening;
 using events;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using static UnityEngine.UI.Image;
 
-public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IDragHandler
+public class CardView : CardDefaultView, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
     private const float EPS = 0.01f;
 
@@ -38,6 +35,8 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         rectTransform = GetComponent<RectTransform>();
         canvas = GetComponent<Canvas>();
         canvas.overrideSorting = true;
+
+        canvasGroup = GetComponent<CanvasGroup>();
     }
 
     private void Update() 
@@ -241,22 +240,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
     [Header("Custom")]
     [SerializeField] private GameObject effectGO;
-    [SerializeField] private CardCostView cost;
-    [SerializeField] private TextMeshProUGUI name;
-    [SerializeField] private TextMeshProUGUI desc;
-    [SerializeField] private CardArt[] arts;
-    public CanvasGroup CanvasGroup 
-    {
-        get 
-        {
-            if (_canvasGroup == null)
-            {
-                _canvasGroup = GetComponent<CanvasGroup>();
-            }
-            return _canvasGroup;
-        }
-    }
-    private CanvasGroup _canvasGroup;
+    private CanvasGroup canvasGroup;
     public CardInstance CardInstance { get; private set; }
     public CardMonoSystem CardSystem { get; private set; }
 
@@ -280,48 +264,21 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         transform.parent = cardContainer.transform;
 
-        name.text = cardInstance.Origin.Name;
-        desc.text = cardInstance.Origin.Description;
-
-        cost.Change(
-            value: cardInstance.Cost.ToString(), 
-            color: cardInstance.ExistModifier ? Color.green : Color.white
-        );
-
-        int typeIndex;
-        if (cardInstance.Origin is AttackCardSO)
-        {
-            typeIndex = 0;
-        }
-        else if (cardInstance.Origin is SkillCardSO)
-        {
-            typeIndex = 1;
-        }
-        else
-        {
-            typeIndex = 2;
-        }
-
-        for (int i = 0; i < arts.Length; i++)
-        {
-            if (i == typeIndex)
-            {
-                arts[i].Activate(cardInstance.Origin.Image);
-            }
-            else
-            {
-                arts[i].Deactivate();
-            }
-        }
+        base.Init(cardInstance.Origin);
 
         canvas.overrideSorting = true;
     }
     public void ModifiyCost()
     {
-        cost.Change(
-            value: CardInstance.Cost.ToString(),
-            color: CardInstance.ExistModifier ? Color.green : Color.white
-        );
+        Sequence seq = DOTween.Sequence();
+
+        seq.AppendCallback(() =>
+        {
+            cost.text = CardInstance.Cost.ToString();
+            cost.color = CardInstance.ExistModifier ? Color.green : Color.white;
+            cost.transform.localScale = Vector3.one * 1.25f;
+        });
+        seq.Append(cost.transform.DOScale(Vector3.one, 0.25f).SetEase(Ease.OutBack));
     }
     Sequence sequence;
     public Sequence Draw()
@@ -338,7 +295,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             transform.position = cardPlayConfig.DrawArea.transform.position;
             transform.rotation = Quaternion.Euler(0, 0, -90);
             transform.localScale = Vector3.zero;
-            CanvasGroup.alpha = 1f;
+            canvasGroup.alpha = 1f;
 
             gameObject.SetActive(true);
         });
@@ -390,7 +347,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             isUsable = false;
         });
         sequence.Append(transform.DOLocalMoveY(transform.localPosition.y + 150, 0.5f).SetEase(Ease.OutSine));
-        sequence.Join(CanvasGroup.DOFade(0, 0.5f).SetEase(Ease.OutSine));
+        sequence.Join(canvasGroup.DOFade(0, 0.5f).SetEase(Ease.OutSine));
         sequence.AppendCallback(() =>
         {
             isUsable = true;

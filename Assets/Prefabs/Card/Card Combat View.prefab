@@ -1643,6 +1643,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c12e20291b761c4bac3111684400ed4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardView
+  cost: {fileID: 3594038673397173339}
+  name: {fileID: 4856709307807490056}
+  desc: {fileID: 3028371758683374867}
+  arts:
+  - {fileID: 8319740718431440009}
+  - {fileID: 6028704415344421677}
+  - {fileID: 1917674812528433215}
   zoomConfig:
     zoomOnHover: 0
     multiplier: 1
@@ -1677,13 +1684,6 @@ MonoBehaviour:
   container: {fileID: 0}
   preventCardInteraction: 0
   effectGO: {fileID: 6093068214214537985}
-  cost: {fileID: 5574962006694371880}
-  name: {fileID: 4856709307807490056}
-  desc: {fileID: 3028371758683374867}
-  arts:
-  - {fileID: 8319740718431440009}
-  - {fileID: 6028704415344421677}
-  - {fileID: 1917674812528433215}
 --- !u!114 &-7832233825955742045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1709,7 +1709,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7457746064626439576}
   m_Enabled: 1
-  m_Alpha: 0.48
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0

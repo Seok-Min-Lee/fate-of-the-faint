@@ -22,7 +22,7 @@ public abstract class CardSO : ScriptableObject
     [SerializeField] protected CardSO upgradeCard;
 
     public string Id => id;
-    public string Name => name;
+    public string Name => isUpgraded ? $"<color=#00FF40>{name}</color>" : name;
     public string Description => GetDescription();
     public Sprite Image => image;
     public bool IsExhausted => isExhausted;

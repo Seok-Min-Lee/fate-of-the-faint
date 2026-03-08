@@ -8,27 +8,19 @@ public class EnhancePreviewWindow : UIWindow
 
     [SerializeField] private RestCompleteWindow completeWindow;
 
+    private CardEntry before;
+    private CardSO after;
     private CardDisplayView beforeView;
     private CardDisplayView afterView;
     public void Bind(CardEntry before, CardSO after)
     {
-        beforeView = pool.Pop();
-        beforeView.Init(
-            id: 0,
-            hoverScale: 1f,
-            entry: before,
-            origin: before.Origin,
-            parent: parent
-        );
+        this.before = before;
+        this.after = after;
+
+        beforeView = CreateView(before.Origin);
         beforeView.transform.SetAsFirstSibling();
 
-        afterView = pool.Pop();
-        afterView.Init(
-            id: 0,
-            hoverScale: 1f,
-            origin: after,
-            parent: parent
-        );
+        afterView = CreateView(after);
         afterView.transform.SetAsLastSibling();
     }
     private void OnDisable()
@@ -52,11 +44,27 @@ public class EnhancePreviewWindow : UIWindow
     }
     public void OnClickSelect()
     {
-        PlayManager.Instance.CurrentData.RemoveCard(beforeView.Entry.Origin.Id, beforeView.Entry.SubId);
-        PlayManager.Instance.CurrentData.AddCard(afterView.Origin);
+        PlayManager.Instance.CurrentData.RemoveCard(before.Id, before.SubId);
+        PlayManager.Instance.CurrentData.AddCard(after);
 
-        completeWindow.CompleteEnhance(afterView.Origin);
+        completeWindow.CompleteEnhance(
+            before: before.Origin, 
+            after: after
+        );
         
         ChangeWindow(WindowType.RestComplete, WindowMode.Single);
+    }
+    private CardDisplayView CreateView(CardSO data)
+    {
+        CardDisplayView view = pool.Pop();
+
+        view.Init(
+            index: 0,
+            origin: data
+        );
+        view.transform.localScale = Vector3.one;
+        view.transform.parent = parent;
+
+        return view;
     }
 }

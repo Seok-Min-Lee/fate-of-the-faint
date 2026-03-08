@@ -33,12 +33,15 @@ public class CardRewardWindow : UIWindow
             CardDisplayView view = pool.Pop();
 
             view.Init(
-                id: i,
+                index: i,
                 hoverScale: 1.25f,
-                origin: candidates.ElementAt(i),
-                parent: rewardGroupLayout.transform,
-                onClick: () => OnCardSelected(view)
+                origin: candidates.ElementAt(i)
             );
+
+            view.transform.localScale = Vector3.one;
+            view.transform.parent = rewardGroupLayout.transform;
+
+            view.BindOnClickListener(() => OnCardSelected(view));
         }
         rewardGroupLayout.enabled = true;
 
@@ -55,7 +58,10 @@ public class CardRewardWindow : UIWindow
             skipButton.SetActive(false);
             selectButton.gameObject.SetActive(false);
         });
-        sequence.Append(selectedView.Select(icon.transform.position));
+
+        sequence.Append(selectedView.transform.DOMove(icon.transform.position, 0.5f).SetEase(Ease.OutSine));
+        sequence.Join(selectedView.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InSine));
+
         sequence.AppendCallback(() =>
         {
             pool.Push(selectedView);
@@ -96,7 +102,7 @@ public class CardRewardWindow : UIWindow
         // 선택한 것 외에 Hover Cancel
         for (int i = 0; i < pool.Actives.Count; i++)
         {
-            if (view.Id != pool.Actives[i].Id)
+            if (view.Index != pool.Actives[i].Index)
             {
                 pool.Actives[i].HoverCancel();
             }

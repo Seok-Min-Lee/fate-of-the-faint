@@ -796,7 +796,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3353536988689505950}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2163,8 +2163,6 @@ MonoBehaviour:
   - {fileID: 8817910486407947977}
   - {fileID: 6332712509258971753}
   - {fileID: 7299542741959289864}
-  defaultColor: {r: 1, g: 1, b: 1, a: 1}
-  upgradedColor: {r: 0, g: 1, b: 0.2509804, a: 1}
 --- !u!1 &8837493650789331638
 GameObject:
   m_ObjectHideFlags: 0

@@ -25,6 +25,7 @@ public class CombatSystem : BaseSystem
     private CameraMonoSystem cameraSystem;
     private RelicMonoSystem relicSystem;
     private GoldMonoSystem goldSystem;
+    private HpMonoSystem hpSystem;
 
     private PlayerInstance player;
     private Dictionary<Guid, EnemyInstance> enemies;
@@ -41,6 +42,7 @@ public class CombatSystem : BaseSystem
         MotionMonoSystem animationSystem,
         RelicMonoSystem relicSystem,
         GoldMonoSystem goldSystem,
+        HpMonoSystem hpSystem,
         PlayerInstance player,
         IEnumerable<EnemyInstance> enemies
     )
@@ -58,6 +60,7 @@ public class CombatSystem : BaseSystem
         this.AnimationSystem = animationSystem;
         this.relicSystem = relicSystem;
         this.goldSystem = goldSystem;
+        this.hpSystem = hpSystem;
 
         TurnSystem.Init(enemies, animationSystem);
     }
@@ -106,6 +109,8 @@ public class CombatSystem : BaseSystem
         EventBus.Subscribe<EnergyChanged>(uiSystem.OnEnergyChanged);
         EventBus.Subscribe<HpChanged>(uiSystem.OnHpChanged);
 
+        EventBus.Subscribe<ActionEnded>(hpSystem.OnActionEnded);
+
         EventBus.Subscribe<CombatEnded>(cardSystem.OnCombatEnded);
         EventBus.Subscribe<PlayerTurnStarted>(cardSystem.OnPlayerTurnStarted);
         EventBus.Subscribe<PlayerTurnEnded>(cardSystem.OnPlayerTurnEnded);
@@ -146,6 +151,8 @@ public class CombatSystem : BaseSystem
         EventBus.Unsubscribe<EnemyTurnStarted>(uiSystem.OnEnemyTurnStarted);
         EventBus.Unsubscribe<EnergyChanged>(uiSystem.OnEnergyChanged);
         EventBus.Unsubscribe<HpChanged>(uiSystem.OnHpChanged);
+
+        EventBus.Unsubscribe<ActionEnded>(hpSystem.OnActionEnded);
 
         EventBus.Unsubscribe<CombatEnded>(cardSystem.OnCombatEnded);
         EventBus.Unsubscribe<PlayerTurnStarted>(cardSystem.OnPlayerTurnStarted);

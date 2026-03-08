@@ -1,21 +1,10 @@
-﻿using DG.Tweening;
-using System.Collections;
-using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CardDisplayView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class CardDisplayView : CardDefaultView, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField] private TextMeshProUGUI cost;
-    [SerializeField] private TextMeshProUGUI name;
-    [SerializeField] private TextMeshProUGUI desc;
-    [SerializeField] private CardArt[] arts;
-
-    [SerializeField] private Color defaultColor;
-    [SerializeField] private Color upgradedColor;
-    private bool IsHold = false;
     public RectTransform RectTransform
     {
         get
@@ -42,49 +31,18 @@ public class CardDisplayView : MonoBehaviour, IPointerEnterHandler, IPointerExit
         }
     }
     private Button _button;
-    public int Id { get; private set; }
-    public CardEntry Entry { get; private set; }
-    public CardSO Origin { get; private set; }
+    public int Index { get; private set; }
+    private bool isHold;
     private float hoverScale;
-    public void Init(int id, float hoverScale, CardSO origin, Transform parent, CardEntry entry = null, UnityAction onClick = null)
+    public void Init(int index, CardSO origin, float hoverScale = 1f)
     {
-        Id = id;
-        Origin = origin;
-        Entry = entry;
+        Index = index;
+        base.Init(origin);
+
         this.hoverScale = hoverScale;
-        transform.parent = parent;
-
-        cost.text = origin.Cost.ToString();
-        name.text = origin.Name;
-        desc.text = origin.Description;
-
-        name.color = origin.IsUpgraded ? upgradedColor : defaultColor;
-
-        int typeIndex = origin switch
-        {
-            AttackCardSO => 0,
-            SkillCardSO => 1,
-            _ => 2
-        };
-
-        for (int i = 0; i < arts.Length; i++)
-        {
-            if (i == typeIndex)
-            {
-                arts[i].Activate(origin.Image);
-            }
-            else
-            {
-                arts[i].Deactivate();
-            }
-        }
-
-        AddOnClickListener(onClick);
-
-        transform.localScale = Vector3.one;
-        IsHold = false;
+        isHold = hoverScale == 1f;
     }
-    public void AddOnClickListener(UnityAction onClick)
+    public void BindOnClickListener(UnityAction onClick)
     {
         if (onClick == null)
         {
@@ -98,7 +56,7 @@ public class CardDisplayView : MonoBehaviour, IPointerEnterHandler, IPointerExit
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (IsHold)
+        if (isHold)
         {
             return;
         }
@@ -107,7 +65,7 @@ public class CardDisplayView : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (IsHold)
+        if (isHold)
         {
             return;
         }
@@ -123,23 +81,10 @@ public class CardDisplayView : MonoBehaviour, IPointerEnterHandler, IPointerExit
     }
     public void Hold()
     {
-        IsHold = true;
+        isHold = true;
     }
     public void HoldCancel()
     {
-        IsHold = false;
-    }
-    public Sequence Select(Vector3 dir)
-    {
-        Sequence sequence = DOTween.Sequence();
-
-        sequence.Append(transform.DOMove(dir, 0.5f).SetEase(Ease.OutSine));
-        sequence.Join(transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InSine));
-        sequence.AppendCallback(() =>
-        {
-            Button.onClick.RemoveAllListeners();
-        });
-
-        return sequence;
+        isHold = false;
     }
 }

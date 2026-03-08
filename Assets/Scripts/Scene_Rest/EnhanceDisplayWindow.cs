@@ -15,7 +15,7 @@ public class EnhanceDisplayWindow : CardDisplayWindow
 
         foreach (CardDisplayView view in views)
         {
-            view.AddOnClickListener(() => OnClickView(view));
+            view.BindOnClickListener(() => OnClickView(view));
         }
     }
     private void OnClickView(CardDisplayView view)
@@ -32,7 +32,7 @@ public class EnhanceDisplayWindow : CardDisplayWindow
         }
 
         previewWindow.Bind(
-            before: view.Entry, 
+            before: PlayManager.Instance.CurrentData.Cards[view.Index], 
             after: view.Origin.UpgradeCard
         );
 
