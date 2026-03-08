@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 000de83f0458e5a45b5c1b2c1ade33ff, type: 3}
-  m_Name: EnemyAction_A_Attack
+  m_Name: EnemyAction attack 11
   m_EditorClassIdentifier: Assembly-CSharp::EnemyActionSO
-  key: EnemyAction_A_Attack
-  displayName: EnemyAction_A_Attack
+  key: EnemyAction attack 11
+  displayName: EnemyAction attack 11
   intentType: 0
   intentIcon: {fileID: 1603510916, guid: a169860f858f7644c82f92e9157da230, type: 3}
-  intentDescription: EnemyAction_A_Attack
+  intentDescription: EnemyAction attack 11
   effects:
-  - {fileID: 11400000, guid: acf0f1076638e7545b0d89184c59f33c, type: 2}
+  - {fileID: 11400000, guid: b5d80ca91fc75f04d9ca4cf15fa58eac, type: 2}
   weight: 10
   cooldownTurns: 0
   maxConsecutive: 0

@@ -54,10 +54,10 @@ MonoBehaviour:
     MaxOutDegree: 2
     MaxDeltaCol: 1
     MaxAttempts: 50
-    TargetShops: 2
+    TargetShops: 0
     TargetRests: 3
     TargetElites: 3
-    TargetTreasures: 1
+    TargetTreasures: 3
     NoShopBeforeFloor: 3
     NoRestBeforeFloor: 2
     NoEliteBeforeFloor: 3
@@ -119,3 +119,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f0dac4e2bac0e6946a6704cc3d2ccc84, type: 2}
   - {fileID: 11400000, guid: a679a1ed55c72e2458c080b823862c24, type: 2}
   potions: []
+  enemyPlans:
+  - {fileID: 11400000, guid: 0f5695e55498a59469e6f43ec9de91ad, type: 2}
+  - {fileID: 11400000, guid: edbb2386048cf2a42ba8bed24b3a24a2, type: 2}
+  - {fileID: 11400000, guid: 64f8cbd913a8c4444abf3bceddc2dd38, type: 2}
+  elitePlans:
+  - {fileID: 11400000, guid: 0fc784f74d321e747bb491dc284ace33, type: 2}
+  bossPlan: {fileID: 11400000, guid: ed30f74b90a222847867d0bb846d73fa, type: 2}

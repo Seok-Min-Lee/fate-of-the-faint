@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d9cf1465abd13f4f895bdc71117e59a, type: 3}
+  m_Name: Enemy C
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySO
+  id: Enemy_C
+  displayName: Enemy_C
+  prefab: {fileID: 7910200027380248996, guid: 22e95314440ccd5448a70ff1c529be13, type: 3}
+  maxHpRange:
+    min: 14
+    max: 18
+  aiPolicy: {fileID: 11400000, guid: 6715ddf0256444e468910d2def1a134e, type: 2}
+  goldReward:
+    min: 10
+    max: 20

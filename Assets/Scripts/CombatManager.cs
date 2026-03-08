@@ -18,9 +18,6 @@ public class CombatManager : MonoBehaviour
     [SerializeField] private EntityBuffViewPool entityBuffPool;
     [SerializeField] private DamageTextPool damageTextPool;
 
-    [Header("Instance")]
-    [SerializeField] private EnemySpawnPlan[] normalPlans;
-    [SerializeField] private EnemySpawnPlan[] elitePlans;
     public CombatSystem CombatSystem { get; private set; }
     private void Awake()
     {
@@ -120,22 +117,17 @@ public class CombatManager : MonoBehaviour
     }
     private List<EnemyInstance> CreateEnemyInstances()
     {
-        EnemySpawnPlan team = normalPlans[UnityEngine.Random.Range(0, normalPlans.Length)];
-
         List<EnemyInstance> enemies = new List<EnemyInstance>();
 
-        for (int i = 0; i < team.details.Length; i++)
-        {
-            EnemySpawnPlanDetail detail = team.details[i];
+        EnemySpawnPlanSO plan = PlayManager.Instance.GetEnemyPlan();
 
-            for (int j = 0; j < detail.count; j++)
-            {
-                enemies.Add(new EnemyInstance(
-                    data: detail.origin,
-                    maxHp: detail.origin.maxHpRange.Roll(),
-                    goldReward: detail.origin.goldReward.Roll()
-                ));
-            }
+        foreach (EnemySO enemy in plan.Enemies)
+        {
+            enemies.Add(new EnemyInstance(
+                data: enemy,
+                maxHp: enemy.maxHpRange.Roll(),
+                goldReward: enemy.goldReward.Roll()
+            ));
         }
 
         return enemies;
@@ -196,21 +188,8 @@ public class CombatManager : MonoBehaviour
 
         return instances;
     }
-    private void Save()
+    public void Save()
     {
-        //CombatResult result = new CombatResult();
-
+        CombatSystem.
     }
-}
-[Serializable]
-public struct EnemySpawnPlan
-{
-    public EnemySpawnPlanDetail[] details;
-    public int Count => details.Sum(x => x.count);
-}
-[Serializable]
-public struct EnemySpawnPlanDetail
-{
-    public EnemySO origin;
-    public int count;
 }

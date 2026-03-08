@@ -4361,19 +4361,6 @@ MonoBehaviour:
   playerPrefab: {fileID: 3590264590922241840, guid: 341ee4c7cdddb6146b15246fa7025fa8, type: 3}
   entityBuffPool: {fileID: 606307828}
   damageTextPool: {fileID: 606307829}
-  normalPlans:
-  - details:
-    - origin: {fileID: 11400000, guid: ae1d8f43b40e1174d87a29fd36b53e6f, type: 2}
-      count: 1
-  - details:
-    - origin: {fileID: 11400000, guid: aacf06d043d61474a87f25cc6b3ea039, type: 2}
-      count: 2
-  - details:
-    - origin: {fileID: 11400000, guid: ae1d8f43b40e1174d87a29fd36b53e6f, type: 2}
-      count: 2
-    - origin: {fileID: 11400000, guid: aacf06d043d61474a87f25cc6b3ea039, type: 2}
-      count: 1
-  elitePlans: []
 --- !u!114 &606307825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11404,6 +11391,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VictoryWindow
   type: 2
+  combatCtrl: {fileID: 606307823}
   relicSystem: {fileID: 3108958426846968672}
   goldSystem: {fileID: 1836647910}
   cardRewardWindow: {fileID: 719357629}

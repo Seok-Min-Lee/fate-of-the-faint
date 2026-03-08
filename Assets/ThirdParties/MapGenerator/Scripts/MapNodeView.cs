@@ -112,17 +112,23 @@ public class MapNodeView : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
             sequence.AppendCallback(() =>
             {
-                if (Node.Type == MapNodeType.Combat)
-                {
-                    UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.COMBAT);
-                }
-                else if (Node.Type == MapNodeType.Treasure)
-                {
-                    UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.TREASURE);
-                }
-
                 Hide();
                 eventIcon.raycastTarget = false;
+
+                switch (Node.Type)
+                {
+                    case MapNodeType.Combat:
+                    case MapNodeType.Elite:
+                    case MapNodeType.Boss:
+                        UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.COMBAT);
+                        break;
+                    case MapNodeType.Treasure:
+                        UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.TREASURE);
+                        break;
+                    case MapNodeType.Rest:
+                        UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.REST);
+                        break;
+                }
             });
         }
     }

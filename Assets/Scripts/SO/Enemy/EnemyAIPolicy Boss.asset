@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1c63f272b58a394da1275a370b44a02, type: 3}
+  m_Name: EnemyAIPolicy Boss
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAIPolicySO
+  actions:
+  - {fileID: 11400000, guid: d592d9f6506f6f2478ed00603385aebd, type: 2}
+  - {fileID: 11400000, guid: 007098880df0b47468b0eab919720fc8, type: 2}
+  - {fileID: 11400000, guid: 0f014304872243241b0131d59c3ad4b5, type: 2}
+  - {fileID: 11400000, guid: 918c754a12f5b454498ed93ffe9921a9, type: 2}
+  - {fileID: 11400000, guid: 8ae05de467cb21c4bb07885b9a9a288a, type: 2}
+  globalMaxRepeat: 1
+  allowFallbackPick: 1

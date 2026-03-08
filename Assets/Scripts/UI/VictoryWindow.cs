@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class VictoryWindow : UIMotionWindow
 {
+    [SerializeField] private CombatManager combatCtrl;
     [SerializeField] private RelicMonoSystem relicSystem;
     [SerializeField] private GoldMonoSystem goldSystem;
     [SerializeField] private CardRewardWindow cardRewardWindow;
@@ -27,7 +28,7 @@ public class VictoryWindow : UIMotionWindow
     }
     public void OnClickNext()
     {
-        PlayManager.Instance.SaveData();
+        combatCtrl.CombatSystem.Save();
         UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
     }
     private Sequence Show()

@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 000de83f0458e5a45b5c1b2c1ade33ff, type: 3}
-  m_Name: EnemyAction_B_Attack
+  m_Name: EnemyAction debuff vulnerable 2
   m_EditorClassIdentifier: Assembly-CSharp::EnemyActionSO
-  key: EnemyAction_A_Attack
-  displayName: EnemyAction_A_Attack
-  intentType: 0
-  intentIcon: {fileID: 1603510916, guid: a169860f858f7644c82f92e9157da230, type: 3}
-  intentDescription: EnemyAction_A_Attack
+  key: EnemyAction debuff vulnerable 2
+  displayName: EnemyAction debuff vulnerable 2
+  intentType: 4
+  intentIcon: {fileID: 897260411, guid: a169860f858f7644c82f92e9157da230, type: 3}
+  intentDescription: EnemyAction debuff vulnerable 2
   effects:
-  - {fileID: 11400000, guid: 1105463c9a20bd54991eca38e04a588f, type: 2}
+  - {fileID: 11400000, guid: b6f474491fb47e6408888cdb06670d26, type: 2}
   weight: 10
   cooldownTurns: 0
   maxConsecutive: 0

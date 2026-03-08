@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 69dafb43ae1dad340b7cff69e6f9d0dc, type: 3}
-  m_Name: Attack player 17
+  m_Name: Attack player 7
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAttackSO
   targetType: 1
-  value: 17
+  value: 7
   repeat: 1

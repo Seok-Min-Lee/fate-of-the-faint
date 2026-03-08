@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 [CreateAssetMenu(fileName = "Attack ", menuName = "Scriptable Objects/EnemyEffectSO/Attack")]
 public class EnemyAttackSO : EnemyEffectSO
@@ -14,6 +15,11 @@ public class EnemyAttackSO : EnemyEffectSO
         IEnumerable<EntityInstance> targets = null
     )
     {
+        if (targets?.Count() == 0)
+        {
+            return null;
+        }
+
         return () =>
         {
             foreach (EntityInstance target in targets)

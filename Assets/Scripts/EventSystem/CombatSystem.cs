@@ -456,16 +456,14 @@ public class CombatSystem : BaseSystem
             return;
         }
 
-        EntityInstance instance = null;
-        if (e.Target is PlayerInstance player)
+        EntityInstance instance = e.Target switch
         {
-            instance = player;
-        }
-        else if (e.Target is EnemyInstance enemy)
-        {
-            instance = enemies[enemy.Id];
-        }
-        else
+            PlayerInstance player => player,
+            EnemyInstance enemy => enemies[enemy.Id],
+            _ => null
+        };
+
+        if (instance == null)
         {
             return;
         }
@@ -511,7 +509,10 @@ public class CombatSystem : BaseSystem
 
             if (instance.CurrentHp <= 0)
             {
-                e.Context.Combat.AddGold(((EnemyInstance)instance)?.GoldReward ?? 0);
+                if (instance is EnemyInstance enemy)
+                {
+                    e.Context.Combat.AddGold(enemy.GoldReward);
+                }
 
                 EventBus.Publish<DeathDeclared>(new DeathDeclared(
                     context: e.Context.RewriteNew(this),
@@ -642,6 +643,11 @@ public class CombatSystem : BaseSystem
                 request: requestContext
             ));
         });
+    }
+    public void Save()
+    {
+        PlayManager.Instance.CurrentData.SetHp(player.CurrentHp, player.MaxHp);
+        PlayManager.Instance.SaveData();
     }
 }
 

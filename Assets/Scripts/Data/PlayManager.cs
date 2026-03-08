@@ -11,6 +11,9 @@ public class PlayManager : MonoSingleton<PlayManager>
     [SerializeField] private RelicSO[] relics;
     [SerializeField] private PotionSO[] potions;
 
+    [SerializeField] private EnemySpawnPlanSO[] enemyPlans;
+    [SerializeField] private EnemySpawnPlanSO[] elitePlans;
+    [SerializeField] private EnemySpawnPlanSO bossPlan;
     public PlayData CurrentData { get; private set; }
     public GameCatalog Catalog { get; private set; }
     public MapGraph MapGraph { get; private set; }
@@ -18,9 +21,9 @@ public class PlayManager : MonoSingleton<PlayManager>
     private void Awake()
     {
         Catalog = new GameCatalog(
-            players: players, 
-            cards: cards, 
-            relics: relics, 
+            players: players,
+            cards: cards,
+            relics: relics,
             potions: potions
         );
 
@@ -59,5 +62,22 @@ public class PlayManager : MonoSingleton<PlayManager>
     {
         CurrentData = PlayData.CreateNew(temp_PlaerSO, 1234, Catalog);
         MapGraph = MapGenerator.Generate(mapConfig);
+    }
+    public EnemySpawnPlanSO GetEnemyPlan()
+    {
+        switch (MapGraph.LatestNode.Type)
+        {
+            case MapNodeType.Combat:
+                return enemyPlans[Random.Range(0, enemyPlans.Length)];
+
+            case MapNodeType.Elite:
+                return elitePlans[Random.Range(0, elitePlans.Length)];
+
+            case MapNodeType.Boss:
+                return bossPlan;
+
+            default:
+                return null;
+        }
     }
 }

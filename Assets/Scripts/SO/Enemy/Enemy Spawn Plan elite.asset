@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d60b366ecf7c6164698e5890946c74eb, type: 3}
-  m_Name: Block 5
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyBlockSO
-  targetType: 0
-  value: 5
-  value: 5
+  m_Script: {fileID: 11500000, guid: 32b03834d6b94274e9f0312eb8793cd3, type: 3}
+  m_Name: Enemy Spawn Plan elite
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnPlanSO
+  enemies:
+  - {fileID: 11400000, guid: ee5eddeae5de83a40b5855e9340ecdac, type: 2}

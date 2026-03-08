@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 000de83f0458e5a45b5c1b2c1ade33ff, type: 3}
+  m_Name: EnemyAction buff strength 3
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyActionSO
+  key: EnemyAction buff strength 3
+  displayName: EnemyAction buff strength 3
+  intentType: 3
+  intentIcon: {fileID: 1236965830, guid: a169860f858f7644c82f92e9157da230, type: 3}
+  intentDescription: EnemyAction buff strength 3
+  effects:
+  - {fileID: 11400000, guid: 87ca75f51c4113c45bf15273a6a60167, type: 2}
+  weight: 10
+  cooldownTurns: 0
+  maxConsecutive: 0

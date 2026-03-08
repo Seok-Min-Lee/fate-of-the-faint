@@ -11,6 +11,7 @@ public static class SceneNames
     public const string MAP = "Map";
     public const string COMBAT = "Combat";
     public const string TREASURE = "Treasure";
+    public const string REST = "Rest";
 }
 public static class AnimationKeys
 {
