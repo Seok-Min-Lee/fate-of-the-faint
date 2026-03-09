@@ -58,7 +58,7 @@ public class RestCompleteWindow : UIWindow
 
         Sequence sequence = DOTween.Sequence();
 
-        sequence.AppendInterval(1f);
+        sequence.AppendInterval(0.5f);
 
         sequence.Append(ModifyMotion(view.Cost, after.Cost.ToString()));
         sequence.Join(PunchMotion(view));

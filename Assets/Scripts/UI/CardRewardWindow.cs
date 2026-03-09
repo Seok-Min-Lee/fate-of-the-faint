@@ -51,6 +51,9 @@ public class CardRewardWindow : UIWindow
     }
     public void OnClickSubmit()
     {
+        Vector3 startPos = selectedView.transform.position;
+        Vector3 endPos = icon.transform.position;
+
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() =>
         {
@@ -59,8 +62,14 @@ public class CardRewardWindow : UIWindow
             selectButton.gameObject.SetActive(false);
         });
 
-        sequence.Append(selectedView.transform.DOMove(icon.transform.position, 0.5f).SetEase(Ease.OutSine));
-        sequence.Join(selectedView.transform.DOScale(Vector3.zero, 0.5f).SetEase(Ease.InSine));
+        sequence.Append(selectedView.transform.DOScale(Vector3.one * 0.05f, 0.5f));
+        sequence.Append(DOVirtual.Float(0, 1, 0.5f, t =>
+        {
+            Vector3 currentPos = Vector3.Lerp(startPos, endPos, t);
+            currentPos.x -= Mathf.Sin(t * Mathf.PI) * Mathf.Abs(endPos.x - startPos.x) * 0.5f;
+            selectedView.transform.position = currentPos;
+        }).SetEase(Ease.Linear));
+
 
         sequence.AppendCallback(() =>
         {

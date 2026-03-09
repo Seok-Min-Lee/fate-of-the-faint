@@ -28,14 +28,16 @@ public class CardDisplayWindow : UIWindow
             views.Add(view);
         }
     }
-    public void OnClickCancel()
+    protected virtual void OnDisable()
     {
         for (int i = 0; i < views.Count; i++)
         {
             pool.Push(views[i]);
         }
         views.Clear();
-
+    }
+    public void OnClickCancel()
+    {
         ChangeWindow(WindowType.CardDisplay, WindowMode.Revert);
     }
 }
