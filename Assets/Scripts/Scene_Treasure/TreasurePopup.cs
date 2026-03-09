@@ -42,6 +42,14 @@ public class TreasurePopup : MonoBehaviour
         });
         sequence.Append(dimmedCG.DOFade(1f, 0.5f));
         sequence.Join(content.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack));
+
+        sequence.Append(DOTween.To(() => content.localEulerAngles,
+           x => content.localEulerAngles = new Vector3(content.localEulerAngles.x, content.localEulerAngles.y, x.z),
+           new Vector3(0, 0, 15), 5f)
+            .SetEase(Ease.Linear)
+            .SetLoops(-1, LoopType.Yoyo));
+
+
     }
     private void Hide(RelicView view)
     {

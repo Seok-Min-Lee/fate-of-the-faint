@@ -21,9 +21,6 @@
         "skl_defend",
         "skl_defend"
     ],
-    "relicIds": [
-        "Vajra",
-        "Bag of Marbles"
-    ],
+    "relicIds": [],
     "potionIds": []
 }

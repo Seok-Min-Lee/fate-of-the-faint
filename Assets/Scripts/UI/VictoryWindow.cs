@@ -111,7 +111,7 @@ public class VictoryWindow : UIMotionWindow
         );
 
         int count = PlayManager.Instance.CurrentData.RewardCardOptionCount;
-        List<CardSO> samples = Utils.PickRandom<CardSO>(PlayManager.Instance.Catalog.CardList, count);
+        List<CardSO> samples = Utils.PickRandom<CardSO>(PlayManager.Instance.Catalog.CardList.Where(x => x.UpgradeCard != null), count);
 
         cardSampleDic.Add(button, samples);
     }

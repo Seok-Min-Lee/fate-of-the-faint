@@ -23,6 +23,8 @@ public static class Utils
     }
     public static List<T> PickRandom<T>(IEnumerable<T> source, int count)
     {
+        count = Mathf.Min(count, source.Count());
+
         List<T> pool = new List<T>(source);
         List<T> result = new List<T>(count);
 

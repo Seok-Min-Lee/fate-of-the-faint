@@ -1,9 +1,15 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
 
 public class RestMenuWindow : UIWindow
 {
     [SerializeField] private RestCompleteWindow completeWindow;
+    [SerializeField] private TextMeshProUGUI tipText;
+    protected override void OnEnable()
+    {
+        Utils.TMPDOText(tipText, 2f);
+    }
     public void OnClickRest()
     {
         int heal = (int)(PlayManager.Instance.CurrentData.MaxHp * 0.3f);
