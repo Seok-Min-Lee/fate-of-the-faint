@@ -3,6 +3,7 @@ using DG.Tweening;
 using events;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class CardView : CardDefaultView, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
@@ -170,7 +171,9 @@ public class CardView : CardDefaultView, IPointerEnterHandler, IPointerExitHandl
 
         eventsConfig?.OnCardHover?.Invoke(new CardHover(this));
         isHovered = true;
-        effectGO.SetActive(true);
+
+        effect.gameObject.SetActive(true);
+        effect.color = hoverColor;
     }
 
     public void OnPointerExit(PointerEventData eventData) 
@@ -183,7 +186,8 @@ public class CardView : CardDefaultView, IPointerEnterHandler, IPointerExitHandl
         canvas.sortingOrder = uiLayer;
         isHovered = false;
         eventsConfig?.OnCardUnhover?.Invoke(new CardUnhover(this));
-        effectGO.SetActive(false);
+
+        effect.gameObject.SetActive(false);
     }
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -206,7 +210,8 @@ public class CardView : CardDefaultView, IPointerEnterHandler, IPointerExitHandl
             canvas.sortingOrder = uiLayer;
             isHovered = false;
             eventsConfig?.OnCardUnhover?.Invoke(new CardUnhover(this));
-            effectGO.SetActive(false);
+            
+            effect.gameObject.SetActive(false);
         }
 
         isDragged = false;
@@ -219,12 +224,19 @@ public class CardView : CardDefaultView, IPointerEnterHandler, IPointerExitHandl
     public void OnDrag(PointerEventData eventData)
     {
         // 1) 아직 라치 안 됐고, PlayArea에 닿으면 라치!
-        if (!targetingLatched && 
-            CardInstance.Origin.ExistTarget &&
-            Utils.ExistPointInRect(point: eventData.position, rect: cardPlayConfig.PlayArea))
+        if (Utils.ExistPointInRect(point: eventData.position, rect: cardPlayConfig.PlayArea))
         {
-            targetingLatched = true;
-            lockedPosition = cardPlayConfig.PrepareArea.position;   // 닿는 순간 위치에 고정(원하면 스냅으로 변경 가능)
+            if (!targetingLatched && CardInstance.Origin.ExistTarget)
+            {
+                targetingLatched = true;
+                lockedPosition = cardPlayConfig.PrepareArea.position;   // 닿는 순간 위치에 고정(원하면 스냅으로 변경 가능)
+            }
+
+            effect.color = prepareColor;
+        }
+        else
+        {
+            effect.color = hoverColor;
         }
 
         // 2) 라치 됐으면: 카드 고정 + 타겟팅 UI 업데이트(라인/색)
@@ -239,7 +251,10 @@ public class CardView : CardDefaultView, IPointerEnterHandler, IPointerExitHandl
         }
     }
     [Header("Custom")]
-    [SerializeField] private GameObject effectGO;
+    [SerializeField] private Image effect;
+    [SerializeField] private Color hoverColor;
+    [SerializeField] private Color prepareColor;
+
     private CanvasGroup canvasGroup;
     public CardInstance CardInstance { get; private set; }
     public CardMonoSystem CardSystem { get; private set; }

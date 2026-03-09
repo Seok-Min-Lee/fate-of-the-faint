@@ -14,6 +14,7 @@ public class HomeCtrl : MonoBehaviour
         background.CanvasGroup.alpha = 0f;
         titleCG.alpha = 0f;
         menuCG.alpha = 0f;
+        menuCG.blocksRaycasts = false;
 
         continueButton.gameObject.SetActive(PlayManager.Instance.CurrentData != null);
 
@@ -29,6 +30,8 @@ public class HomeCtrl : MonoBehaviour
         sequence.AppendCallback(() => 
         {
             background.StartParallax();
+
+            menuCG.blocksRaycasts = true;
 
             dimmedCG.alpha = 1f;
             dimmedCG.DOFade(0.5f, 7.5f)
