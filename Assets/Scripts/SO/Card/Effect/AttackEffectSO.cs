@@ -25,17 +25,14 @@ public class AttackEffectSO : EffectSO
         {
             foreach (EntityInstance target in targets)
             {
-                for (int i = 0; i < repeat; i++)
-                {
-                    eventBus.Publish<AttackDeclared>(new AttackDeclared(
-                        context: context,
-                        motion: motion,
-                        source: source,
-                        target: target,
-                        amount: value,
-                        repeat: repeat
-                    ));
-                }
+                eventBus.Publish<AttackDeclared>(new AttackDeclared(
+                    context: context,
+                    motion: motion,
+                    source: source,
+                    target: target,
+                    amount: value,
+                    repeat: repeat
+                ));
             }
         }; 
     }

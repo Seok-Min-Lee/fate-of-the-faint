@@ -22,7 +22,7 @@ public class VictoryWindow : UIMotionWindow
     [SerializeField] private Sprite goldIcon;
 
     private Dictionary<RewardButton, List<CardSO>> cardSampleDic = new Dictionary<RewardButton, List<CardSO>>();
-    private void Awake()
+    protected override void Awake()
     {
         _handler.Add(MotionKey.WindowShow, Show);
     }

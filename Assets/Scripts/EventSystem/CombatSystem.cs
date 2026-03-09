@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 public class CombatSystem : BaseSystem
 {
@@ -171,47 +170,62 @@ public class CombatSystem : BaseSystem
             return;
         }
 
-        // Block Clear
-        if (player.Block > 0 && !powerSystem.ExistPower<TurnStartedRemainBlockPowerInstance>())
-        {
-            int beforeBlock = player.Block;
-            player.SetBlock(0);
-
-            EventBus.Publish<BlockChanged>(new BlockChanged(
-                context: e.Context.RewriteNew(this),
-                motion: e.Motion,
-                target: player,
-                startAmount: beforeBlock,
-                endAmount: player.Block
-            ));
-        }
-
-        // Buff Update
-        List<BuffType> types = new List<BuffType>(player.Buffs.Keys);
-        foreach (BuffType type in types)
-        {
-            int startAmount = player.Getbuff(type);
-            player.ApplyBuff(type, -1);
-            EventBus.Publish<BuffChanged>(new BuffChanged(
-                context: e.Context.RewriteNew(this),
-                motion: e.Motion,
-                target: player,
-                type: type,
-                startAmount: startAmount,
-                endAmount: startAmount - 1
-            ));
-        }
-
         // Enemy Intent Update
-        foreach (EnemyInstance enemy in enemies.Values.Where(enemy => !enemy.IsDead))
+        foreach (EnemyInstance enemy in e.Context.Combat.Enemies)
         {
-            enemy.DecideNextAction(new System.Random());
-
-            EventBus.Publish<EnemyIntentDecided>(new EnemyIntentDecided(
-                context: e.Context.RewriteNew(this),
+            enemy.DecideIntent(
+                eventBus: EventBus,
+                context: e.Context,
                 motion: e.Motion,
-                source: enemy
-            ));
+                rng: new System.Random()
+            );
+        }
+
+        if (e.Context.Turn.TurnId < 1)
+        {
+            return;
+        }
+
+        // Clear Player Block
+        if (!powerSystem.ExistPower<TurnStartedRemainBlockPowerInstance>())
+        {
+            player.ChangeBlock(
+                eventBus: EventBus,
+                context: e.Context,
+                motion: e.Motion,
+                amount: -player.Block
+            );
+        }
+
+        // Update Player Buff & Debuff
+        List<BuffType> buffTypes = new List<BuffType>(player.Buffs.Keys);
+        foreach (BuffType type in buffTypes)
+        {
+            player.ApplyBuff(
+                eventBus: EventBus,
+                context: e.Context,
+                motion: e.Motion,
+                type: type,
+                delta: -1
+            );
+        }
+
+        // Update Enemy Buff & Debuff
+        foreach (EnemyInstance enemy in e.Context.Combat.Enemies)
+        {
+            buffTypes.Clear();
+            buffTypes.AddRange(enemy.Buffs.Keys);
+
+            foreach (BuffType type in buffTypes)
+            {
+                enemy.ApplyBuff(
+                    eventBus: EventBus,
+                    context: e.Context,
+                    motion: e.Motion,
+                    type: type,
+                    delta: -1
+                );
+            }
         }
     }
     public void OnEnemyTurnStarted(EnemyTurnStarted e)
@@ -221,38 +235,15 @@ public class CombatSystem : BaseSystem
             return;
         }
 
+        // Clear Enemy Block
         foreach (EnemyInstance enemy in enemies.Values.Where(enemy => !enemy.IsDead))
         {
-            // Block Clear
-            if (enemy.Block > 0)
-            {
-                int beforeBlock = enemy.Block;
-                enemy.SetBlock(0);
-
-                EventBus.Publish<BlockChanged>(new BlockChanged(
-                    context: e.Context.RewriteNew(this),
-                    motion: e.Motion,
-                    target: enemy,
-                    startAmount: beforeBlock,
-                    endAmount: enemy.Block
-                ));
-            }
-
-            // Buff Update
-            List<BuffType> types = new List<BuffType>(enemy.Buffs.Keys);
-            foreach (BuffType type in types)
-            {
-                int startAmount = enemy.Getbuff(type);
-                enemy.ApplyBuff(type, -1);
-                EventBus.Publish<BuffChanged>(new BuffChanged(
-                    context: e.Context.RewriteNew(this),
-                    motion: e.Motion,
-                    target: enemy,
-                    type: type,
-                    startAmount: startAmount,
-                    endAmount: startAmount - 1
-                ));
-            }
+            enemy.ChangeBlock(
+                eventBus: EventBus,
+                context: e.Context,
+                motion: e.Motion,
+                amount: -enemy.Block
+            );
         }
 
         actionRequestQueue.Enqueue(() => EnemyActionStart(e.Context.Turn.EnemyQueue.Dequeue().Id));
@@ -349,55 +340,39 @@ public class CombatSystem : BaseSystem
             return;
         }
 
-        EventContext eventContext = new EventContext(
-            source: this,
-            action: e.Context.Action,
-            turn: e.Context.Turn,
-            combat: e.Context.Combat
-        );
-
         if (e.Source == player)
         {
-            CombatContext.state = CombatState.Defeat;
-
-            actionRequestQueue.Enqueue(() =>
-            {
-                MotionContext motionContext = new MotionContext(this);
-
-                EventBus.Publish<CombatEnded>(new CombatEnded(
-                    context: eventContext,
-                    motion: motionContext,
-                    result: CombatState.Defeat
-                ));
-
-                AnimationSystem.Play(
-                    context: eventContext, 
-                    motion: motionContext
-                );
-            });
+            CombatEnd(e.Context, CombatState.Defeat);
         }
         else
         {
-            if (!enemies.Values.Any(enemy => !enemy.IsDead))
+            if (e.Context.Combat.Enemies.Count > 0)
             {
-                CombatContext.state = CombatState.Victory;
-
-                actionRequestQueue.Enqueue(() =>
-                {
-                    MotionContext motionContext = new MotionContext(this);
-
-                    EventBus.Publish<CombatEnded>(new CombatEnded(
-                        context: eventContext,
-                        motion: motionContext,
-                        result: CombatState.Victory
-                    ));
-
-                    AnimationSystem.Play(
-                        context: eventContext,
-                        motion: motionContext
-                    );
-                });
+                return;
             }
+
+            CombatEnd(e.Context, CombatState.Victory);
+        }
+
+        void CombatEnd(EventContext context, CombatState result)
+        {
+            actionRequestQueue.Enqueue(() =>
+            {
+                CombatContext.state = result;
+
+                MotionContext motionContext = new MotionContext(this);
+
+                EventBus.Publish<CombatEnded>(new CombatEnded(
+                    context: e.Context.RewriteNew(this),
+                    motion: motionContext,
+                    result: result
+                ));
+
+                AnimationSystem.Play(
+                    context: e.Context.RewriteNew(this),
+                    motion: motionContext
+                );
+            });
         }
     }
     private void OnDamageRequested(DamageRequested e)
@@ -407,47 +382,11 @@ public class CombatSystem : BaseSystem
             return;
         }
 
-        EnemyInstance enemy;
-        if(e.Damage.Source is PlayerInstance)
-        {
-            if (player.Buffs.TryGetValue(key: BuffType.Strength, value: out int strength))
-            {
-                e.Damage.Add(strength, player);
-            }
-            if (player.Buffs.ContainsKey(BuffType.Weak))
-            {
-                e.Damage.Multiply(0.5f, player);
-            }
-        }
-        else if (e.Damage.Source is EnemyInstance)
-        {
-            enemy = e.Damage.Source as EnemyInstance;
+        EntityInstance source = e.Damage.Source as EntityInstance;
+        source.ModifyDamage(e.Damage);
 
-            if (enemy.Buffs.TryGetValue(key: BuffType.Strength, value: out int strength))
-            {
-                e.Damage.Add(strength, enemy);
-            }
-            if (enemy.Buffs.ContainsKey(BuffType.Weak))
-            {
-                e.Damage.Multiply(0.5f, enemy);
-            }
-        }
-        if (e.Damage.Target is PlayerInstance)
-        {
-            if (player.Buffs.ContainsKey(BuffType.Vulnerable))
-            {
-                e.Damage.Multiply(1.5f, player);
-            }
-        }
-        else if (e.Damage.Target is EnemyInstance)
-        {
-            enemy = e.Damage.Target as EnemyInstance;
-
-            if (enemy.Buffs.ContainsKey(BuffType.Vulnerable))
-            {
-                e.Damage.Multiply(1.5f, player);
-            }
-        }
+        EntityInstance target = e.Damage.Target as EntityInstance;
+        target.ModifyDamage(e.Damage);
     }
     private void OnDamageResolved(DamageResolved e)
     {
@@ -475,51 +414,12 @@ public class CombatSystem : BaseSystem
                 break;
             }
 
-            int damage = e.Amount;
-
-            if (instance.Block > 0)
-            {
-                damage -= instance.Block;
-
-                int beforeBlock = instance.Block;
-                instance.SetBlock(Mathf.Max(0, instance.Block - e.Amount));
-
-                EventBus.Publish<BlockChanged>(new BlockChanged(
-                    context: e.Context.RewriteNew(this),
-                    motion: e.Motion,
-                    target: instance,
-                    startAmount: beforeBlock,
-                    endAmount: instance.Block
-                ));
-            }
-
-            if (damage > 0)
-            {
-                int beforeHp = instance.CurrentHp;
-                instance.SetCurrentHp(Mathf.Max(0, instance.CurrentHp - damage));
-
-                EventBus.Publish<HpChanged>(new HpChanged(
-                    context: e.Context.RewriteNew(this),
-                    motion: e.Motion,
-                    target: instance,
-                    startAmount: beforeHp,
-                    endAmount: instance.CurrentHp
-                ));
-            }
-
-            if (instance.CurrentHp <= 0)
-            {
-                if (instance is EnemyInstance enemy)
-                {
-                    e.Context.Combat.AddGold(enemy.GoldReward);
-                }
-
-                EventBus.Publish<DeathDeclared>(new DeathDeclared(
-                    context: e.Context.RewriteNew(this),
-                    motion: e.Motion,
-                    target: instance
-                ));
-            }
+            instance.Hit(
+                eventBus: EventBus, 
+                context: e.Context, 
+                motion: e.Motion, 
+                amount: e.Amount
+            );
         }
     }
 
@@ -530,40 +430,25 @@ public class CombatSystem : BaseSystem
             return;
         }
 
-        EntityInstance instance = null;
-        if (e.Target is PlayerInstance player)
+        EntityInstance instance = e.Target switch
         {
-            instance = player;
-        }
-        else if (e.Target is EnemyInstance enemy)
-        {
-            instance = enemy;
-        }
-        else
+            PlayerInstance player => player,
+            EnemyInstance enemy => enemy,
+            _ => null
+        };
+
+        if (instance == null)
         {
             return;
         }
 
-        int startAmount = instance.Buffs.TryGetValue(e.Type, out int value) ? value : 0;
-        int endAmount = Mathf.Max(0, startAmount + e.Amount);
-
-        instance.ApplyBuff(type: e.Type, delta: e.Amount);
-
-        EventContext eventContext = new EventContext(
-            source: this,
-            action: e.Context.Action,
-            turn: e.Context.Turn,
-            combat: e.Context.Combat
-        );
-
-        EventBus.Publish<BuffChanged>(new BuffChanged(
-            context: eventContext,
+        instance.ApplyBuff(
+            eventBus: EventBus,
+            context: e.Context,
             motion: e.Motion,
-            target: instance,
             type: e.Type,
-            startAmount: startAmount,
-            endAmount: endAmount
-        ));
+            delta: e.Amount
+        );
     }
     private void OnBlockDeclared(BlockDeclared e)
     {
@@ -572,30 +457,24 @@ public class CombatSystem : BaseSystem
             return;
         }
 
-        EntityInstance instance;
-        if (e.Source is PlayerInstance)
+        EntityInstance instance = e.Target switch
         {
-            instance = player;
-        }
-        else if (e.Source is EnemyInstance enemy)
-        {
-            instance = enemy;
-        }
-        else
+            PlayerInstance player => player,
+            EnemyInstance enemy => enemy,
+            _ => null
+        };
+
+        if (instance == null)
         {
             return;
         }
 
-        int beforeBlock = instance.Block;
-        instance.AddBlock(e.Amount);
-
-        EventBus.Publish<BlockChanged>(new BlockChanged(
-            context: e.Context.RewriteNew(this),
+        instance.ChangeBlock(
+            eventBus: EventBus,
+            context: e.Context,
             motion: e.Motion,
-            target: instance,
-            startAmount: beforeBlock,
-            endAmount: instance.Block
-        ));
+            amount: e.Amount
+        );
     }
     public void CombatStart()
     {
@@ -631,15 +510,8 @@ public class CombatSystem : BaseSystem
         {
             RequestContext requestContext = new RequestContext(this);
 
-            eventContext = new EventContext(
-                source: this,
-                action: null,
-                turn: null,
-                combat: CombatContext
-            );
-
             EventBus.Publish<PlayerTurnStartRequested>(new PlayerTurnStartRequested(
-                context: eventContext,
+                context: eventContext.RewriteNew(this),
                 request: requestContext
             ));
         });

@@ -51,28 +51,21 @@ public class TurnEndedEntityDamagePowerInstance : PowerInstance, IPlayerTurnEnde
 
         Activate(e.Context, e.Motion, () =>
         {
-            EntityInstance player = e.Context.Combat.Player;
-            int startAmount = player.CurrentHp;
-            player.SetCurrentHp(startAmount - playerDamage);
-
-            EventBus.Publish<HpChanged>(new HpChanged(
-                context: e.Context.RewriteNew(this),
+            e.Context.Combat.Player.Damage(
+                eventBus: EventBus,
+                context: e.Context,
                 motion: e.Motion,
-                target: player,
-                startAmount: startAmount,
-                endAmount: player.CurrentHp
-            ));
+                amount: playerDamage
+            );
 
             foreach (EntityInstance enemy in e.Context.Combat.Enemies)
             {
-                EventBus.Publish<AttackDeclared>(new AttackDeclared(
-                    context: e.Context.RewriteNew(this),
+                enemy.Hit(
+                    eventBus: EventBus,
+                    context: e.Context,
                     motion: e.Motion,
-                    source: this,
-                    target: enemy,
-                    amount: enemyDamage,
-                    repeat: 1
-                ));
+                    amount: playerDamage
+                );
             }
         });
     }

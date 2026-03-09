@@ -7,13 +7,13 @@ public class NoBlockTurnEndedAddBlockRelicSO : RelicSO
     public int Amount => amount;
     public override RelicInstance CreateInstance()
     {
-        return new NoBlockThisTurnRelicInstance(this);
+        return new NoBlockTurnEndedAddBlockRelicInstance(this);
     }
 }
-public class NoBlockThisTurnRelicInstance : RelicInstance, IPlayerTurnEnded
+public class NoBlockTurnEndedAddBlockRelicInstance : RelicInstance, IPlayerTurnEnded
 {
     private int amount;
-    public NoBlockThisTurnRelicInstance(NoBlockTurnEndedAddBlockRelicSO origin) : base(origin)
+    public NoBlockTurnEndedAddBlockRelicInstance(NoBlockTurnEndedAddBlockRelicSO origin) : base(origin)
     {
         amount = origin.Amount;
     }
@@ -38,16 +38,12 @@ public class NoBlockThisTurnRelicInstance : RelicInstance, IPlayerTurnEnded
 
         Activate(e.Context, e.Motion, () =>
         {
-            int startAmount = player.Block;
-            player.SetBlock(startAmount + amount);
-
-            EventBus.Publish<BlockChanged>(new BlockChanged(
-                context: e.Context.RewriteNew(this),
+            player.ChangeBlock(
+                eventBus: EventBus,
+                context: e.Context,
                 motion: e.Motion,
-                target: player,
-                startAmount: startAmount,
-                endAmount: player.Block
-            ));
+                amount: amount
+            );
         });
     }
 }

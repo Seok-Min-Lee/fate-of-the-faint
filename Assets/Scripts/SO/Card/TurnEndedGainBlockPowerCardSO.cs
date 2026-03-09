@@ -41,17 +41,12 @@ public class TurnEndedGainBlockPowerInstance : PowerInstance, IPlayerTurnEnded
 
         Activate(e.Context, e.Motion, () =>
         {
-            EntityInstance player = e.Context.Combat.Player;
-            int startAmount = player.Block;
-            player.AddBlock(amount);
-
-            EventBus.Publish<BlockChanged>(new BlockChanged(
-                context: e.Context.RewriteNew(this), 
+            e.Context.Combat.Player.ChangeBlock(
+                eventBus: EventBus,
+                context: e.Context,
                 motion: e.Motion,
-                target: e.Context.Combat.Player,
-                startAmount: startAmount,
-                endAmount: player.Block
-            ));
+                amount: amount
+            );
         });
     }
 }

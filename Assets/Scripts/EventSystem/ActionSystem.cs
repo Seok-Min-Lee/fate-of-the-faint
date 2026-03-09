@@ -13,34 +13,38 @@ public class ActionSystem : BaseSystem
     }
     public void ExcuteAction(object source, ActionType type, Action<EventContext, MotionContext> declared)
     {
-        ActionContext action = new ActionContext(type: type, source: source);
+        ActionContext action = new ActionContext(
+            type: type, 
+            source: source
+        );
+
+        EventContext eventContext = new EventContext(
+            source: source,
+            action: action,
+            turn: combatSystem.TurnSystem.TurnContext,
+            combat: combatSystem.CombatContext
+        );
 
         MotionContext motionContext = new MotionContext(this);
 
         eventBus.Publish<ActionStarted>(new ActionStarted(
-            context:CreateContext(action),
+            context: eventContext.RewriteNew(this),
             motion: motionContext
         ));
 
-        declared?.Invoke(CreateContext(action), motionContext);
+        declared?.Invoke(
+            arg1: eventContext.RewriteNew(source),
+            arg2: motionContext
+        );
 
         eventBus.Publish<ActionEnded>(new ActionEnded(
-            context: CreateContext(action),
+            context: eventContext.RewriteNew(this),
             motion: motionContext
         ));
 
         combatSystem.AnimationSystem.Play(
-            context: CreateContext(action),
+            context: eventContext.RewriteNew(this),
             motion: motionContext
-        );
-    }
-    private EventContext CreateContext(ActionContext action)
-    {
-        return new EventContext(
-            source: action.Source,
-            action: action,
-            turn: combatSystem.TurnSystem.TurnContext,
-            combat: combatSystem.CombatContext
         );
     }
 }

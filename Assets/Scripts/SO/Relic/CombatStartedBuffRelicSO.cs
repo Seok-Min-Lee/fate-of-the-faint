@@ -55,17 +55,13 @@ public class CombatStartedBuffRelicInstance : RelicInstance, ICombatStarted
 
         for (int i = 0; i < targets.Count; i++)
         {
-            int startAmount = targets[i].Getbuff(buff);
-            targets[i].ApplyBuff(buff, value);
-
-            EventBus.Publish<BuffChanged>(new BuffChanged(
-                context: e.Context.RewriteNew(this),
+            targets[i].ApplyBuff(
+                eventBus: EventBus,
+                context: e.Context,
                 motion: e.Motion,
-                target: targets[i],
-                type: buff,
-                startAmount: startAmount,
-                endAmount: targets[i].Getbuff(buff)
-            ));
+                type: buff, 
+                delta: value
+            );
         }
     }
 }

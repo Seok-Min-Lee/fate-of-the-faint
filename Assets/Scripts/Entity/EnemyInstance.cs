@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyInstance : EntityInstance
 {
@@ -28,7 +29,17 @@ public class EnemyInstance : EntityInstance
     }
 
     // AI
-    public void DecideNextAction(Random rng)
+    public void DecideIntent(EventBus eventBus, EventContext context, MotionContext motion, Random rng)
+    {
+        DecideNextAction(rng);
+
+        eventBus.Publish<EnemyIntentDecided>(new EnemyIntentDecided(
+            context: context.RewriteNew(this),
+            motion: motion,
+            source: this
+        ));
+    }
+    private void DecideNextAction(Random rng)
     {
         if (rng == null)
         {

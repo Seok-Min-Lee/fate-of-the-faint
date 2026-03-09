@@ -22,18 +22,16 @@ public class DamageSystem : BaseSystem
             target: e.Target
         );
 
-        EventContext eventContext = e.Context.RewriteNew(this);
         eventBus.Publish<DamageRequested>(new DamageRequested(
-            context: eventContext,
+            context: e.Context.RewriteNew(this),
             motion: e.Motion,
             damage: damage
         ));
 
         int sum = damage.Calculate();
 
-        eventContext = e.Context.RewriteNew(this);
         eventBus.Publish<DamageResolved>(new DamageResolved(
-            context: eventContext,
+            context: e.Context.RewriteNew(this),
             motion: e.Motion,
             source: damage.Source,
             target: damage.Target,

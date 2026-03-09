@@ -522,41 +522,42 @@ public static class MapGenerator
             eliteFloors.Add(pick.Floor);
         }
 
-        // (B) Fill remaining nodes with Combat/Event (and a little Rest if none, etc.)
-        foreach (MapNode n in nodes)
-        {
-            if (n.Type != MapNodeType.Combat) 
-            {
-                continue; // already placed scarce types
-            }
+        // 미구현
+        //// (B) Fill remaining nodes with Combat/Event (and a little Rest if none, etc.)
+        //foreach (MapNode n in nodes)
+        //{
+        //    if (n.Type != MapNodeType.Combat) 
+        //    {
+        //        continue; // already placed scarce types
+        //    }
 
-            // Floor-based weights
-            // Early: Combat heavy
-            // Mid: Event appears
-            // Late: Combat slightly rises, rest handled earlier
-            int combatW = 70;
-            int eventW = 30;
+        //    // Floor-based weights
+        //    // Early: Combat heavy
+        //    // Mid: Event appears
+        //    // Late: Combat slightly rises, rest handled earlier
+        //    int combatW = 70;
+        //    int eventW = 30;
 
-            if (n.Floor < 3) 
-            {
-                combatW = 85; 
-                eventW = 15; 
-            }
-            else if (n.Floor >= cfg.Floors - 3)
-            { 
-                combatW = 80; 
-                eventW = 20; 
-            }
+        //    if (n.Floor < 3) 
+        //    {
+        //        combatW = 85; 
+        //        eventW = 15; 
+        //    }
+        //    else if (n.Floor >= cfg.Floors - 3)
+        //    { 
+        //        combatW = 80; 
+        //        eventW = 20; 
+        //    }
 
-            // If floor is immediately before boss, slightly reduce event
-            if (n.Floor == cfg.Floors - 2) 
-            { 
-                combatW = 90; 
-                eventW = 10; 
-            }
+        //    // If floor is immediately before boss, slightly reduce event
+        //    if (n.Floor == cfg.Floors - 2) 
+        //    { 
+        //        combatW = 90; 
+        //        eventW = 10; 
+        //    }
 
-            n.Type = Roll2(rng, combatW, eventW) ? MapNodeType.Combat : MapNodeType.Event;
-        }
+        //    n.Type = Roll2(rng, combatW, eventW) ? MapNodeType.Combat : MapNodeType.Event;
+        //}
     }
 
     private static void PlaceTargetType(

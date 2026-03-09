@@ -93,10 +93,12 @@ public class TurnSystem : BaseSystem
         EventContext eventContext = new EventContext(
             source: this,
             action: null,
-            turn: e.Context.Turn,
+            turn: TurnContext,
             combat: e.Context.Combat
         ); 
+
         MotionContext motionContext = new MotionContext(this);
+
         eventBus.Publish<PlayerTurnStarted>(new PlayerTurnStarted(
             context: eventContext,
             motion: motionContext
@@ -115,12 +117,9 @@ public class TurnSystem : BaseSystem
             source: this
         );
 
-        for (int i = 0; i < enemies.Count; i++)
+        for (int i = 0; i < e.Context.Combat.Enemies.Count; i++)
         {
-            if (!enemies[i].IsDead)
-            {
-                TurnContext.EnemyQueue.Enqueue(enemies[i]);
-            }
+            TurnContext.EnemyQueue.Enqueue(e.Context.Combat.Enemies[i] as EnemyInstance);
         }
 
         EventContext eventContext = new EventContext(
@@ -129,6 +128,7 @@ public class TurnSystem : BaseSystem
             turn: TurnContext,
             combat: e.Context.Combat
         ); 
+
         MotionContext motionContext = new MotionContext(this);
 
         eventBus.Publish<EnemyTurnStarted>(new EnemyTurnStarted(

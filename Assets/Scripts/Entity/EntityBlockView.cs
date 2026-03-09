@@ -8,6 +8,7 @@ public class EntityBlockView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI text;
 
     private Color textColor;
+    private Sequence sequence;
     public void Init(int value)
     {
         textColor = text.color;
@@ -23,7 +24,12 @@ public class EntityBlockView : MonoBehaviour
     }
     public Sequence Show(int value)
     {
-        Sequence sequence = DOTween.Sequence();
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+        //Sequence sequence = DOTween.Sequence();
 
         sequence.AppendCallback(() =>
         {
@@ -45,7 +51,12 @@ public class EntityBlockView : MonoBehaviour
     }
     public Sequence Hide()
     {
-        Sequence sequence = DOTween.Sequence();
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+        //Sequence sequence = DOTween.Sequence();
 
         sequence.Append(borderCG.DOFade(0f, 0.5f));
         sequence.Join(text.DOColor(Color.clear, 0.5f));
@@ -56,7 +67,12 @@ public class EntityBlockView : MonoBehaviour
     }
     public Sequence Change(int value)
     {
-        Sequence sequence = DOTween.Sequence();
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+        //Sequence sequence = DOTween.Sequence();
 
         sequence.AppendCallback(() => 
         {

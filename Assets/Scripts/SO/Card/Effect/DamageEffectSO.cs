@@ -21,17 +21,15 @@ public class DamageEffectSO : EffectSO
 
         return () =>
         {
-            EntityInstance player = context.Combat.Player;
-            int startAmount = player.CurrentHp;
-            player.SetCurrentHp(startAmount - value);
-
-            eventBus.Publish<HpChanged>(new HpChanged(
-                context: context.RewriteNew(this),
-                motion: motion,
-                target: player,
-                startAmount: startAmount,
-                endAmount: player.CurrentHp
-            ));
+            foreach (EntityInstance target in targets)
+            {
+                target.Damage(
+                    eventBus: eventBus, 
+                    context: context, 
+                    motion: motion,
+                    amount: value
+                );
+            }
         };
     }
 }

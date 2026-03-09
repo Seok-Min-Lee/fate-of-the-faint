@@ -1,8 +1,8 @@
 {
     "playerId": "Player_A",
-    "currentHp": 23,
+    "currentHp": 100,
     "maxHp": 100,
-    "gold": 238,
+    "gold": 0,
     "rewardCardOptionCount": 3,
     "rng": {
         "seed": 1234,
@@ -19,24 +19,10 @@
         "skl_defend",
         "skl_defend",
         "skl_defend",
-        "skl_defend",
-        "skl_shrugItOff+",
-        "pwr_demonForm+",
-        "skl_shockwave+",
-        "skl_intimidate+",
-        "skl_bloodletting+",
-        "skl_ghostlyArmor+",
-        "skl_seeingRed"
+        "skl_defend"
     ],
     "relicIds": [
-        "Centennial Puzzle",
-        "Akabeko",
-        "Art of War",
         "Vajra",
-        "Gremlin Horn",
-        "Orichalcum",
-        "Happy Flower",
-        "Nunchaku",
         "Bag of Marbles"
     ],
     "potionIds": []
