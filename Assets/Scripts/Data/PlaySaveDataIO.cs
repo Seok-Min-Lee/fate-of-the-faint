@@ -57,4 +57,26 @@ public static class PlaySaveDataIO
             return false;
         }
     }
+
+    public static bool TryRemoveFromFile(string filePath = null)
+    {
+        filePath ??= DefaultFilePath;
+
+        if (!File.Exists(filePath))
+        {
+            return false;
+        }
+
+        try
+        {
+            File.Delete(filePath);
+            return true;
+        }
+        catch (Exception e)
+        {
+            Debug.Log("삭제 실패 -> 덮어쓰기");
+            File.WriteAllText(filePath, string.Empty);
+            return true;
+        }
+    }
 }

@@ -16,7 +16,7 @@ public class DefeatWindow : UIMotionWindow
     }
     public void OnClickBack()
     {
-        PlayManager.Instance.ClearPlayData();
+        PlayManager.Instance.RemovePlayData();
         UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.HOME);
     }
     private Sequence Show()
