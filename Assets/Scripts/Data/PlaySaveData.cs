@@ -17,6 +17,8 @@ public class PlaySaveData
     public List<string> cardIds;
     public List<string> relicIds;
     public List<string> potionIds;
+
+    public List<PlayRecord> records;
 }
 
 [Serializable]

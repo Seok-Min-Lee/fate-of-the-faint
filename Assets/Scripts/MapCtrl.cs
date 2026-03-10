@@ -87,6 +87,18 @@ public class MapCtrl : MonoBehaviour
 
             UpdateNodeStates();
 
+            string key = node.Type switch
+            {
+                MapNodeType.Combat => PlayRecordKeys.COMBAT_VISIT_COUNT,
+                MapNodeType.Elite => PlayRecordKeys.ELITE_VISIT_COUNT,
+                MapNodeType.Treasure => PlayRecordKeys.TREASURE_VISIT_COUNT,
+                MapNodeType.Rest => PlayRecordKeys.REST_VISIT_COUNT,
+                MapNodeType.Shop => PlayRecordKeys.SHOP_VISIT_COUNT,
+                _ => string.Empty
+            };
+
+            PlayManager.Instance.CurrentData.AddRecord(key, 1);
+
             return true;
         }
 

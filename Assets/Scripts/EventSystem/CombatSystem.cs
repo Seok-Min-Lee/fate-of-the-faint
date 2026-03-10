@@ -25,6 +25,7 @@ public class CombatSystem : BaseSystem
     private RelicMonoSystem relicSystem;
     private GoldMonoSystem goldSystem;
     private HpMonoSystem hpSystem;
+    private RecordSystem recordSystem;
 
     private PlayerInstance player;
     private Dictionary<Guid, EnemyInstance> enemies;
@@ -41,6 +42,7 @@ public class CombatSystem : BaseSystem
         RelicMonoSystem relicSystem,
         GoldMonoSystem goldSystem,
         HpMonoSystem hpSystem,
+        RecordSystem recordSystem,
         PlayerInstance player,
         IEnumerable<EnemyInstance> enemies
     )
@@ -59,6 +61,7 @@ public class CombatSystem : BaseSystem
         this.relicSystem = relicSystem;
         this.goldSystem = goldSystem;
         this.hpSystem = hpSystem;
+        this.recordSystem = recordSystem;
 
         TurnSystem.Init(enemies, animationSystem);
     }
@@ -114,6 +117,10 @@ public class CombatSystem : BaseSystem
         EventBus.Subscribe<DrawCardDeclared>(cardSystem.OnDrawCardDeclared);
         EventBus.Subscribe<ModifyCostDeclared>(cardSystem.OnModifyCostDeclared);
 
+        EventBus.Subscribe<PlayerTurnStarted>(recordSystem.OnPlayerTurnStarted);
+        EventBus.Subscribe<CardPlayDeclared>(recordSystem.OnCardPlayDeclared);
+        EventBus.Subscribe<DeathDeclared>(recordSystem.OnDeathDeclared);
+
         EventBus.Subscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
         EventBus.Subscribe<EnemyTurnStarted>(OnEnemyTurnStarted);
     }
@@ -154,6 +161,10 @@ public class CombatSystem : BaseSystem
         EventBus.Unsubscribe<EnergyResolved>(cardSystem.OnEnergyResolved);
         EventBus.Unsubscribe<DrawCardDeclared>(cardSystem.OnDrawCardDeclared);
         EventBus.Unsubscribe<ModifyCostDeclared>(cardSystem.OnModifyCostDeclared);
+
+        EventBus.Unsubscribe<PlayerTurnStarted>(recordSystem.OnPlayerTurnStarted);
+        EventBus.Unsubscribe<CardPlayDeclared>(recordSystem.OnCardPlayDeclared);
+        EventBus.Unsubscribe<DeathDeclared>(recordSystem.OnDeathDeclared);
 
         EventBus.Unsubscribe<PlayerTurnStarted>(OnPlayerTurnStarted);
         EventBus.Unsubscribe<EnemyTurnStarted>(OnEnemyTurnStarted);

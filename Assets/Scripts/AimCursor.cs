@@ -76,7 +76,7 @@ public class AimCursor : MonoBehaviour
         Move(worldPoint);
 
         Image.sprite = unlockImage;
-        Image.color = Color.black;
+        Image.color = Color.white;
 
         Rotate();
     }

@@ -6,7 +6,9 @@ public class DefeatWindow : UIMotionWindow
 {
     [SerializeField] private CanvasGroup dimmedCG;
     [SerializeField] private CanvasGroup contentCG;
-    [SerializeField] private TextMeshProUGUI headText;
+    [SerializeField] private CanvasGroup homeButtonCG;
+    [SerializeField] private Transform recordParent;
+    [SerializeField] private RecordView recordViewPrefab;
 
     protected override void Awake()
     {
@@ -25,15 +27,23 @@ public class DefeatWindow : UIMotionWindow
             ChangeWindow(WindowType.Defeat, WindowMode.Single);
             dimmedCG.alpha = 0f;
             contentCG.alpha = 0f;
-            headText.text = string.Empty;
+            homeButtonCG.alpha = 0f;
         });
         sequence.Append(dimmedCG.DOFade(1f, 1f));
         sequence.Append(contentCG.DOFade(1f, 0.5f));
-        sequence.JoinCallback(() =>
+
+        foreach (PlayRecord record in PlayManager.Instance.CurrentData.Records.Values)
         {
-            headText.text = "You are Slain!";
-            Utils.TMPDOText(headText, 1f);
-        });
+            sequence.AppendCallback(() =>
+            {
+                RecordView view = GameObject.Instantiate<RecordView>(recordViewPrefab, recordParent);
+                view.Init($"{record.Id}: {record.Value}");
+            });
+            sequence.AppendInterval(0.2f);
+        }
+
+        sequence.Append(homeButtonCG.DOFade(1f, 0.5f));
+
 
         return sequence;
     }

@@ -48,6 +48,7 @@ public class CombatManager : MonoBehaviour
         DamageSystem damageSystem = new DamageSystem(CombatSystem.EventBus);
         BuffSystem buffSystem = new BuffSystem(CombatSystem.EventBus);
         PowerSystem powerSystem = new PowerSystem(CombatSystem.EventBus);
+        RecordSystem recordSystem = new RecordSystem(CombatSystem.EventBus);
         EnergySystem energySystem = new EnergySystem(
             eventBus: CombatSystem.EventBus, 
             max: playerInstance.Energy
@@ -79,6 +80,7 @@ public class CombatManager : MonoBehaviour
             goldSystem: goldSystem,
             animationSystem: animationSystem,
             cameraSystem: cameraSystem,
+            recordSystem: recordSystem,
             player: playerInstance,
             enemies: enemyInstances
         );

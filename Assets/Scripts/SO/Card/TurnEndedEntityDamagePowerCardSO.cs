@@ -64,7 +64,7 @@ public class TurnEndedEntityDamagePowerInstance : PowerInstance, IPlayerTurnEnde
                     eventBus: EventBus,
                     context: e.Context,
                     motion: e.Motion,
-                    amount: playerDamage
+                    amount: enemyDamage
                 );
             }
         });

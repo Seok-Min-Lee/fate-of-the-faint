@@ -63,6 +63,11 @@ public class PlayManager : MonoSingleton<PlayManager>
         CurrentData = PlayData.CreateNew(temp_PlaerSO, 1234, Catalog);
         MapGraph = MapGenerator.Generate(mapConfig);
     }
+    public void RemovePlayData()
+    {
+        CurrentData = null;
+        MapGraph = null;
+    }
     public EnemySpawnPlanSO GetEnemyPlan()
     {
         switch (MapGraph.LatestNode.Type)

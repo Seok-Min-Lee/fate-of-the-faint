@@ -3660,7 +3660,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 610720184}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -3677,6 +3677,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 521502489}
+  - {fileID: 1428726900}
   - {fileID: 1779058804}
   m_Father: {fileID: 1980508301}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8164,6 +8165,68 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1519188697402770169, guid: a90bc75212a7dce42b961e277b470f8e, type: 3}
   m_PrefabInstance: {fileID: 1395314376}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1428726899
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1428726900}
+  - component: {fileID: 1428726901}
+  m_Layer: 5
+  m_Name: Records
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1428726900
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428726899}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 610720186}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -75}
+  m_SizeDelta: {x: 400, y: 400}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1428726901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428726899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.VerticalLayoutGroup
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 20
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &1434446877
 GameObject:
   m_ObjectHideFlags: 0
@@ -10662,6 +10725,7 @@ GameObject:
   - component: {fileID: 1779058806}
   - component: {fileID: 1779058805}
   - component: {fileID: 1779058807}
+  - component: {fileID: 1779058808}
   m_Layer: 5
   m_Name: Back
   m_TagString: Untagged
@@ -10783,6 +10847,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!225 &1779058808
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779058803}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1793625655
 GameObject:
   m_ObjectHideFlags: 0
@@ -11194,7 +11270,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB3CC\uC544\uAC00\uAE30"
+  m_text: "\uCC98\uC74C\uC73C\uB85C"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0b96104025fca5942a7e5cc9a4ff56bd, type: 2}
   m_sharedMaterial: {fileID: 1139193548961459898, guid: 0b96104025fca5942a7e5cc9a4ff56bd, type: 2}
@@ -11844,7 +11920,9 @@ MonoBehaviour:
   type: 1
   dimmedCG: {fileID: 488916958}
   contentCG: {fileID: 610720185}
-  headText: {fileID: 2143568044}
+  homeButtonCG: {fileID: 1779058808}
+  recordParent: {fileID: 1428726900}
+  recordViewPrefab: {fileID: 8741570255575808694, guid: 5bde887ce2fda2949b486cdb53ecff0f, type: 3}
 --- !u!1001 &1988543985
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13080,7 +13158,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: You are Slain!
+  m_text: "\uD328\uBC30..."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9c65566dd1f71fd4f892dccc735d36b6, type: 2}
   m_sharedMaterial: {fileID: 1139193548961459898, guid: 9c65566dd1f71fd4f892dccc735d36b6, type: 2}
@@ -13089,8 +13167,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4286611584
+  m_fontColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -13255,6 +13333,10 @@ PrefabInstance:
     - target: {fileID: 6918924844527452715, guid: f5690acc4b79eec4bb26daf9ae7e02f8, type: 3}
       propertyPath: m_Name
       value: Relic Window
+      objectReference: {fileID: 0}
+    - target: {fileID: 6918924844527452715, guid: f5690acc4b79eec4bb26daf9ae7e02f8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14038,6 +14120,10 @@ PrefabInstance:
     - target: {fileID: 6008498758747199715, guid: 5592fc6318e56f14cb50ff49b8fc300a, type: 3}
       propertyPath: m_Name
       value: Display Window
+      objectReference: {fileID: 0}
+    - target: {fileID: 6008498758747199715, guid: 5592fc6318e56f14cb50ff49b8fc300a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

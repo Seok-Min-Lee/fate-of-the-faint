@@ -1,8 +1,8 @@
 {
     "playerId": "Player_A",
-    "currentHp": 100,
+    "currentHp": 9,
     "maxHp": 100,
-    "gold": 0,
+    "gold": 184,
     "rewardCardOptionCount": 3,
     "rng": {
         "seed": 1234,
@@ -19,8 +19,34 @@
         "skl_defend",
         "skl_defend",
         "skl_defend",
-        "skl_defend"
+        "skl_defend",
+        "pwr_combust",
+        "pwr_metallicize",
+        "skl_ghostlyArmor",
+        "skl_bloodletting"
     ],
-    "relicIds": [],
-    "potionIds": []
+    "relicIds": [
+        "Gremlin Horn",
+        "Bag of Marbles",
+        "Orichalcum"
+    ],
+    "potionIds": [],
+    "records": [
+        {
+            "Id": "일반 전투 횟수",
+            "Value": 4
+        },
+        {
+            "Id": "진행한 턴 수",
+            "Value": 17
+        },
+        {
+            "Id": "사용한 카드 수",
+            "Value": 46
+        },
+        {
+            "Id": "몬스터 처치 수",
+            "Value": 12
+        }
+    ]
 }

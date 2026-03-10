@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting.FullSerializer;
 using UnityEditor;
 public class PlayData
 {
@@ -15,7 +16,8 @@ public class PlayData
         IEnumerable<int> nodes,
         IEnumerable<CardEntry> cards,
         IEnumerable<RelicInstance> relics,
-        IEnumerable<PotionEntry> potions
+        IEnumerable<PotionEntry> potions,
+        Dictionary<string, PlayRecord> records
     )
     {
         PlayerId = playerId;
@@ -28,6 +30,7 @@ public class PlayData
         Cards = new List<CardEntry>(cards);
         Relics = new List<RelicInstance>(relics);
         Potions = new List<PotionEntry>(potions);
+        Records = records;
     }
     // Identity
     public string PlayerId { get; private set; }
@@ -46,6 +49,8 @@ public class PlayData
     public List<CardEntry> Cards { get; private set; }
     public List<RelicInstance> Relics { get; private set; }
     public List<PotionEntry> Potions { get; private set; }
+
+    public Dictionary<string, PlayRecord> Records { get; private set; }
 
     // Create
     public static PlayData CreateNew(PlayerSO player, int seed, GameCatalog catalog)
@@ -98,7 +103,8 @@ public class PlayData
             nodes: new List<int>(),
             cards: cards,
             relics: relics,
-            potions: new List<PotionEntry>()
+            potions: new List<PotionEntry>(),
+            records: new Dictionary<string, PlayRecord>()
         );
 
         return data;
@@ -132,7 +138,7 @@ public class PlayData
             }
             else
             {
-                throw new InvalidOperationException("Card not found for id: " + save.playerId);
+                throw new InvalidOperationException("Card not found for id: " + save.cardIds[i]);
             }
         }
 
@@ -145,7 +151,7 @@ public class PlayData
             }
             else
             {
-                throw new InvalidOperationException("Relic not found for id: " + save.playerId);
+                throw new InvalidOperationException("Relic not found for id: " + save.relicIds[i]);
             }
         }
 
@@ -162,7 +168,22 @@ public class PlayData
             }
             else
             {
-                throw new InvalidOperationException("Potion not found for id: " + save.playerId);
+                throw new InvalidOperationException("Potion not found for id: " + save.potionIds[i]);
+            }
+        }
+
+
+        Dictionary<string, PlayRecord> records = new Dictionary<string, PlayRecord>();
+        for (int i = 0; i < save.records.Count; i++)
+        {
+            PlayRecord record = save.records[i];
+            if (!records.ContainsKey(record.Id))
+            {
+                records.Add(record.Id, record);
+            }
+            else
+            {
+                throw new InvalidOperationException("Record already exist for id: " + save.records[i]);
             }
         }
 
@@ -177,7 +198,8 @@ public class PlayData
             rngState: new RunRngState(save.rng.seed, save.rng.calls),
             cards: cards,
             relics: relics,
-            potions: potions
+            potions: potions,
+            records: records
         );
 
         return data;
@@ -204,6 +226,8 @@ public class PlayData
         save.cardIds = new List<string>(Cards.Select(card => card.Id));
         save.relicIds = new List<string>(Relics.Select(relic => relic.Id));
         save.potionIds = new List<string>(Potions.Select(potion => potion.Id));
+
+        save.records = new List<PlayRecord>(Records.Values);
 
         return save;
     }
@@ -313,6 +337,26 @@ public class PlayData
             }
         }
     }
+    public void AddRecord(string key, int delta)
+    {
+        if (string.IsNullOrEmpty(key))
+        {
+            return;
+        }
+
+        if (Records.ContainsKey(key))
+        {
+            Records[key].Add(delta);
+        }
+        else
+        {
+            PlayRecord newRecord = new PlayRecord(
+                id: key,
+                value: delta
+            );
+            Records.Add(key, newRecord);
+        }
+    }
     // ─────────────────────────────────────────────
     // Helpers
     // ─────────────────────────────────────────────
@@ -354,4 +398,31 @@ public class PotionEntry
     public string Id { get; private set; }
     public int SubId { get; private set; }
     public PotionSO Origin { get; private set; }
+}
+[Serializable]
+public class PlayRecord
+{
+    public PlayRecord(string id, int value) 
+    {
+        Id = id;
+        Value = value;
+    }
+    public void Add(int delta)
+    {
+        Value += delta;
+    }
+    public string Id;// { get; private set; }
+    public int Value;// { get; private set; }
+}
+public static class PlayRecordKeys
+{
+    public const string ENEMY_KILL_COUNT = "몬스터 처치 수";
+    public const string TURN_COUNT = "진행한 턴 수";
+    public const string CARD_PLAY_COUNT = "사용한 카드 수";
+
+    public const string COMBAT_VISIT_COUNT = "일반 전투 횟수";
+    public const string ELITE_VISIT_COUNT = "엘리트 전투 횟수";
+    public const string SHOP_VISIT_COUNT = "상점 방문 횟수";
+    public const string TREASURE_VISIT_COUNT = "유물방 방문 횟수";
+    public const string REST_VISIT_COUNT = "휴식 횟수";
 }
