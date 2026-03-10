@@ -28,8 +28,15 @@ public class VictoryWindow : UIMotionWindow
     }
     public void OnClickNext()
     {
-        combatCtrl.CombatSystem.Save();
-        UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
+        if (PlayManager.Instance.MapGraph.LatestNode.Type == MapNodeType.Boss)
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.ENDING);
+        }
+        else
+        {
+            combatCtrl.CombatSystem.Save();
+            UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
+        }
     }
     private Sequence Show()
     {
