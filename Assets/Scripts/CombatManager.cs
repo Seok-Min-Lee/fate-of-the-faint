@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,9 +32,9 @@ public class CombatManager : MonoBehaviour
         PlayerInstance playerInstance = CreatePlayerInstance(PlayManager.Instance.CurrentData);
         PlayerView playerView = GameObject.Instantiate<PlayerView>(playerPrefab);
         playerView.Init(
+            eventBus: CombatSystem.EventBus,
             instance: playerInstance,
-            combatManager: this,
-            position: new Vector3(-0.71f, 0f, -0.71f),
+            position: new Vector3(-0.71f, 0f, -10f),
             buffViewPool: entityBuffPool,
             damageTextPool: damageTextPool
         );
@@ -41,16 +42,16 @@ public class CombatManager : MonoBehaviour
         List<EnemyInstance> enemyInstances = CreateEnemyInstances();
         List<EnemyView> enemyViews = ConvertEnemyInstanceToView(enemyInstances, playerInstance);
 
-        List<CardInstance> cardInstance = CreateCardInstances(PlayManager.Instance.CurrentData.Cards);
+        List<CardInstance> cardInstances = CreateCardInstances(PlayManager.Instance.CurrentData.Cards);
 
         //
         DamageSystem damageSystem = new DamageSystem(CombatSystem.EventBus);
         BuffSystem buffSystem = new BuffSystem(CombatSystem.EventBus);
+        PowerSystem powerSystem = new PowerSystem(CombatSystem.EventBus);
         EnergySystem energySystem = new EnergySystem(
             eventBus: CombatSystem.EventBus, 
             max: playerInstance.Energy
         );
-        PowerSystem powerSystem = new PowerSystem(CombatSystem.EventBus);
         animationSystem.Init(CombatSystem.EventBus);
         hpSystem.Init(CombatSystem.EventBus);
         goldSystem.Init(CombatSystem.EventBus);
@@ -64,7 +65,7 @@ public class CombatManager : MonoBehaviour
             eventBus: CombatSystem.EventBus, 
             actionSystem: CombatSystem.ActionSystem,
             powerSystem: powerSystem,
-            cardInstances: cardInstance
+            cardInstances: cardInstances
         );
         CombatSystem.Init(
             damageSystem: damageSystem, 
@@ -81,15 +82,14 @@ public class CombatManager : MonoBehaviour
             player: playerInstance,
             enemies: enemyInstances
         );
+
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(playerView.Move(new Vector3(-0.71f, 0f, -0.71f)));
+        sequence.AppendCallback(() => CombatSystem.CombatStart());
     }
     private void OnEnable()
     {
         CombatSystem.OnEnable();
-    }
-    private IEnumerator Start()
-    {
-        yield return new WaitForSeconds(1f);
-        CombatSystem.CombatStart();
     }
     private void OnDisable()
     {
@@ -160,7 +160,7 @@ public class CombatManager : MonoBehaviour
             EnemyView view = go.GetComponent<EnemyView>();
             view.Init(
                 instance: _instance,
-                combatManager: this,
+                eventBus: CombatSystem.EventBus,
                 position: positions[i],
                 buffViewPool: entityBuffPool,
                 damageTextPool: damageTextPool

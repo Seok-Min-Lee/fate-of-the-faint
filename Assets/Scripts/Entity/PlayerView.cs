@@ -1,37 +1,36 @@
 ﻿using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerView : EntityView, ITargetable
 {
-    private CombatManager combatManager;
+    private EventBus eventBus;
     public Transform AimPoint => aimPoint;
     public EntityInstance Instance => instance;
+
     public void Init(
+        EventBus eventBus,
         PlayerInstance instance, 
-        CombatManager combatManager, 
         Vector3 position, 
         EntityBuffViewPool buffViewPool,
         DamageTextPool damageTextPool
     )
     {
-        this.combatManager = combatManager;
+        this.eventBus = eventBus;
         this.instance = instance;
         base.buffViewPool = buffViewPool;
         base.damageTextPool = damageTextPool;
 
         transform.position = position;
 
-        combatManager.CombatSystem.EventBus.Subscribe<CombatStarted>(OnCombatStarted);
-        combatManager.CombatSystem.EventBus.Subscribe<CombatEnded>(OnCombatEnded);
-        combatManager.CombatSystem.EventBus.Subscribe<DeathDeclared>(OnDeathDeclared);
-        combatManager.CombatSystem.EventBus.Subscribe<AttackPlayed>(OnAttackPlayed);
-        combatManager.CombatSystem.EventBus.Subscribe<SkillPlayed>(OnSkillPlayed);
-        combatManager.CombatSystem.EventBus.Subscribe<PowerPlayed>(OnPowerPlayed);
-        combatManager.CombatSystem.EventBus.Subscribe<HpChanged>(OnHpChanged);
-        combatManager.CombatSystem.EventBus.Subscribe<BlockChanged>(OnBlockChanged);
-        combatManager.CombatSystem.EventBus.Subscribe<BuffChanged>(OnBuffChanged);
+        eventBus.Subscribe<CombatStarted>(OnCombatStarted);
+        eventBus.Subscribe<CombatEnded>(OnCombatEnded);
+        eventBus.Subscribe<DeathDeclared>(OnDeathDeclared);
+        eventBus.Subscribe<AttackPlayed>(OnAttackPlayed);
+        eventBus.Subscribe<SkillPlayed>(OnSkillPlayed);
+        eventBus.Subscribe<PowerPlayed>(OnPowerPlayed);
+        eventBus.Subscribe<HpChanged>(OnHpChanged);
+        eventBus.Subscribe<BlockChanged>(OnBlockChanged);
+        eventBus.Subscribe<BuffChanged>(OnBuffChanged);
 
         animator.SetBool(AnimationKeys.PLAYER_ENCOUNTER, true);
         statusCG.alpha = 0f;
@@ -40,15 +39,15 @@ public class PlayerView : EntityView, ITargetable
     }
     private void OnDisable()
     {
-        combatManager.CombatSystem.EventBus.Unsubscribe<CombatStarted>(OnCombatStarted);
-        combatManager.CombatSystem.EventBus.Unsubscribe<CombatEnded>(OnCombatEnded);
-        combatManager.CombatSystem.EventBus.Unsubscribe<DeathDeclared>(OnDeathDeclared);
-        combatManager.CombatSystem.EventBus.Unsubscribe<AttackPlayed>(OnAttackPlayed);
-        combatManager.CombatSystem.EventBus.Unsubscribe<SkillPlayed>(OnSkillPlayed);
-        combatManager.CombatSystem.EventBus.Unsubscribe<PowerPlayed>(OnPowerPlayed);
-        combatManager.CombatSystem.EventBus.Unsubscribe<HpChanged>(OnHpChanged);
-        combatManager.CombatSystem.EventBus.Unsubscribe<BlockChanged>(OnBlockChanged);
-        combatManager.CombatSystem.EventBus.Unsubscribe<BuffChanged>(OnBuffChanged);
+        eventBus.Unsubscribe<CombatStarted>(OnCombatStarted);
+        eventBus.Unsubscribe<CombatEnded>(OnCombatEnded);
+        eventBus.Unsubscribe<DeathDeclared>(OnDeathDeclared);
+        eventBus.Unsubscribe<AttackPlayed>(OnAttackPlayed);
+        eventBus.Unsubscribe<SkillPlayed>(OnSkillPlayed);
+        eventBus.Unsubscribe<PowerPlayed>(OnPowerPlayed);
+        eventBus.Unsubscribe<HpChanged>(OnHpChanged);
+        eventBus.Unsubscribe<BlockChanged>(OnBlockChanged);
+        eventBus.Unsubscribe<BuffChanged>(OnBuffChanged);
     }
     public void OnCombatStarted(CombatStarted e)
     {
@@ -146,5 +145,9 @@ public class PlayerView : EntityView, ITargetable
             command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_POWER),
             source: this
         ));
+    }
+    public Tween Move(Vector3 target)
+    {
+        return transform.DOMove(target, 1f).SetEase(Ease.Linear);
     }
 }

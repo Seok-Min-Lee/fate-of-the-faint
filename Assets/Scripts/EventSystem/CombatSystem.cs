@@ -28,7 +28,6 @@ public class CombatSystem : BaseSystem
 
     private PlayerInstance player;
     private Dictionary<Guid, EnemyInstance> enemies;
-    public IReadOnlyList<EnemyInstance> liveEnemies => enemies.Values.Where(e => !e.IsDead).ToList();
     private Queue<Action> actionRequestQueue = new Queue<Action>();
     public void Init(
         DamageSystem damageSystem,

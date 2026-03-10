@@ -1,8 +1,8 @@
 {
     "playerId": "Player_A",
-    "currentHp": 55,
+    "currentHp": 100,
     "maxHp": 100,
-    "gold": 90,
+    "gold": 0,
     "rewardCardOptionCount": 3,
     "rng": {
         "seed": 1234,
@@ -19,13 +19,8 @@
         "skl_defend",
         "skl_defend",
         "skl_defend",
-        "skl_defend",
-        "pwr_demonForm",
-        "atk_twinStrike"
+        "skl_defend"
     ],
-    "relicIds": [
-        "Gremlin Horn",
-        "Centennial Puzzle"
-    ],
+    "relicIds": [],
     "potionIds": []
 }

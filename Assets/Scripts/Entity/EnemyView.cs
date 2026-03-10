@@ -8,32 +8,32 @@ public class EnemyView : EntityView, ITargetable
     public Transform AimPoint => aimPoint;
     public EntityInstance Instance => instance;
 
-    private CombatManager combatManager;
+    private EventBus eventBus;
 
     public void Init(
         EnemyInstance instance,
-        CombatManager combatManager, 
+        EventBus eventBus, 
         Vector3 position, 
         EntityBuffViewPool buffViewPool,
         DamageTextPool damageTextPool
     )
     {
         this.instance = instance;
-        this.combatManager = combatManager;
+        this.eventBus = eventBus;
         base.buffViewPool = buffViewPool;
         base.damageTextPool = damageTextPool;
 
         transform.position = position;
 
-        combatManager.CombatSystem.EventBus.Subscribe<CombatStarted>(OnCombatStarted);
-        combatManager.CombatSystem.EventBus.Subscribe<CombatEnded>(OnCombatEnded);
-        combatManager.CombatSystem.EventBus.Subscribe<DeathDeclared>(OnDeathDeclared);
-        combatManager.CombatSystem.EventBus.Subscribe<AttackPlayed>(OnAttackPlayed);
-        combatManager.CombatSystem.EventBus.Subscribe<SkillPlayed>(OnSkillPlayed);
-        combatManager.CombatSystem.EventBus.Subscribe<EnemyIntentDecided>(OnEnemyIntentDecided);
-        combatManager.CombatSystem.EventBus.Subscribe<HpChanged>(OnHpChanged);
-        combatManager.CombatSystem.EventBus.Subscribe<BlockChanged>(OnBlockChanged);
-        combatManager.CombatSystem.EventBus.Subscribe<BuffChanged>(OnBuffChanged);
+        eventBus.Subscribe<CombatStarted>(OnCombatStarted);
+        eventBus.Subscribe<CombatEnded>(OnCombatEnded);
+        eventBus.Subscribe<DeathDeclared>(OnDeathDeclared);
+        eventBus.Subscribe<AttackPlayed>(OnAttackPlayed);
+        eventBus.Subscribe<SkillPlayed>(OnSkillPlayed);
+        eventBus.Subscribe<EnemyIntentDecided>(OnEnemyIntentDecided);
+        eventBus.Subscribe<HpChanged>(OnHpChanged);
+        eventBus.Subscribe<BlockChanged>(OnBlockChanged);
+        eventBus.Subscribe<BuffChanged>(OnBuffChanged);
 
         statusCG.alpha = 0f;
         hpView.Init(instance.CurrentHp, instance.MaxHp);
@@ -42,15 +42,15 @@ public class EnemyView : EntityView, ITargetable
     }
     private void OnDisable()
     {
-        combatManager.CombatSystem.EventBus.Unsubscribe<CombatStarted>(OnCombatStarted);
-        combatManager.CombatSystem.EventBus.Unsubscribe<CombatEnded>(OnCombatEnded);
-        combatManager.CombatSystem.EventBus.Unsubscribe<DeathDeclared>(OnDeathDeclared);
-        combatManager.CombatSystem.EventBus.Subscribe<AttackPlayed>(OnAttackPlayed);
-        combatManager.CombatSystem.EventBus.Subscribe<SkillPlayed>(OnSkillPlayed);
-        combatManager.CombatSystem.EventBus.Unsubscribe<EnemyIntentDecided>(OnEnemyIntentDecided);
-        combatManager.CombatSystem.EventBus.Unsubscribe<HpChanged>(OnHpChanged);
-        combatManager.CombatSystem.EventBus.Unsubscribe<BlockChanged>(OnBlockChanged);
-        combatManager.CombatSystem.EventBus.Unsubscribe<BuffChanged>(OnBuffChanged);
+        eventBus.Unsubscribe<CombatStarted>(OnCombatStarted);
+        eventBus.Unsubscribe<CombatEnded>(OnCombatEnded);
+        eventBus.Unsubscribe<DeathDeclared>(OnDeathDeclared);
+        eventBus.Subscribe<AttackPlayed>(OnAttackPlayed);
+        eventBus.Subscribe<SkillPlayed>(OnSkillPlayed);
+        eventBus.Unsubscribe<EnemyIntentDecided>(OnEnemyIntentDecided);
+        eventBus.Unsubscribe<HpChanged>(OnHpChanged);
+        eventBus.Unsubscribe<BlockChanged>(OnBlockChanged);
+        eventBus.Unsubscribe<BuffChanged>(OnBuffChanged);
     }
     public void OnCombatStarted(CombatStarted e)
     {
