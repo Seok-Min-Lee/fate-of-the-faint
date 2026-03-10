@@ -106,7 +106,6 @@ public class CombatSystem : BaseSystem
         EventBus.Subscribe<PlayerTurnEnded>(uiSystem.OnPlayerTurnEnded);
         EventBus.Subscribe<EnemyTurnStarted>(uiSystem.OnEnemyTurnStarted);
         EventBus.Subscribe<EnergyChanged>(uiSystem.OnEnergyChanged);
-        EventBus.Subscribe<HpChanged>(uiSystem.OnHpChanged);
 
         EventBus.Subscribe<ActionEnded>(hpSystem.OnActionEnded);
 
@@ -149,7 +148,6 @@ public class CombatSystem : BaseSystem
         EventBus.Unsubscribe<PlayerTurnEnded>(uiSystem.OnPlayerTurnEnded);
         EventBus.Unsubscribe<EnemyTurnStarted>(uiSystem.OnEnemyTurnStarted);
         EventBus.Unsubscribe<EnergyChanged>(uiSystem.OnEnergyChanged);
-        EventBus.Unsubscribe<HpChanged>(uiSystem.OnHpChanged);
 
         EventBus.Unsubscribe<ActionEnded>(hpSystem.OnActionEnded);
 

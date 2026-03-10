@@ -12,7 +12,6 @@ public class UIMonoSystem : BaseMonoSystem
     [SerializeField] private Transform windowParent;
 
     [SerializeField] private EnergyView energy;
-    [SerializeField] private TextMeshProUGUI hpText;
 
     private Dictionary<WindowType, UIWindow> windowDictionary = new Dictionary<WindowType, UIWindow>();
     private Stack<HashSet<WindowType>> windowSnapshot = new Stack<HashSet<WindowType>>();
@@ -28,8 +27,6 @@ public class UIMonoSystem : BaseMonoSystem
                 window.ChangeWindow = ChangeWindow;
             }
         }
-
-        hpText.text = $"{PlayManager.Instance.CurrentData.CurrentHp}/{PlayManager.Instance.CurrentData.MaxHp}";
     }
     private void Start()
     {
@@ -184,21 +181,6 @@ public class UIMonoSystem : BaseMonoSystem
             command: () => energy.ChangeCor(e.EndAmount, e.MaxAmount),
             source: this
         ));
-    }
-    public void OnHpChanged(HpChanged e)
-    {
-        if (e.Context.Combat.state != CombatState.Combat)
-        {
-            return;
-        }
-
-        EntityInstance player = e.Context.Combat.Player;
-        if (e.Target.Id != player.Id)
-        {
-            return;
-        }
-
-        hpText.text = $"{e.EndAmount}/{player.MaxHp}";
     }
     public void OnClickCardDisplay()
     {

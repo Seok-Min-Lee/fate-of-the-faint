@@ -1,8 +1,8 @@
 {
     "playerId": "Player_A",
-    "currentHp": 67,
+    "currentHp": 34,
     "maxHp": 100,
-    "gold": 36,
+    "gold": 83,
     "rewardCardOptionCount": 3,
     "rng": {
         "seed": 1234,
@@ -20,10 +20,12 @@
         "skl_defend",
         "skl_defend",
         "skl_defend",
-        "pwr_demonForm"
+        "pwr_demonForm",
+        "atk_pommelStrike"
     ],
     "relicIds": [
-        "Akabeko"
+        "Akabeko",
+        "Gremlin Horn"
     ],
     "potionIds": []
 }
