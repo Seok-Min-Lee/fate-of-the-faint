@@ -3595,9 +3595,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd2f77362c8e76145bbd0dac327ca863, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UIMonoSystem
-  windowParent: {fileID: 2052917263}
+  windowManager: {fileID: 2052917264}
   energy: {fileID: 1854831585}
-  hpText: {fileID: 843749909}
 --- !u!114 &606307827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5320,17 +5319,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2587156182966324022, guid: d71fb8fdd7564124591ae9173367da6e, type: 3}
   m_PrefabInstance: {fileID: 835910068}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &843749909 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2196207809315391573, guid: 0b734837de7870443ad40a029f88a3ed, type: 3}
-  m_PrefabInstance: {fileID: 5301783699880551696}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1001 &866831011
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12291,6 +12279,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2052917263}
+  - component: {fileID: 2052917264}
   m_Layer: 5
   m_Name: Windows
   m_TagString: Untagged
@@ -12324,6 +12313,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2052917264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052917262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17e62b98f47bbf746a670e7b7838341c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WindowManager
+  windowParent: {fileID: 2052917263}
+  startWindowSource: 0
+  startWindowMode: 0
 --- !u!1001 &2053920774
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13226,6 +13230,10 @@ PrefabInstance:
       propertyPath: relic
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2853467941525804516, guid: e290279d306c55640a5779de6529cb43, type: 3}
+      propertyPath: windowManager
+      value: 
+      objectReference: {fileID: 2052917264}
     - target: {fileID: 4421055640453646483, guid: e290279d306c55640a5779de6529cb43, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0

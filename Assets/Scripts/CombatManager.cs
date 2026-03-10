@@ -55,13 +55,10 @@ public class CombatManager : MonoBehaviour
         hpSystem.Init(CombatSystem.EventBus);
         goldSystem.Init(CombatSystem.EventBus);
         cameraSystem.Init(CombatSystem.EventBus);
+        relicSystem.Init(CombatSystem.EventBus);
         uiSystem.Init(
             eventBus: CombatSystem.EventBus,
             actionSystem: CombatSystem.ActionSystem
-        );
-        relicSystem.Init(
-            eventBus: CombatSystem.EventBus,
-            onClick: (relic) => uiSystem.OnClickRelic(relic)
         );
         cardSystem.Init(
             eventBus: CombatSystem.EventBus, 

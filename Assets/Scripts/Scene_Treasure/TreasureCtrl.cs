@@ -5,10 +5,12 @@ using UnityEngine.UI;
 
 public class TreasureCtrl : MonoBehaviour
 {
-    [SerializeField] Button button;
-    [SerializeField] TreasurePopup popup;
-    [SerializeField] Button nextButton;
-    [SerializeField] TextMeshProUGUI tipText;
+    [SerializeField] private UIWindowManager windowManager;
+
+    [SerializeField] private Button button;
+    [SerializeField] private TreasurePopup popup;
+    [SerializeField] private Button nextButton;
+    [SerializeField] private TextMeshProUGUI tipText;
     private void Start()
     {
         nextButton.gameObject.SetActive(false);
@@ -28,5 +30,17 @@ public class TreasureCtrl : MonoBehaviour
     public void ShowNext()
     {
         nextButton.gameObject.SetActive(true);
+    }
+    public void OnClickCardDisplay()
+    {
+        windowManager.ActivateWindow(WindowType.CardDisplay, WindowMode.Single);
+    }
+    public void OnClickMap()
+    {
+        windowManager.ActivateWindow(WindowType.Map, WindowMode.Single);
+    }
+    public void OnClickSetting()
+    {
+        windowManager.ActivateWindow(WindowType.Setting, WindowMode.Single);
     }
 }

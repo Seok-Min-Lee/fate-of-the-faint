@@ -94,7 +94,11 @@ public class TreasurePopup : MonoBehaviour
             instances.Add(candidates[i].CreateInstance());
         }
 
-        sampleViews = samplePool.CreateViews(instances);
+        sampleViews = samplePool.CreateViews(
+            samples: instances, 
+            onClick: (view) => SelectView(view)
+        );
+
         List<Vector3> positions = Utils.GetCircleAlignedPositions(count, radius);
 
         for (int i = 0; i < sampleViews.Count; i++)
@@ -103,7 +107,7 @@ public class TreasurePopup : MonoBehaviour
 
             view.transform.parent = content;
             view.transform.localScale = Vector3.one;
-            view.AddListener((v) => SelectView(v));
+            //view.AddListener((v) => SelectView(v));
 
             RectTransform rt = view.GetComponent<RectTransform>();
             rt.anchorMin = new Vector2(0.5f, 0.5f);

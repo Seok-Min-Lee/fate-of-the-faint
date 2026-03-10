@@ -8,6 +8,8 @@ public class MapCtrl : MonoBehaviour
 {
     [SerializeField] private MapBootstrap bootstrap;
     [SerializeField] private ScrollRect scrollRect;
+
+    [SerializeField] private UIWindowManager windowManager;
     public MapGraph Graph { get; private set; }
     private Sequence seq;
     private void Awake()
@@ -48,6 +50,18 @@ public class MapCtrl : MonoBehaviour
         }
     }
 #endif
+    public void OnClickCardDisplay()
+    {
+        windowManager.ActivateWindow(WindowType.CardDisplay, WindowMode.Single);
+    }
+    public void OnClickMap()
+    {
+        windowManager.ActivateWindow(WindowType.Map, WindowMode.Single);
+    }
+    public void OnClickSetting()
+    {
+        windowManager.ActivateWindow(WindowType.Setting, WindowMode.Single);
+    }
     public bool TrySelectNode(MapNode node)
     {
         bool success = false;

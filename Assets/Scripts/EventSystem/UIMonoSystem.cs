@@ -9,70 +9,10 @@ public class UIMonoSystem : BaseMonoSystem
     private ActionSystem actionSystem;
 
     [Header("Canvas")]
-    [SerializeField] private Transform windowParent;
-
+    [SerializeField] private UIWindowManager windowManager;
     [SerializeField] private EnergyView energy;
 
-    private Dictionary<WindowType, UIWindow> windowDictionary = new Dictionary<WindowType, UIWindow>();
-    private Stack<HashSet<WindowType>> windowSnapshot = new Stack<HashSet<WindowType>>();
-
     private Sequence sequence;
-    private void Awake()
-    {
-        foreach (UIWindow window in windowParent.GetComponentsInChildren<UIWindow>())
-        {
-            if (!windowDictionary.ContainsKey(window.Type))
-            {
-                windowDictionary.Add(window.Type, window);
-                window.ChangeWindow = ChangeWindow;
-            }
-        }
-    }
-    private void Start()
-    {
-        ChangeWindow(WindowType.Combat, WindowMode.Single);
-    }
-    private void ChangeWindow(WindowType source, WindowMode mode)
-    {
-        UIWindow window;
-        HashSet<WindowType> snapshot;
-        if (mode == WindowMode.Revert)
-        {
-            if (windowSnapshot.Count > 0)
-            {
-                snapshot = windowSnapshot.Pop();
-                foreach (KeyValuePair<WindowType, UIWindow> kvp in windowDictionary)
-                {
-                    kvp.Value.gameObject.SetActive(snapshot.Contains(kvp.Key));
-                }
-            }
-        }
-        else
-        {
-            snapshot = new HashSet<WindowType>();
-            foreach (KeyValuePair<WindowType, UIWindow> kvp in windowDictionary)
-            {
-                if (kvp.Value.gameObject.activeSelf)
-                {
-                    snapshot.Add(kvp.Key);
-                }
-            }
-            windowSnapshot.Push(snapshot);
-
-            if (windowDictionary.TryGetValue(source, out window))
-            {
-                if (mode == WindowMode.Single)
-                {
-                    foreach (UIWindow w in windowDictionary.Values)
-                    {
-                        w.gameObject.SetActive(false);
-                    }
-                }
-
-                window.gameObject.SetActive(true);
-            }
-        }
-    }
     public void Init(EventBus eventBus, ActionSystem actionSystem)
     {
         this.eventBus = eventBus;
@@ -80,11 +20,11 @@ public class UIMonoSystem : BaseMonoSystem
     }
     public void OnCombatStarted(CombatStarted e)
     {
-        if (!windowDictionary.TryGetValue(WindowType.Combat, out UIWindow window))
-        { 
+        if (!windowManager.TryGetWindow(WindowType.Combat, out UIWindow window) ||
+            window is not CombatWindow combatWindow)
+        {
             return;
         }
-        CombatWindow combatWindow = window as CombatWindow;
 
         e.Motion.AddTask(new MotionTask(
             priority: MotionPriority.Window,
@@ -96,10 +36,10 @@ public class UIMonoSystem : BaseMonoSystem
     {
         UIWindow window;
 
-        if (e.Context.Combat.state == CombatState.Victory && 
-            windowDictionary.TryGetValue(WindowType.Victory, out window))
+        if (e.Context.Combat.state == CombatState.Victory &&
+            windowManager.TryGetWindow(WindowType.Victory, out window) &&
+            window is VictoryWindow victoryWindow)
         {
-            VictoryWindow victoryWindow = window as VictoryWindow;
             victoryWindow.Init(e.Context.Combat.GoldReward);
 
             e.Motion.AddTask(new MotionTask(
@@ -109,10 +49,9 @@ public class UIMonoSystem : BaseMonoSystem
             ));
         }
         else if (e.Context.Combat.state == CombatState.Defeat &&
-                 windowDictionary.TryGetValue(WindowType.Defeat, out window))
+                 windowManager.TryGetWindow(WindowType.Defeat, out window) &&
+                 window is DefeatWindow defeatWindow)
         {
-            DefeatWindow defeatWindow = window as DefeatWindow;
-
             e.Motion.AddTask(new MotionTask(
                 priority: MotionPriority.Window,
                 command: () => CombatEndedDefeatWindowAnimationCor(defeatWindow),
@@ -131,11 +70,11 @@ public class UIMonoSystem : BaseMonoSystem
             return;
         }
 
-        if (!windowDictionary.TryGetValue(WindowType.Combat, out UIWindow window))
+        if (!windowManager.TryGetWindow(WindowType.Combat, out UIWindow window) ||
+            window is not CombatWindow combatWindow)
         {
             return;
         }
-        CombatWindow combatWindow = window as CombatWindow;
 
         e.Motion.AddTask(new MotionTask(
             priority: MotionPriority.Window,
@@ -150,24 +89,17 @@ public class UIMonoSystem : BaseMonoSystem
             return;
         }
 
-        if (!windowDictionary.TryGetValue(WindowType.Combat, out UIWindow window))
+        if (!windowManager.TryGetWindow(WindowType.Combat, out UIWindow window) ||
+            window is not CombatWindow combatWindow)
         {
             return;
         }
-        CombatWindow combatWindow = window as CombatWindow;
 
         e.Motion.AddTask(new MotionTask(
             priority: MotionPriority.Window,
             command: () => EnemyTurnStartedAnimationCor(combatWindow),
             source: this
         ));
-    }
-    public void OnPlayerTurnEnded(PlayerTurnEnded e)
-    {
-        if (e.Context.Combat.state != CombatState.Combat)
-        {
-            return;
-        }
     }
     public void OnEnergyChanged(EnergyChanged e)
     {
@@ -184,31 +116,15 @@ public class UIMonoSystem : BaseMonoSystem
     }
     public void OnClickCardDisplay()
     {
-        if (!windowDictionary.TryGetValue(WindowType.CardDisplay, out UIWindow window) ||
-            window.gameObject.activeSelf)
-        {
-            return;
-        }
-
-        ChangeWindow(WindowType.CardDisplay, WindowMode.Single);
+        windowManager.ActivateWindow(WindowType.CardDisplay, WindowMode.Single);
     }
     public void OnClickMap()
     {
-        if (!windowDictionary.TryGetValue(WindowType.Map, out UIWindow window) ||
-            window.gameObject.activeSelf)
-        {
-            return;
-        }
-        ChangeWindow(WindowType.Map, WindowMode.Single);
+        windowManager.ActivateWindow(WindowType.Map, WindowMode.Single);
     }
     public void OnClickSetting()
     {
-        if (!windowDictionary.TryGetValue(WindowType.Setting, out UIWindow window) ||
-            window.gameObject.activeSelf)
-        {
-            return;
-        }
-        ChangeWindow(WindowType.Setting, WindowMode.Single);
+        windowManager.ActivateWindow(WindowType.Setting, WindowMode.Single);
     }
     public void OnClickReturn()
     {
@@ -223,20 +139,6 @@ public class UIMonoSystem : BaseMonoSystem
             ));
         });
     }
-    public void OnClickRelic(RelicView relic)
-    {
-        if (!windowDictionary.TryGetValue(WindowType.Relic, out UIWindow window))
-        {
-            return;
-        }
-
-        ((RelicWindow)window).Bind(relic);
-
-        if (!window.gameObject.activeSelf)
-        {
-            ChangeWindow(WindowType.Relic, WindowMode.Single);
-        }
-    }
     IEnumerator CombatStartedAnimationCor(CombatWindow combatWindow)
     {
         if (sequence != null)
@@ -245,7 +147,7 @@ public class UIMonoSystem : BaseMonoSystem
         }
         sequence = DOTween.Sequence();
 
-        sequence.AppendCallback(() => ChangeWindow(WindowType.Combat, WindowMode.Single));
+        sequence.AppendCallback(() => windowManager.ActivateWindow(WindowType.Combat, WindowMode.Single));
         sequence.Append(combatWindow.AnnounceCombat());
 
         yield return sequence.WaitForCompletion();

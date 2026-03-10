@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class RelicViewPool : GameObjectPool<RelicView>
 {
     [SerializeField] private RelicSimplePopup simplePopup;
     public RelicSimplePopup SimplePopup => simplePopup;
-    public List<RelicView> CreateViews(IEnumerable<RelicInstance> samples)
+    public List<RelicView> CreateViews(IEnumerable<RelicInstance> samples, Action<RelicView> onClick)
     {
         List<RelicView> views = new List<RelicView>();
 
@@ -13,6 +14,7 @@ public class RelicViewPool : GameObjectPool<RelicView>
         {
             RelicView view = Pop();
             view.Init(sample, simplePopup);
+            view.AddListener(onClick);
             views.Add(view);
         }
 
