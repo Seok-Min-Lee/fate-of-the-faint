@@ -9,13 +9,13 @@ public class RelicView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 {
     [SerializeField] private Image image;
     public RelicInstance Instance { get; private set; }
-    public RelicSimplePopup SimplePopup { get; private set; }
+    public TooltipView Tooltip { get; private set; }
     private Sequence sequence;
     private Action<RelicView> onClick;
-    public void Init(RelicInstance instance, RelicSimplePopup simplePopup)
+    public void Init(RelicInstance instance, TooltipView tooltip)
     {
         Instance = instance;
-        SimplePopup = simplePopup;
+        Tooltip = tooltip;
         image.sprite = instance.Origin.Icon;
 
     }
@@ -54,12 +54,18 @@ public class RelicView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        SimplePopup.Bind(Instance.Origin.DisplayName, Instance.Origin.Description, transform);
+        Tooltip.Bind(
+            name: Instance.Origin.DisplayName, 
+            description: Instance.Origin.Description
+        );
+
+        Tooltip.transform.position = transform.position;
+        Tooltip.transform.parent = transform.parent.parent;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        SimplePopup.Clear();
+        Tooltip.Clear();
     }
 
     public void OnPointerClick(PointerEventData eventData)

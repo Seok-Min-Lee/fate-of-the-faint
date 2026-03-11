@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class RelicViewPool : GameObjectPool<RelicView>
 {
-    [SerializeField] private RelicSimplePopup simplePopup;
-    public RelicSimplePopup SimplePopup => simplePopup;
+    [SerializeField] private TooltipView tooltip;
+    public TooltipView Tooltip => tooltip;
     public List<RelicView> CreateViews(IEnumerable<RelicInstance> samples, Action<RelicView> onClick)
     {
         List<RelicView> views = new List<RelicView>();
@@ -13,7 +13,7 @@ public class RelicViewPool : GameObjectPool<RelicView>
         foreach (RelicInstance sample in samples)
         {
             RelicView view = Pop();
-            view.Init(sample, simplePopup);
+            view.Init(sample, tooltip);
             view.AddListener(onClick);
             views.Add(view);
         }
@@ -23,7 +23,7 @@ public class RelicViewPool : GameObjectPool<RelicView>
     public RelicView CreateView(RelicInstance instance)
     {
         RelicView view = Pop();
-        view.Init(instance, simplePopup);
+        view.Init(instance, tooltip);
 
         return view;
     }

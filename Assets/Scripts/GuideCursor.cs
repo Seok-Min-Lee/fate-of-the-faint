@@ -8,7 +8,6 @@ public interface ITooltip
 public class GuideCursor : RaycastCursor<ITooltip>
 {
     [SerializeField] TooltipView view;
-    [SerializeField] Transform child;
     private void Update()
     {
         ITooltip tooltip = RaycastTargetUnderCursor();

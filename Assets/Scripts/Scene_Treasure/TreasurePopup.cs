@@ -63,7 +63,7 @@ public class TreasurePopup : MonoBehaviour
         {
             view.gameObject.SetActive(false);
 
-            samplePool.SimplePopup.gameObject.SetActive(false);
+            samplePool.Tooltip.gameObject.SetActive(false);
         });
         sequence.Append(dimmedCG.DOFade(0f, 0.5f));
         sequence.Join(content.DOScale(Vector3.zero, 0.5f).SetEase(Ease.OutBack));
