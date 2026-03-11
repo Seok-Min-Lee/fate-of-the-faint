@@ -388,11 +388,15 @@ public class CombatSystem : BaseSystem
             return;
         }
 
-        EntityInstance source = e.Damage.Source as EntityInstance;
-        source.ModifyDamage(e.Damage);
+        if (e.Damage.Source is EntityInstance source)
+        {
+            source.ModifyDamage(e.Damage);
+        }
 
-        EntityInstance target = e.Damage.Target as EntityInstance;
-        target.ModifyDamage(e.Damage);
+        if (e.Damage.Target is EntityInstance target)
+        {
+            target.ModifyDamage(e.Damage);
+        }
     }
     private void OnDamageResolved(DamageResolved e)
     {

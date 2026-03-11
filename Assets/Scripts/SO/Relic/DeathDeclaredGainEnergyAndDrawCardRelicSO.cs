@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 [CreateAssetMenu(fileName = "Death Declared Gain Energy And Draw Card Relic ", menuName = "Scriptable Objects/Relic/Death Declared Gain Energy And Draw Card Relic ")]
 public class DeathDeclaredGainEnergyAndDrawCardRelicSO : RelicSO

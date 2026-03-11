@@ -1,5 +1,3 @@
-﻿using UnityEngine;
-
-public class MapEdgeViewPool : GameObjectPool<MapEdgeView>
+﻿public class MapEdgeViewPool : GameObjectPool<MapEdgeView>
 {
 }

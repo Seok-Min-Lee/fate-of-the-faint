@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyInstance : EntityInstance
 {

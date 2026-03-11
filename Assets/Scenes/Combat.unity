@@ -9876,7 +9876,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Tip: Every path you take will always have at aleast 1 treasure room.'
+  m_text: "\uCC59\uAE30\uC9C0 \uC54A\uC740 \uBCF4\uC0C1\uC740 \uB3CC\uC544\uC640\uC11C
+    \uAC00\uC838\uAC08 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0b96104025fca5942a7e5cc9a4ff56bd, type: 2}
   m_sharedMaterial: {fileID: 1139193548961459898, guid: 0b96104025fca5942a7e5cc9a4ff56bd, type: 2}
@@ -12942,7 +12943,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Reward
+  m_text: "\uC2B9\uB9AC!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9c65566dd1f71fd4f892dccc735d36b6, type: 2}
   m_sharedMaterial: {fileID: 1139193548961459898, guid: 9c65566dd1f71fd4f892dccc735d36b6, type: 2}

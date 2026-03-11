@@ -5,6 +5,7 @@ using UnityEngine;
 public class RestCompleteWindow : UIWindow
 {
     [SerializeField] private UICurtain curtain;
+    [SerializeField] private GameObject nextButton;
 
     [Header("[Heal]")]
     [SerializeField] private CanvasGroup healTextCG;
@@ -20,6 +21,7 @@ public class RestCompleteWindow : UIWindow
     [SerializeField] private int vibrato;
     public void CompleteHeal()
     {
+        nextButton.SetActive(true);
         RectTransform healTextTransform = healTextCG.GetComponent<RectTransform>();
 
         Sequence sequence = DOTween.Sequence();
@@ -41,6 +43,7 @@ public class RestCompleteWindow : UIWindow
     {
         healTextCG.gameObject.SetActive(false);
         healParticle.gameObject.SetActive(false);
+        nextButton.SetActive(false);
 
         CardDisplayView view = pool.Pop();
 
@@ -86,6 +89,7 @@ public class RestCompleteWindow : UIWindow
         sequence.AppendCallback(() =>
         {
             pool.Push(view);
+            nextButton.SetActive(true);
         });
     }
 

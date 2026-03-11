@@ -86,7 +86,7 @@ public class PlayManager : MonoSingleton<PlayManager>
 
             default:
 #if UNITY_EDITOR
-                return bossPlan;
+                return enemyPlans[Random.Range(0, enemyPlans.Length)];
 #else
                 return null;
 #endif

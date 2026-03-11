@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class RecordSystem : IPlayerTurnStarted, IDeathDeclared, ICardPlayDeclared
+﻿public class RecordSystem : IPlayerTurnStarted, IDeathDeclared, ICardPlayDeclared
 {
     private readonly EventBus eventBus;
     

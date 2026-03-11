@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [CreateAssetMenu(fileName = "Draw Card ", menuName = "Scriptable Objects/EffectSO/Draw Card Effect ")]
 public class DrawCardEffectSO : EffectSO

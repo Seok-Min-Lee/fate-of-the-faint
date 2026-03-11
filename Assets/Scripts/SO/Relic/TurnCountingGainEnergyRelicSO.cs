@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "Turn Counting Gain Energy Relic ", menuName = "Scriptable Objects/Relic/Turn Counting Gain Energy Relic ")]
 public class TurnCountingGainEnergyRelicSO : RelicSO

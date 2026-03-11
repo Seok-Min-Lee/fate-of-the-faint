@@ -1,4 +1,3 @@
-﻿
-public class CardDisplayViewPool : GameObjectPool<CardDisplayView>
+﻿public class CardDisplayViewPool : GameObjectPool<CardDisplayView>
 {
 }

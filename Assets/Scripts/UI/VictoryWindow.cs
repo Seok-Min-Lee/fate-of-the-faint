@@ -1,5 +1,4 @@
 ﻿using DG.Tweening;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -45,6 +44,7 @@ public class VictoryWindow : UIMotionWindow
     }
     private Sequence Show()
     {
+        string tipStr = tipText.text;
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() =>
         {
@@ -57,7 +57,7 @@ public class VictoryWindow : UIMotionWindow
         sequence.Append(contentCG.DOFade(1f, 0.5f));
         sequence.JoinCallback(() => 
         {
-            tipText.text = "Tip: Every path you take will always have at aleast 1 treasure room.";
+            tipText.text = tipStr;
             Utils.TMPDOText(tipText, 2f);
         });
 

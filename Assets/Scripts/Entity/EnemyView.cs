@@ -1,6 +1,4 @@
-﻿using DG.Tweening;
-using System.Collections;
-using TMPro;
+﻿using System.Collections;
 using UnityEngine;
 public class EnemyView : EntityView, ITargetable
 {

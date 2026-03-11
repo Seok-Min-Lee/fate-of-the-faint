@@ -1,6 +1,4 @@
-﻿using NUnit.Framework;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "atk_", menuName = "Scriptable Objects/CardSO/Attack Card")]

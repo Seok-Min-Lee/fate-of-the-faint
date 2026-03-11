@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using static UnityEngine.GraphicsBuffer;
-
 public class TooltipTarget : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private RectTransform canvas;

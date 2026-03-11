@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [CreateAssetMenu(fileName = "Modify Cost ", menuName = "Scriptable Objects/EffectSO/Modify Cost Effect ")]
 public class ModifyCostEffectSO : EffectSO

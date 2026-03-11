@@ -1,5 +1,3 @@
-﻿using UnityEngine;
-
-public class MapNodeViewPool : GameObjectPool<MapNodeView>
+﻿public class MapNodeViewPool : GameObjectPool<MapNodeView>
 {
 }

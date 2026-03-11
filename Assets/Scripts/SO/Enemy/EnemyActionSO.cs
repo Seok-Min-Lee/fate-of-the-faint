@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "EnemyAction_", menuName = "Scriptable Objects/Enemy/EnemyActionSO")]
 public sealed class EnemyActionSO : ScriptableObject

@@ -111,6 +111,11 @@ public class TurnSystem : BaseSystem
     }
     private void PublishEnemyTurnStarted(ICombatEvent e)
     {
+        if (e.Context.Combat.Enemies.Count == 0)
+        {
+            return;
+        }
+
         TurnContext = new TurnContext(
             turnId: turnId++,
             phase: TurnPhase.Enemy,

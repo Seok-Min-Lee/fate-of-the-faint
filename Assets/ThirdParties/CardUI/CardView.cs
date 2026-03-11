@@ -16,8 +16,33 @@ public class CardView : CardDefaultView, IPointerEnterHandler, IPointerExitHandl
     [SerializeField] private CardContainer container;
     [SerializeField] private bool preventCardInteraction;
 
-    private RectTransform rectTransform;
-    private Canvas canvas;
+    private RectTransform rectTransform
+    {
+        get
+        {
+            if (_rectTransform == null)
+            {
+                _rectTransform = GetComponent<RectTransform>();
+            }
+
+            return _rectTransform;
+        }
+    }
+    private RectTransform _rectTransform;
+
+    private Canvas canvas
+    {
+        get
+        {
+            if (_canvas == null)
+            {
+                _canvas = GetComponent<Canvas>();
+            }
+
+            return _canvas;
+        }
+    }
+    private Canvas _canvas;
 
     private float targetRotation;
     private Vector2 targetPosition;
@@ -27,18 +52,14 @@ public class CardView : CardDefaultView, IPointerEnterHandler, IPointerExitHandl
     private bool isHovered;
     private bool isDragged;
 
-    private bool isUsable = true;
-
     public float Width => rectTransform.rect.width * rectTransform.localScale.x;
 
-    private void Awake() 
-    {
-        rectTransform = GetComponent<RectTransform>();
-        canvas = GetComponent<Canvas>();
-        canvas.overrideSorting = true;
-
-        canvasGroup = GetComponent<CanvasGroup>();
-    }
+    //private void Awake() 
+    //{
+    //    RectTransform = GetComponent<RectTransform>();
+    //    Canvas = GetComponent<Canvas>();
+    //    Canvas.overrideSorting = true;
+    //}
 
     private void Update() 
     {
@@ -255,10 +276,23 @@ public class CardView : CardDefaultView, IPointerEnterHandler, IPointerExitHandl
     [SerializeField] private Color hoverColor;
     [SerializeField] private Color prepareColor;
 
-    private CanvasGroup canvasGroup;
+    public CanvasGroup CanvasGroup
+    {
+        get
+        {
+            if (_canvasGroup == null)
+            {
+                _canvasGroup = GetComponent<CanvasGroup>();
+            }
+
+            return _canvasGroup;
+        }
+    }
+    private CanvasGroup _canvasGroup;
     public CardInstance CardInstance { get; private set; }
     public CardMonoSystem CardSystem { get; private set; }
 
+    private bool isUsable = true;
     private bool targetingLatched;
     private Vector2 lockedPosition;
     public void PlayCardStart(ITargetable target)
@@ -280,8 +314,6 @@ public class CardView : CardDefaultView, IPointerEnterHandler, IPointerExitHandl
         transform.parent = cardContainer.transform;
 
         base.Init(cardInstance.Origin);
-
-        canvas.overrideSorting = true;
     }
     public void ModifiyCost()
     {
@@ -310,7 +342,7 @@ public class CardView : CardDefaultView, IPointerEnterHandler, IPointerExitHandl
             transform.position = cardPlayConfig.DrawArea.transform.position;
             transform.rotation = Quaternion.Euler(0, 0, -90);
             transform.localScale = Vector3.zero;
-            canvasGroup.alpha = 1f;
+            CanvasGroup.alpha = 1f;
 
             gameObject.SetActive(true);
         });
@@ -362,7 +394,7 @@ public class CardView : CardDefaultView, IPointerEnterHandler, IPointerExitHandl
             isUsable = false;
         });
         sequence.Append(transform.DOLocalMoveY(transform.localPosition.y + 150, 0.5f).SetEase(Ease.OutSine));
-        sequence.Join(canvasGroup.DOFade(0, 0.5f).SetEase(Ease.OutSine));
+        sequence.Join(CanvasGroup.DOFade(0, 0.5f).SetEase(Ease.OutSine));
         sequence.AppendCallback(() =>
         {
             isUsable = true;

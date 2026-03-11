@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "pwr_turnStartedRemainBlock_", menuName = "Scriptable Objects/CardSO/Turn Started Remain Block Power Card")]
 public class TurnStartedRemainBlockPowerCardSO : PowerCardSO

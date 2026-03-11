@@ -1,7 +1,5 @@
 ﻿using DG.Tweening;
-using System.Diagnostics;
 using TMPro;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 using UnityEngine.UI;
 

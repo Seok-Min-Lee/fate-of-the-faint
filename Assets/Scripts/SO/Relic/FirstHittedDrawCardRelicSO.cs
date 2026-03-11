@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "First Hitted Draw Card Relic ", menuName = "Scriptable Objects/Relic/First Hitted Draw Card Relic")]
 public class FirstHittedDrawCardRelicSO : RelicSO

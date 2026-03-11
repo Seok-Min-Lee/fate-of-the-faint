@@ -60,12 +60,20 @@ public class TurnEndedEntityDamagePowerInstance : PowerInstance, IPlayerTurnEnde
 
             foreach (EntityInstance enemy in e.Context.Combat.Enemies)
             {
-                enemy.Hit(
-                    eventBus: EventBus,
-                    context: e.Context,
+                EventBus.Publish<AttackDeclared>(new AttackDeclared(
+                context: e.Context.RewriteNew(this),
                     motion: e.Motion,
-                    amount: enemyDamage
-                );
+                    source: this,
+                    target: enemy,
+                    amount: enemyDamage,
+                    repeat: 1
+                ));
+                //enemy.Hit(
+                //    eventBus: EventBus,
+                //    context: e.Context,
+                //    motion: e.Motion,
+                //    amount: enemyDamage
+                //);
             }
         });
     }

@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 [CreateAssetMenu(fileName = "skl_", menuName = "Scriptable Objects/CardSO/Skill Card")]
 public class SkillCardSO : CardSO
