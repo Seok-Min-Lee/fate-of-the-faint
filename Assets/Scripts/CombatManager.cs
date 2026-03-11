@@ -17,6 +17,8 @@ public class CombatManager : MonoBehaviour
     [SerializeField] private EntityBuffViewPool entityBuffPool;
     [SerializeField] private DamageTextPool damageTextPool;
 
+    [SerializeField] private RectTransform curtainRect;
+
     public CombatSystem CombatSystem { get; private set; }
     private void Awake()
     {

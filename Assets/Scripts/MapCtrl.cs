@@ -1,11 +1,14 @@
 ﻿using DG.Tweening;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MapCtrl : MonoBehaviour
 {
+    [SerializeField] private UICurtain curtain;
+
     [SerializeField] private MapBootstrap bootstrap;
     [SerializeField] private ScrollRect scrollRect;
 
@@ -28,7 +31,10 @@ public class MapCtrl : MonoBehaviour
         // OnClick Process Bind
         foreach (MapNodeView view in bootstrap.Nodes)
         {
-            view.Bind((node) => TrySelectNode(node));
+            view.Bind(
+                checkProcess: (node) => TrySelectNode(node),
+                successProcess: (node) => LoadSceneByNode(node)
+            );
         }
 
         // View Update
@@ -62,7 +68,7 @@ public class MapCtrl : MonoBehaviour
     {
         windowManager.ActivateWindow(WindowType.Setting, WindowMode.Single);
     }
-    public bool TrySelectNode(MapNode node)
+    private bool TrySelectNode(MapNode node)
     {
         bool success = false;
 
@@ -103,6 +109,26 @@ public class MapCtrl : MonoBehaviour
         }
 
         return false;
+    }
+    private void LoadSceneByNode(MapNode node)
+    {
+        curtain.Close().OnComplete(() =>
+        {
+            switch (node.Type)
+            {
+                case MapNodeType.Combat:
+                case MapNodeType.Elite:
+                case MapNodeType.Boss:
+                    UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.COMBAT);
+                    break;
+                case MapNodeType.Treasure:
+                    UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.TREASURE);
+                    break;
+                case MapNodeType.Rest:
+                    UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.REST);
+                    break;
+            }
+        });
     }
     public void CreateMap()
     {

@@ -18,6 +18,8 @@ public class VictoryWindow : UIMotionWindow
     [SerializeField] private Transform rewardParent;
     [SerializeField] private TextMeshProUGUI tipText;
 
+    [SerializeField] private UICurtain curtain;
+
     [SerializeField] private Sprite cardIcon;
     [SerializeField] private Sprite goldIcon;
 
@@ -28,15 +30,18 @@ public class VictoryWindow : UIMotionWindow
     }
     public void OnClickNext()
     {
-        if (PlayManager.Instance.MapGraph.LatestNode.Type == MapNodeType.Boss)
+        curtain.Close().OnComplete(() =>
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.ENDING);
-        }
-        else
-        {
-            combatCtrl.CombatSystem.Save();
-            UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
-        }
+            if (PlayManager.Instance.MapGraph.LatestNode.Type == MapNodeType.Boss)
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.ENDING);
+            }
+            else
+            {
+                combatCtrl.CombatSystem.Save();
+                UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
+            }
+        });
     }
     private Sequence Show()
     {

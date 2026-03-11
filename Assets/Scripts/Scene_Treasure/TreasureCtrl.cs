@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class TreasureCtrl : MonoBehaviour
 {
     [SerializeField] private UIWindowManager windowManager;
+    [SerializeField] private UICurtain curtain;
 
     [SerializeField] private Button button;
     [SerializeField] private TreasurePopup popup;
@@ -24,8 +25,11 @@ public class TreasureCtrl : MonoBehaviour
     }
     public void OnClickNext()
     {
-        PlayManager.Instance.SaveData();
-        UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
+        curtain.Close().OnComplete(() =>
+        {
+            PlayManager.Instance.SaveData();
+            UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
+        });
     }
     public void ShowNext()
     {

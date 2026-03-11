@@ -6,14 +6,23 @@ public class EndingCredit : MonoBehaviour
     [SerializeField] private Vector3 startPosition;
     [SerializeField] private Vector3 endPosition;
     
-    private RectTransform rectTransform;
-    private void Start()
+    public RectTransform RectTransform
     {
-        rectTransform = GetComponent<RectTransform>();
-        rectTransform.anchoredPosition = startPosition;
+        get
+        {
+            if (_rectTransform == null)
+            {
+                _rectTransform = GetComponent<RectTransform>();
+            }
+
+            return _rectTransform;
+        }
     }
+    private RectTransform _rectTransform;
     public Tween Play(float duration)
     {
-        return rectTransform.DOAnchorPos(endPosition, duration);
+        RectTransform.anchoredPosition = startPosition;
+
+        return RectTransform.DOAnchorPos(endPosition, duration);
     }
 }

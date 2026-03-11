@@ -19,7 +19,8 @@ public class MapNodeView : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     public int floor;
     public int col;
 
-    private Func<MapNode, bool> onClick;
+    private Func<MapNode, bool> checkProcess;
+    private Action<MapNode> successProcess;
     private Sequence sequence;
     private void Awake()
     {
@@ -55,9 +56,10 @@ public class MapNodeView : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         floor = node.Floor;
         col = node.Col;
     }
-    public void Bind(Func<MapNode, bool> onClick)
+    public void Bind(Func<MapNode, bool> checkProcess, Action<MapNode> successProcess)
     {
-        this.onClick = onClick;
+        this.checkProcess = checkProcess;
+        this.successProcess = successProcess;
     }
     public void Highlight()
     {
@@ -98,7 +100,7 @@ public class MapNodeView : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     }
     public void OnClick()
     {
-        if (onClick != null && onClick.Invoke(Node))
+        if (checkProcess != null && checkProcess.Invoke(Node))
         {
             Sequence sequence = DOTween.Sequence();
 
@@ -115,20 +117,7 @@ public class MapNodeView : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 Hide();
                 eventIcon.raycastTarget = false;
 
-                switch (Node.Type)
-                {
-                    case MapNodeType.Combat:
-                    case MapNodeType.Elite:
-                    case MapNodeType.Boss:
-                        UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.COMBAT);
-                        break;
-                    case MapNodeType.Treasure:
-                        UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.TREASURE);
-                        break;
-                    case MapNodeType.Rest:
-                        UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.REST);
-                        break;
-                }
+                successProcess?.Invoke(Node);
             });
         }
     }

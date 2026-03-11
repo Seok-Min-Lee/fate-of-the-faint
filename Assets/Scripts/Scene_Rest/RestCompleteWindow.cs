@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class RestCompleteWindow : UIWindow
 {
+    [SerializeField] private UICurtain curtain;
+
     [Header("[Heal]")]
     [SerializeField] private CanvasGroup healTextCG;
     [SerializeField] private HpMonoSystem hpSystem;
@@ -89,8 +91,11 @@ public class RestCompleteWindow : UIWindow
 
     public void OnClickNext()
     {
-        PlayManager.Instance.SaveData();
-        UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
+        curtain.Close().OnComplete(() =>
+        {
+            PlayManager.Instance.SaveData();
+            UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
+        });
     }
 
     private Sequence ModifyMotion(TextMeshProUGUI component, string value)

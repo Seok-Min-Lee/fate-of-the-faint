@@ -1,8 +1,8 @@
 {
     "playerId": "Player_A",
-    "currentHp": 49,
+    "currentHp": 54,
     "maxHp": 100,
-    "gold": 421,
+    "gold": 147,
     "rewardCardOptionCount": 3,
     "rng": {
         "seed": 1234,
@@ -20,57 +20,32 @@
         "skl_defend",
         "skl_defend",
         "skl_defend",
-        "atk_hemokinesis",
-        "pwr_combust",
-        "skl_shrugItOff",
-        "atk_cleave",
         "skl_intimidate",
-        "skl_shockwave",
-        "pwr_demonForm",
-        "atk_carnage",
-        "atk_bash",
-        "pwr_demonForm+"
+        "pwr_metallicize",
+        "atk_twinStrike"
     ],
     "relicIds": [
-        "Art of War",
-        "Orichalcum",
-        "Vajra",
-        "Centennial Puzzle",
-        "Nunchaku",
-        "Gremlin Horn",
         "Akabeko",
-        "Bag of Marbles",
-        "Happy Flower"
+        "Orichalcum",
+        "Gremlin Horn"
     ],
     "potionIds": [],
     "records": [
         {
             "Id": "일반 전투 횟수",
-            "Value": 9
-        },
-        {
-            "Id": "진행한 턴 수",
-            "Value": 30
-        },
-        {
-            "Id": "사용한 카드 수",
-            "Value": 84
-        },
-        {
-            "Id": "몬스터 처치 수",
-            "Value": 28
-        },
-        {
-            "Id": "엘리트 전투 횟수",
-            "Value": 1
-        },
-        {
-            "Id": "유물방 방문 횟수",
             "Value": 2
         },
         {
-            "Id": "휴식 횟수",
-            "Value": 1
+            "Id": "진행한 턴 수",
+            "Value": 12
+        },
+        {
+            "Id": "사용한 카드 수",
+            "Value": 27
+        },
+        {
+            "Id": "몬스터 처치 수",
+            "Value": 9
         }
     ]
 }

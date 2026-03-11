@@ -10,14 +10,19 @@ public class DefeatWindow : UIMotionWindow
     [SerializeField] private Transform recordParent;
     [SerializeField] private RecordView recordViewPrefab;
 
+    [SerializeField] private UICurtain curtain;
+
     protected override void Awake()
     {
         _handler.Add(MotionKey.WindowShow, Show);
     }
     public void OnClickBack()
     {
-        PlayManager.Instance.RemovePlayData();
-        UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.HOME);
+        curtain.Close().OnComplete(() =>
+        {
+            PlayManager.Instance.RemovePlayData();
+            UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.HOME);
+        });
     }
     private Sequence Show()
     {
