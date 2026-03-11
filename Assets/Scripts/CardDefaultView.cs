@@ -32,7 +32,7 @@ public class CardDefaultView : MonoBehaviour
         {
             if (i == typeIndex)
             {
-                arts[i].Activate(data.Image);
+                arts[i].Activate(data.Image, data.Rarity);
             }
             else
             {
