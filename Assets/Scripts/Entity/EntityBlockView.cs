@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-public class EntityBlockView : MonoBehaviour
+public class EntityBlockView : MonoBehaviour, ITooltip
 {
     [SerializeField] private CanvasGroup borderCG;
     [SerializeField] private TextMeshProUGUI text;
@@ -29,7 +29,6 @@ public class EntityBlockView : MonoBehaviour
             sequence.Kill();
         }
         sequence = DOTween.Sequence();
-        //Sequence sequence = DOTween.Sequence();
 
         sequence.AppendCallback(() =>
         {
@@ -56,7 +55,6 @@ public class EntityBlockView : MonoBehaviour
             sequence.Kill();
         }
         sequence = DOTween.Sequence();
-        //Sequence sequence = DOTween.Sequence();
 
         sequence.Append(borderCG.DOFade(0f, 0.5f));
         sequence.Join(text.DOColor(Color.clear, 0.5f));
@@ -72,7 +70,6 @@ public class EntityBlockView : MonoBehaviour
             sequence.Kill();
         }
         sequence = DOTween.Sequence();
-        //Sequence sequence = DOTween.Sequence();
 
         sequence.AppendCallback(() => 
         {
@@ -82,5 +79,11 @@ public class EntityBlockView : MonoBehaviour
         sequence.Append(text.transform.DOScale(Vector3.one, 0.25f).SetEase(Ease.OutBack));
 
         return sequence;
+    }
+
+    public void GetTooltip(out string head, out string desc)
+    {
+        head = "방어";
+        desc = "수치만큼 피해를 막습니다";
     }
 }

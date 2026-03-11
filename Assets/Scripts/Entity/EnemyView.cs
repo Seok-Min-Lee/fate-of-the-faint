@@ -146,19 +146,20 @@ public class EnemyView : EntityView, ITargetable
             return;
         }
 
-        EnemyInstance enemy = instance as EnemyInstance;
-        Sprite icon = enemy.NextAction.IntentIcon;
-        string text = enemy.NextAction.Effects[0].Value.ToString();
+        if (instance is not EnemyInstance enemy)
+        {
+            return;
+        }
 
         e.Motion.AddTask(new MotionTask(
             priority: MotionPriority.Actor,
-            command: () => ShowIntentCor(sprite: icon, text: text),
+            command: () => ShowIntentCor(enemy.NextAction),
             source: this
         ));
     }
-    private IEnumerator ShowIntentCor(Sprite sprite, string text)
+    private IEnumerator ShowIntentCor(EnemyActionSO intent)
     {
-        intentView.Show(sprite, text);
+        intentView.Show(intent);
         yield break;
     }
     private IEnumerator HideIntentCor()

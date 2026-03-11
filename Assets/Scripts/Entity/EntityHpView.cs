@@ -2,13 +2,15 @@
 using TMPro;
 using UnityEngine;
 
-public class EntityHpView : MonoBehaviour
+public class EntityHpView : MonoBehaviour, ITooltip
 {
     [SerializeField] private RectTransform guage;
     [SerializeField] private TextMeshProUGUI text;
 
     private RectTransform rectTransform;
     private Color textColor;
+
+
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
@@ -40,5 +42,10 @@ public class EntityHpView : MonoBehaviour
         sequence.Join(text.DOColor(textColor, 0.25f));
 
         return sequence;
+    }
+    public void GetTooltip(out string head, out string desc)
+    {
+        head = "체력";
+        desc = "0이 되면 죽습니다";
     }
 }

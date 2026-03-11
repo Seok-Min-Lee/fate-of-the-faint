@@ -143,12 +143,13 @@ public class EntityView : MonoBehaviour
     }
     protected IEnumerator ShowStatusCor()
     {
+        statusCG.gameObject.SetActive(true);
         statusCG.DOFade(1f, 1f);
         yield break;
     }
     protected IEnumerator HideStatusCor()
     {
-        statusCG.DOFade(0f, 1f);
+        statusCG.DOFade(0f, 1f).OnComplete(() => statusCG.gameObject.SetActive(false));
         yield break;
     }
     protected IEnumerator PlayAnimatorTriggerCor(string key, float duration = 0)

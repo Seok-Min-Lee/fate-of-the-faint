@@ -1,26 +1,30 @@
 ﻿using DG.Tweening;
+using System.Diagnostics;
 using TMPro;
+using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class IntentView : MonoBehaviour
+public class IntentView : MonoBehaviour, ITooltip
 {
     [SerializeField] private Image symbol;
     [SerializeField] private TextMeshProUGUI text;
 
     private CanvasGroup canvasGroup;
+    private IntentType type;
     private void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
     }
-    public Sequence Show(Sprite sprite, string text)
+    public Sequence Show(EnemyActionSO intent)
     {
         Sequence sequence = DOTween.Sequence();
 
         sequence.AppendCallback(() =>
         {
-            symbol.sprite = sprite;
-            this.text.text = text;
+            type = intent.IntentType;
+            symbol.sprite = intent.IntentIcon;
+            text.text = intent.Effects[0].Value.ToString();
 
             canvasGroup.alpha = 0f;
             gameObject.SetActive(true);
@@ -37,5 +41,36 @@ public class IntentView : MonoBehaviour
         sequence.AppendCallback(() => { gameObject.SetActive(false); });
 
         return sequence;
+    }
+
+    public void GetTooltip(out string name, out string description)
+    {
+        switch (type)
+        {
+            case IntentType.Attack:
+                name = "공격";
+                description = "공격을 준비하고 있습니다";
+                break;
+            case IntentType.AttackBlock:
+                name = "공격 & 방어";
+                description = "공격과 방어를 준비하고 있습니다";
+                break;
+            case IntentType.Block:
+                name = "방어";
+                description = "방어를 준비하고 있습니다";
+                break;
+            case IntentType.Buff:
+                name = "스킬";
+                description = "몬스터에게 이로운 효과를 준비하고 있습니다";
+                break;
+            case IntentType.Debuff:
+                name = "스킬";
+                description = "플레이어에게 해로운 효과를 준비하고 있습니다";
+                break;
+            default:
+                name = string.Empty;
+                description = string.Empty;
+                break;
+        }
     }
 }
