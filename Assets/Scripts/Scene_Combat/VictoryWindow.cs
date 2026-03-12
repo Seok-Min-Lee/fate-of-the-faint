@@ -101,7 +101,7 @@ public class VictoryWindow : UIMotionWindow
 
         button.Init(
             parent: rewardParent,
-            sprite: cardIcon,
+            sprite: goldIcon,
             text: $"{amount} 골드",
             onClick: (button) => OnClickGoldReward(button, amount)
         );
