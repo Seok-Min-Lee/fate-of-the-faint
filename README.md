@@ -23,7 +23,7 @@ EventBus 기반 아키텍처로 구현한 Slay the Spire 스타일의 덱빌딩 
 
 ### Data / Instance / View 
 - 데이터 정의, 런타임 상태, 표현 계층을 분리했습니다.
-- 
+  
 ### DAG (Directed Acyclic Graph)
 - **방향성 비순환 그래프** 방식을 활용하여 랜덤한 맵을 생성합니다.
 
