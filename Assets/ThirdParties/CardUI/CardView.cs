@@ -54,12 +54,12 @@ public class CardView : CardDefaultView, IPointerEnterHandler, IPointerExitHandl
 
     public float Width => rectTransform.rect.width * rectTransform.localScale.x;
 
-    //private void Awake() 
-    //{
-    //    RectTransform = GetComponent<RectTransform>();
-    //    Canvas = GetComponent<Canvas>();
-    //    Canvas.overrideSorting = true;
-    //}
+    private void Awake()
+    {
+        //rectTransform = GetComponent<RectTransform>();
+        //canvas = GetComponent<Canvas>();
+        canvas.overrideSorting = true;
+    }
 
     private void Update() 
     {
