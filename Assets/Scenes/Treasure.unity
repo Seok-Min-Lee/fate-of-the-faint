@@ -340,12 +340,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 296756532}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a4b8f59cf4bad743b2d6ddade12a93e, type: 3}
+  m_Script: {fileID: 11500000, guid: 35208092046e9894ba105a82283ce197, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ScaleLoopImage
-  duration: 3
+  m_EditorClassIdentifier: Assembly-CSharp::ScaleLooper
   min: 0.95
   max: 1.05
+  duration: 3
 --- !u!1001 &306844107
 PrefabInstance:
   m_ObjectHideFlags: 0
