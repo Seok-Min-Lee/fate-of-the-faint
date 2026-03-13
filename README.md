@@ -3,6 +3,7 @@ EventBus 기반 아키텍처로 구현한 Slay the Spire 스타일의 덱빌딩 
 전투 시스템을 이벤트 기반으로 설계하여 카드, 버프, 유물 시스템 간 결합도를 낮추었습니다.</br>
 카드 기반 턴제 전투와 덱 빌딩, 유물 시스템을 중심으로 설계되었습니다.
 
+[데모버전 다운로드](https://github.com/Seok-Min-Lee/fate-of-the-faint/releases/tag/Demo)
 ## 🎮 게임 플레이
 ### Attack Card Play
 ![Attack-Card-Play](Docs/Attack-Card-Play.gif)
