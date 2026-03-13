@@ -108,11 +108,6 @@ public class VictoryWindow : UIMotionWindow
     }
     private void AddCardRewardButton()
     {
-        //if (UnityEngine.Random.Range(0, 10) == 0)
-        //{
-        //    return;
-        //}
-
         RewardButton button = rewardButtonPool.Pop(); 
 
         button.Init(
@@ -129,10 +124,13 @@ public class VictoryWindow : UIMotionWindow
     }
     private void AddRelicRewardButton()
     {
-        //if (UnityEngine.Random.Range(0, 10) == 0)
-        //{
-        //    return;
-        //}
+
+#if !UNITY_EDITOR
+        if (PlayManager.Instance.MapGraph.LatestNode.Type == MapNodeType.Combat && UnityEngine.Random.Range(0, 10) != 0)
+        {
+            return;
+        }
+#endif
 
         //
         HashSet<RelicSO> hashset = PlayManager.Instance.CurrentData.Relics.Select(x => x.Origin).ToHashSet();
