@@ -87,7 +87,7 @@ public class RunManager : MonoSingleton<RunManager>
 
             default:
 #if UNITY_EDITOR
-                return enemyPlans[Random.Range(0, enemyPlans.Length)];
+                return bossPlan;
 #else
                 return null;
 #endif

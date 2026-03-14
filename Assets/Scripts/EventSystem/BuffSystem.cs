@@ -22,15 +22,13 @@ public class BuffSystem : BaseSystem
             target: e.Target
         );
 
-        EventContext eventContext = e.Context.RewriteNew(this);
         eventBus.Publish<BuffRequested>(new BuffRequested(
-            context: eventContext,
+            context: e.Context.RewriteNew(this),
             buff: buff
         ));
 
-        eventContext = e.Context.RewriteNew(this);
         eventBus.Publish<BuffResolved>(new BuffResolved(
-            context: eventContext,
+            context: e.Context.RewriteNew(this),
             motion: e.Motion,
             source: buff.Source,
             target: buff.Target,

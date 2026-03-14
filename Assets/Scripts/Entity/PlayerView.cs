@@ -145,6 +145,8 @@ public class PlayerView : EntityView, ITargetable
             command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_POWER),
             source: this
         ));
+
+        particle.Play(EntityParticleKey.Power);
     }
     public Tween Move(Vector3 target)
     {

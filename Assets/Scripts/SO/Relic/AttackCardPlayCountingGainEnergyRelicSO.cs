@@ -53,7 +53,5 @@ public class AttackCardPlayCountTriggerRelicInstance : RelicInstance, ICardPlayD
                 count = 0;
             });
         }
-
-        Debug.Log(count);
     }
 }

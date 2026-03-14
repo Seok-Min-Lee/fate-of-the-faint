@@ -905,6 +905,7 @@ Transform:
   - {fileID: 6711977895858098569}
   - {fileID: 8478039346388497912}
   - {fileID: 3140680492712950751}
+  - {fileID: 2196714510889559685}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &6460756203346933961
@@ -942,6 +943,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyView
   aimPoint: {fileID: 6711977895858098569}
   animator: {fileID: 4907487317028967210}
+  particle: {fileID: 9136994826627567838}
   statusCG: {fileID: 474925910898441538}
   blockView: {fileID: 8416423168326503210}
   hpView: {fileID: 6832231813547855069}
@@ -986,6 +988,67 @@ Transform:
   - {fileID: 851458972394463139}
   m_Father: {fileID: 7379353845710205050}
   m_LocalEulerAnglesHint: {x: -59.74814, y: 87.3719, z: -33.946507}
+--- !u!1001 &2082984932777039359
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7915183283369884692}
+    m_Modifications:
+    - target: {fileID: 185900993084273530, guid: 2003bbbd022650445ade713bd8f99940, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 185900993084273530, guid: 2003bbbd022650445ade713bd8f99940, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 185900993084273530, guid: 2003bbbd022650445ade713bd8f99940, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 185900993084273530, guid: 2003bbbd022650445ade713bd8f99940, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 185900993084273530, guid: 2003bbbd022650445ade713bd8f99940, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 185900993084273530, guid: 2003bbbd022650445ade713bd8f99940, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 185900993084273530, guid: 2003bbbd022650445ade713bd8f99940, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5498589872560539335, guid: 2003bbbd022650445ade713bd8f99940, type: 3}
+      propertyPath: m_Name
+      value: Particles
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2003bbbd022650445ade713bd8f99940, type: 3}
+--- !u!4 &2196714510889559685 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 185900993084273530, guid: 2003bbbd022650445ade713bd8f99940, type: 3}
+  m_PrefabInstance: {fileID: 2082984932777039359}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &9136994826627567838 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7072093562264700193, guid: 2003bbbd022650445ade713bd8f99940, type: 3}
+  m_PrefabInstance: {fileID: 2082984932777039359}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bfa06300bd6e80488ffe8dab5ad649a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EntityParticleManager
 --- !u!1001 &2701294448776724972
 PrefabInstance:
   m_ObjectHideFlags: 0
