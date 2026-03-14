@@ -32,7 +32,7 @@ public class EnhanceDisplayWindow : CardDisplayWindow
         }
 
         previewWindow.Bind(
-            before: PlayManager.Instance.CurrentData.Cards[view.Index], 
+            before: RunManager.Instance.CurrentData.Cards[view.Index], 
             after: view.Origin.UpgradeCard
         );
 

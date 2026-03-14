@@ -569,12 +569,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 55801932}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 286.25415, y: 192.10281, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1345040480}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &75738113
 PrefabInstance:
@@ -1548,7 +1548,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: -0.000061035156, y: 0}
-  m_SizeDelta: {x: 1903, y: 0}
+  m_SizeDelta: {x: 1903, y: 143.2}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &295634692
 MonoBehaviour:
@@ -4023,9 +4023,9 @@ RectTransform:
   m_Father: {fileID: 2029984884}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -17, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &602959823
 MonoBehaviour:
@@ -4087,12 +4087,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 606307822}
-  - component: {fileID: 606307823}
-  - component: {fileID: 606307825}
+  - component: {fileID: 606307828}
   - component: {fileID: 606307826}
   - component: {fileID: 606307827}
-  - component: {fileID: 606307828}
-  - component: {fileID: 606307829}
   m_Layer: 0
   m_Name: Combat Ctrl
   m_TagString: Untagged
@@ -4115,44 +4112,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &606307823
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 606307817}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7ef2039d0245b248924d48dac7a0175, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EventContext
-  cardSystem: {fileID: 28270240}
-  uiSystem: {fileID: 606307826}
-  relicSystem: {fileID: 3108958426846968672}
-  animationSystem: {fileID: 606307827}
-  cameraSystem: {fileID: 1551523249}
-  hpSystem: {fileID: 1803899123}
-  goldSystem: {fileID: 1836647910}
-  playerPrefab: {fileID: 3590264590922241840, guid: 341ee4c7cdddb6146b15246fa7025fa8, type: 3}
-  entityBuffPool: {fileID: 606307828}
-  damageTextPool: {fileID: 606307829}
-  curtainRect: {fileID: 0}
---- !u!114 &606307825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 606307817}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58564765f9064ef46ad04797593c6355, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DebugSystem
-  combatManager: {fileID: 606307823}
-  scrollRect: {fileID: 2029984885}
-  debugTextUI: {fileID: 295634693}
 --- !u!114 &606307826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4188,23 +4147,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 606307817}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08fc427b22c8328468c3eab112e40be2, type: 3}
+  m_Script: {fileID: 11500000, guid: 89b7f8bcefc69244e84b576d6cd14589, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EntityBuffViewPool
-  prefab: {fileID: 3222098425943334830, guid: 5d32c15df63bde84daa42a7ebdf67f44, type: 3}
---- !u!114 &606307829
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 606307817}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdb154753f07c39408fa1577c581b386, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DamageTextPool
-  prefab: {fileID: 3353094300628174136, guid: f8d524c0392ca65489d1e4438c566913, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::CombatCtrl
+  cardSystem: {fileID: 28270240}
+  uiSystem: {fileID: 606307826}
+  relicSystem: {fileID: 3108958426846968672}
+  motionSystem: {fileID: 606307827}
+  cameraSystem: {fileID: 1551523249}
+  hpSystem: {fileID: 1803899123}
+  goldSystem: {fileID: 1836647910}
+  playerPrefab: {fileID: 3590264590922241840, guid: 341ee4c7cdddb6146b15246fa7025fa8, type: 3}
+  entityBuffPool: {fileID: 1678917309}
+  damageTextPool: {fileID: 1678917308}
+  curtainRect: {fileID: 154496668}
 --- !u!1 &610720184
 GameObject:
   m_ObjectHideFlags: 0
@@ -4479,7 +4435,7 @@ RectTransform:
   m_Father: {fileID: 835020617}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -8440,6 +8396,57 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3894222995105915161, guid: c76dac5aff5973948b558bf1b998302b, type: 3}
   m_PrefabInstance: {fileID: 1313524792}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1345040478
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1345040480}
+  - component: {fileID: 1345040479}
+  m_Layer: 0
+  m_Name: Debug System
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1345040479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1345040478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58564765f9064ef46ad04797593c6355, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DebugSystem
+  combatManager: {fileID: 606307828}
+  canvas: {fileID: 1348242871}
+  camera: {fileID: 55801932}
+  scrollRect: {fileID: 2029984885}
+  debugTextUI: {fileID: 295634693}
+--- !u!4 &1345040480
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1345040478}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1348242875}
+  - {fileID: 55801936}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1348242871
 GameObject:
   m_ObjectHideFlags: 0
@@ -8535,7 +8542,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2029984884}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1345040480}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -9780,7 +9787,7 @@ GameObject:
   - component: {fileID: 1551523248}
   - component: {fileID: 1551523249}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: Camera System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10665,7 +10672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VictoryWindow
   type: 2
-  combatCtrl: {fileID: 606307823}
+  combatCtrl: {fileID: 606307828}
   relicSystem: {fileID: 3108958426846968672}
   goldSystem: {fileID: 1836647910}
   cardRewardWindow: {fileID: 719357629}
@@ -10846,6 +10853,65 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7456685920448981494, guid: 8e2fb184aee1d6c4093458a39c29c900, type: 3}
   m_PrefabInstance: {fileID: 1675737743}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1678917307
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1678917310}
+  - component: {fileID: 1678917309}
+  - component: {fileID: 1678917308}
+  m_Layer: 0
+  m_Name: Pools
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1678917308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1678917307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdb154753f07c39408fa1577c581b386, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageTextPool
+  prefab: {fileID: 3353094300628174136, guid: f8d524c0392ca65489d1e4438c566913, type: 3}
+--- !u!114 &1678917309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1678917307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08fc427b22c8328468c3eab112e40be2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EntityBuffViewPool
+  prefab: {fileID: 3222098425943334830, guid: 5d32c15df63bde84daa42a7ebdf67f44, type: 3}
+--- !u!4 &1678917310
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1678917307}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 859.21893, y: 201.83302, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1685359258
 GameObject:
   m_ObjectHideFlags: 0
@@ -14287,7 +14353,7 @@ PrefabInstance:
     - target: {fileID: 1484250064094162371, guid: e290279d306c55640a5779de6529cb43, type: 3}
       propertyPath: combatManager
       value: 
-      objectReference: {fileID: 606307823}
+      objectReference: {fileID: 0}
     - target: {fileID: 2853467941525804516, guid: e290279d306c55640a5779de6529cb43, type: 3}
       propertyPath: relic
       value: 
@@ -15032,6 +15098,6 @@ SceneRoots:
   - {fileID: 1286824798}
   - {fileID: 129072754}
   - {fileID: 2136465371}
+  - {fileID: 1345040480}
   - {fileID: 1793625659}
-  - {fileID: 1348242875}
-  - {fileID: 55801936}
+  - {fileID: 1678917310}

@@ -1,0 +1,49 @@
+{
+    "playerId": "Player_A",
+    "currentHp": 51,
+    "maxHp": 100,
+    "gold": 86,
+    "energy": 3,
+    "rewardCardOptionCount": 3,
+    "rng": {
+        "seed": 1234,
+        "calls": 0
+    },
+    "nodes": [],
+    "cardIds": [
+        "atk_strike",
+        "atk_strike",
+        "atk_strike",
+        "atk_strike",
+        "atk_strike",
+        "skl_defend",
+        "skl_defend",
+        "skl_defend",
+        "skl_defend",
+        "skl_defend",
+        "atk_carnage",
+        "atk_hemokinesis"
+    ],
+    "relicIds": [
+        "Nunchaku"
+    ],
+    "potionIds": [],
+    "records": [
+        {
+            "Id": "진행한 턴 수",
+            "Value": 8
+        },
+        {
+            "Id": "일반 전투 횟수",
+            "Value": 1
+        },
+        {
+            "Id": "사용한 카드 수",
+            "Value": 18
+        },
+        {
+            "Id": "몬스터 처치 수",
+            "Value": 6
+        }
+    ]
+}

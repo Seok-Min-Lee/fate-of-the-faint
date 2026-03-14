@@ -13,7 +13,7 @@ public class CombatSystem : BaseSystem
     public TurnSystem TurnSystem { get; }
     public ActionSystem ActionSystem { get; }
     public CombatContext CombatContext { get; private set; }
-    public MotionMonoSystem AnimationSystem { get; private set; }
+    public MotionMonoSystem MotionSystem { get; private set; }
 
     private DamageSystem damageSystem;
     private BuffSystem buffSystem;
@@ -38,7 +38,7 @@ public class CombatSystem : BaseSystem
         CardMonoSystem cardSystem, 
         UIMonoSystem uiSystem,
         CameraMonoSystem cameraSystem,
-        MotionMonoSystem animationSystem,
+        MotionMonoSystem motionSystem,
         RelicMonoSystem relicSystem,
         GoldMonoSystem goldSystem,
         HpMonoSystem hpSystem,
@@ -57,19 +57,19 @@ public class CombatSystem : BaseSystem
         this.cardSystem = cardSystem;
         this.uiSystem = uiSystem;
         this.cameraSystem = cameraSystem;
-        this.AnimationSystem = animationSystem;
+        this.MotionSystem = motionSystem;
         this.relicSystem = relicSystem;
         this.goldSystem = goldSystem;
         this.hpSystem = hpSystem;
         this.recordSystem = recordSystem;
 
-        TurnSystem.Init(enemies, animationSystem);
+        TurnSystem.Init(motionSystem);
     }
     public void UpdateTick()
     {
         TurnSystem.UpdateTick();
 
-        if (AnimationSystem.IsPlaying)
+        if (MotionSystem.IsPlaying)
         {
             return;
         }
@@ -374,7 +374,7 @@ public class CombatSystem : BaseSystem
                     result: result
                 ));
 
-                AnimationSystem.Play(
+                MotionSystem.Play(
                     context: e.Context.RewriteNew(this),
                     motion: motionContext
                 );
@@ -511,7 +511,7 @@ public class CombatSystem : BaseSystem
             motion: motionContext
         ));
 
-        AnimationSystem.Play(
+        MotionSystem.Play(
             context: eventContext, 
             motion: motionContext
         );
@@ -528,8 +528,8 @@ public class CombatSystem : BaseSystem
     }
     public void Save()
     {
-        PlayManager.Instance.CurrentData.SetHp(player.CurrentHp, player.MaxHp);
-        PlayManager.Instance.SaveData();
+        RunManager.Instance.CurrentData.SetHp(player.CurrentHp, player.MaxHp);
+        RunManager.Instance.SaveData();
     }
 }
 

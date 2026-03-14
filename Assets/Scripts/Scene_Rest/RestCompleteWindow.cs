@@ -97,7 +97,7 @@ public class RestCompleteWindow : UIWindow
     {
         curtain.Close().OnComplete(() =>
         {
-            PlayManager.Instance.SaveData();
+            RunManager.Instance.SaveData();
             UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
         });
     }

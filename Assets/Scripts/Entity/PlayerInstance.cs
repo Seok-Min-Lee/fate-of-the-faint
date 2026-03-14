@@ -12,9 +12,7 @@ public class PlayerInstance : EntityInstance
         CurrentHp = currentHp;
 
         Block = 0;
-        Energy = data.BaseEnergy;
         buffs = new Dictionary<BuffType, int>();
     }
     public PlayerSO Data { get; private set; }
-    public int Energy { get; private set; }
 }

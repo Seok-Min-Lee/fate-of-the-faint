@@ -16,7 +16,7 @@ public class HomeCtrl : MonoBehaviour
         menuCG.alpha = 0f;
         menuCG.blocksRaycasts = false;
 
-        continueButton.gameObject.SetActive(PlayManager.Instance.CurrentData != null);
+        continueButton.gameObject.SetActive(RunManager.Instance.CurrentData != null);
 
         Show();
     }
@@ -46,8 +46,8 @@ public class HomeCtrl : MonoBehaviour
     }
     public void OnClickNewGame()
     {
-        PlayManager.Instance.ClearPlayData();
-        PlayManager.Instance.SaveData();
+        RunManager.Instance.ClearPlayData();
+        RunManager.Instance.SaveData();
         UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
     }
     public void OnClickExit()

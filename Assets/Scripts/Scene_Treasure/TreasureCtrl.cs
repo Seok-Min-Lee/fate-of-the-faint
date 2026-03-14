@@ -27,7 +27,7 @@ public class TreasureCtrl : MonoBehaviour
     {
         curtain.Close().OnComplete(() =>
         {
-            PlayManager.Instance.SaveData();
+            RunManager.Instance.SaveData();
             UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
         });
     }

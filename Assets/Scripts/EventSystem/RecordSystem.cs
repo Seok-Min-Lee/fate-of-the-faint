@@ -14,7 +14,7 @@
             return;
         }
 
-        PlayManager.Instance.CurrentData.AddRecord(PlayRecordKeys.CARD_PLAY_COUNT, 1);
+        RunManager.Instance.CurrentData.AddRecord(PlayRecordKeys.CARD_PLAY_COUNT, 1);
     }
 
     public void OnDeathDeclared(DeathDeclared e)
@@ -29,7 +29,7 @@
             return;
         }
 
-        PlayManager.Instance.CurrentData.AddRecord(PlayRecordKeys.ENEMY_KILL_COUNT, 1);
+        RunManager.Instance.CurrentData.AddRecord(PlayRecordKeys.ENEMY_KILL_COUNT, 1);
     }
 
     public void OnPlayerTurnStarted(PlayerTurnStarted e)
@@ -39,6 +39,6 @@
             return;
         }
 
-        PlayManager.Instance.CurrentData.AddRecord(PlayRecordKeys.TURN_COUNT, 1);
+        RunManager.Instance.CurrentData.AddRecord(PlayRecordKeys.TURN_COUNT, 1);
     }
 }

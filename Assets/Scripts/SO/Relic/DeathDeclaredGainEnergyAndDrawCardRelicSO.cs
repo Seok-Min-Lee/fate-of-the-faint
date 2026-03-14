@@ -46,9 +46,8 @@ public class DeathDeclaredGainEnergyAndDrawCardRelicInstance : RelicInstance, ID
                 amount: cardAmount
             ));
 
-            EventBus.Publish<EnergyChangeRequested>(new EnergyChangeRequested(
+            EventBus.Publish<GainEnergyDeclared>(new GainEnergyDeclared(
                 context: e.Context.RewriteNew(this),
-                request: new RequestContext(this),
                 motion: e.Motion,
                 amount: energyAmount
             ));

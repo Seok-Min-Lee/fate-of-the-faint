@@ -44,9 +44,8 @@ public class AttackCardPlayCountTriggerRelicInstance : RelicInstance, ICardPlayD
         {
             Activate(e.Context, e.Motion, () =>
             {
-                EventBus.Publish<EnergyChangeRequested>(new EnergyChangeRequested(
+                EventBus.Publish<GainEnergyDeclared>(new GainEnergyDeclared(
                     context: e.Context.RewriteNew(this),
-                    request: new RequestContext(this),
                     motion: e.Motion,
                     amount: amount
                 ));
@@ -54,5 +53,7 @@ public class AttackCardPlayCountTriggerRelicInstance : RelicInstance, ICardPlayD
                 count = 0;
             });
         }
+
+        Debug.Log(count);
     }
 }

@@ -8,7 +8,7 @@ public class GoldMonoSystem : BaseMonoSystem
     private EventBus eventBus;
     public void Start()
     {
-        goldText.text = PlayManager.Instance.CurrentData.Gold.ToString();
+        goldText.text = RunManager.Instance.CurrentData.Gold.ToString();
     }
     public void Init(EventBus eventBus)
     {
@@ -16,10 +16,10 @@ public class GoldMonoSystem : BaseMonoSystem
     }
     public void Add(int amount)
     {
-        int startAmount = PlayManager.Instance.CurrentData.Gold;
-        PlayManager.Instance.CurrentData.AddGold(amount);
+        int startAmount = RunManager.Instance.CurrentData.Gold;
+        RunManager.Instance.CurrentData.AddGold(amount);
 
-        int endAmount = PlayManager.Instance.CurrentData.Gold;
+        int endAmount = RunManager.Instance.CurrentData.Gold;
         goldText.text = endAmount.ToString();
 
         eventBus.Publish<GoldChanged>(new GoldChanged(
@@ -31,10 +31,10 @@ public class GoldMonoSystem : BaseMonoSystem
     }
     public void Substract(int amount)
     {
-        int startAmount = PlayManager.Instance.CurrentData.Gold;
-        PlayManager.Instance.CurrentData.SubtractGold(amount);
+        int startAmount = RunManager.Instance.CurrentData.Gold;
+        RunManager.Instance.CurrentData.SubtractGold(amount);
 
-        int endAmount = PlayManager.Instance.CurrentData.Gold;
+        int endAmount = RunManager.Instance.CurrentData.Gold;
         goldText.text = endAmount.ToString();
 
         eventBus.Publish<GoldChanged>(new GoldChanged(

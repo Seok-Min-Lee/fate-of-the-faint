@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CardMonoSystem : BaseMonoSystem
@@ -30,16 +31,25 @@ public class CardMonoSystem : BaseMonoSystem
     public void Init(
         EventBus eventBus,
         ActionSystem actionSystem,
-        PowerSystem powerSystem,
-        IEnumerable<CardInstance> cardInstances
+        PowerSystem powerSystem
     )
     {
         this.eventBus = eventBus;
         this.actionSystem = actionSystem;
         this.powerSystem = powerSystem;
 
-        cardInstanceAll.AddRange(cardInstances);
-        drawPile.AddRange(Utils.Shuffle(cardInstances));
+        List<CardInstance> instances = new List<CardInstance>();
+        foreach (CardEntry entry in RunManager.Instance.CurrentData.Cards)
+        {
+            instances.Add(new CardInstance(
+                instanceId: $"{entry.Id}_{entry.SubId}",
+                entry: entry
+            ));
+        }
+
+        cardInstanceAll.Clear();
+        cardInstanceAll.AddRange(instances);
+        drawPile.AddRange(Utils.Shuffle(instances));
 
         UpdateUI();
     }
@@ -467,7 +477,7 @@ public class CardMonoSystem : BaseMonoSystem
     }
     public void AddCard(CardSO card)
     {
-        PlayManager.Instance.CurrentData.AddCard(card);
+        RunManager.Instance.CurrentData.AddCard(card);
 
         //eventBus.Publish<CardAdded>(new CardAdded(
         //    context: new EventContext(this, null, null, null), 

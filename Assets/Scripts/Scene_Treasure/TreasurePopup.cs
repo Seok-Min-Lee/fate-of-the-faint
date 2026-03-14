@@ -81,10 +81,10 @@ public class TreasurePopup : MonoBehaviour
     }
     private void GetViews(int count)
     {
-        HashSet<RelicSO> hashset = PlayManager.Instance.CurrentData.Relics.Select(x => x.Origin).ToHashSet();
+        HashSet<RelicSO> hashset = RunManager.Instance.CurrentData.Relics.Select(x => x.Origin).ToHashSet();
 
         List<RelicSO> candidates = Utils.PickRandom<RelicSO>(
-            source: PlayManager.Instance.Catalog.RelicList.Where(candidate => !hashset.Contains(candidate)),
+            source: RunManager.Instance.Catalog.RelicList.Where(candidate => !hashset.Contains(candidate)),
             count: count
         );
 

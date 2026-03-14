@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class VictoryWindow : UIMotionWindow
 {
-    [SerializeField] private CombatManager combatCtrl;
+    [SerializeField] private CombatCtrl combatCtrl;
     [SerializeField] private RelicMonoSystem relicSystem;
     [SerializeField] private GoldMonoSystem goldSystem;
     [SerializeField] private CardRewardWindow cardRewardWindow;
@@ -31,7 +31,7 @@ public class VictoryWindow : UIMotionWindow
     {
         curtain.Close().OnComplete(() =>
         {
-            if (PlayManager.Instance.MapGraph.LatestNode.Type == MapNodeType.Boss)
+            if (RunManager.Instance.MapGraph.LatestNode.Type == MapNodeType.Boss)
             {
                 UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.ENDING);
             }
@@ -117,8 +117,8 @@ public class VictoryWindow : UIMotionWindow
             onClick: (button) => OnClickCardReward(button)
         );
 
-        int count = PlayManager.Instance.CurrentData.RewardCardOptionCount;
-        List<CardSO> samples = Utils.PickRandom<CardSO>(PlayManager.Instance.Catalog.CardList.Where(x => x.UpgradeCard != null), count);
+        int count = RunManager.Instance.CurrentData.RewardCardOptionCount;
+        List<CardSO> samples = Utils.PickRandom<CardSO>(RunManager.Instance.Catalog.CardList.Where(x => x.UpgradeCard != null), count);
 
         cardSampleDic.Add(button, samples);
     }
@@ -133,8 +133,8 @@ public class VictoryWindow : UIMotionWindow
 #endif
 
         //
-        HashSet<RelicSO> hashset = PlayManager.Instance.CurrentData.Relics.Select(x => x.Origin).ToHashSet();
-        List<RelicSO> candidates = PlayManager.Instance.Catalog.RelicList
+        HashSet<RelicSO> hashset = RunManager.Instance.CurrentData.Relics.Select(x => x.Origin).ToHashSet();
+        List<RelicSO> candidates = RunManager.Instance.Catalog.RelicList
                                    .Where(candidate => !hashset.Contains(candidate))
                                    .ToList();
 

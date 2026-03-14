@@ -19,7 +19,7 @@ public class DefeatWindow : UIMotionWindow
     {
         curtain.Close().OnComplete(() =>
         {
-            PlayManager.Instance.RemovePlayData();
+            RunManager.Instance.RemovePlayData();
             UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.HOME);
         });
     }
@@ -36,7 +36,7 @@ public class DefeatWindow : UIMotionWindow
         sequence.Append(dimmedCG.DOFade(1f, 1f));
         sequence.Append(contentCG.DOFade(1f, 0.5f));
 
-        foreach (PlayRecord record in PlayManager.Instance.CurrentData.Records.Values)
+        foreach (PlayRecord record in RunManager.Instance.CurrentData.Records.Values)
         {
             sequence.AppendCallback(() =>
             {

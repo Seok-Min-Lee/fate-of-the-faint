@@ -16,14 +16,14 @@ public class MapCtrl : MonoBehaviour
     private Sequence seq;
     private void Awake()
     {
-        if (!PlayManager.Instance.isLoad)
+        if (!RunManager.Instance.isLoad)
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.INIT);
             return;
         }
 
         // Init
-        Graph = PlayManager.Instance.MapGraph;
+        Graph = RunManager.Instance.MapGraph;
 
         bootstrap.Init(Graph);
 
@@ -102,7 +102,7 @@ public class MapCtrl : MonoBehaviour
                 _ => string.Empty
             };
 
-            PlayManager.Instance.CurrentData.AddRecord(key, 1);
+            RunManager.Instance.CurrentData.AddRecord(key, 1);
 
             return true;
         }

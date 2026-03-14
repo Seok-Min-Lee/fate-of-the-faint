@@ -7,11 +7,11 @@ public class EnergySystem : BaseSystem
     private readonly EventBus eventBus;
     public int MaxEnergy;
     public int Energy;
-    public EnergySystem(EventBus eventBus, int max)
+    public EnergySystem(EventBus eventBus)
     {
         this.eventBus = eventBus;
 
-        MaxEnergy = max;
+        MaxEnergy = RunManager.Instance.CurrentData.Energy;
         Energy = MaxEnergy;
     }
     public void OnPlayerTurnStarted(PlayerTurnStarted e)

@@ -16,7 +16,7 @@ public class HpMonoSystem : BaseMonoSystem
     }
     public void Refresh()
     {
-        SetHpText(PlayManager.Instance.CurrentData.CurrentHp, PlayManager.Instance.CurrentData.MaxHp);
+        SetHpText(RunManager.Instance.CurrentData.CurrentHp, RunManager.Instance.CurrentData.MaxHp);
     }
     public void OnActionEnded(ActionEnded e)
     {

@@ -7,7 +7,9 @@ using UnityEngine.UI;
 
 public class DebugSystem : BaseMonoSystem
 {
-    [SerializeField] private CombatManager combatManager;
+    [SerializeField] private CombatCtrl combatManager;
+    [SerializeField] private GameObject canvas;
+    [SerializeField] private GameObject camera;
     private readonly List<EventTrace> traces = new();
 
     [SerializeField] private ScrollRect scrollRect;
@@ -15,8 +17,22 @@ public class DebugSystem : BaseMonoSystem
 
     private Coroutine _scrollRoutine;
     private bool bRebuild = false;
+
+    private void Awake()
+    {
+#if UNITY_EDITOR
+        gameObject.SetActive(true);
+#else
+        gameObject.SetActive(false);
+#endif
+    }
     private void OnEnable()
     {
+        if (combatManager.CombatSystem == null)
+        {
+            return;
+        }
+
         combatManager.CombatSystem.EventBus.OnPublished += Record;
         combatManager.CombatSystem.EventBus.Subscribe<ActionEnded>(OnActionEnded);
         combatManager.CombatSystem.EventBus.Subscribe<EnemyTurnEnded>(OnEnemyTurnEnded);
@@ -25,6 +41,11 @@ public class DebugSystem : BaseMonoSystem
     }
     private void OnDisable()
     {
+        if (combatManager.CombatSystem == null)
+        {
+            return;
+        }
+
         combatManager.CombatSystem.EventBus.OnPublished -= Record;
         combatManager.CombatSystem.EventBus.Unsubscribe<ActionEnded>(OnActionEnded);
         combatManager.CombatSystem.EventBus.Unsubscribe<EnemyTurnEnded>(OnEnemyTurnEnded);

@@ -11,7 +11,7 @@ public class CardDisplayWindow : UIWindow
     {
         base.OnEnable();
 
-        List<CardEntry> cards = PlayManager.Instance.CurrentData.Cards;
+        List<CardEntry> cards = RunManager.Instance.CurrentData.Cards;
         for (int i = 0; i < cards.Count; i++)
         {
             CardDisplayView view = pool.Pop();

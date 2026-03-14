@@ -43,8 +43,8 @@ public class EnhancePreviewWindow : UIWindow
     }
     public void OnClickSelect()
     {
-        PlayManager.Instance.CurrentData.RemoveCard(before.Id, before.SubId);
-        PlayManager.Instance.CurrentData.AddCard(after);
+        RunManager.Instance.CurrentData.RemoveCard(before.Id, before.SubId);
+        RunManager.Instance.CurrentData.AddCard(after);
 
         completeWindow.CompleteEnhance(
             before: before.Origin, 

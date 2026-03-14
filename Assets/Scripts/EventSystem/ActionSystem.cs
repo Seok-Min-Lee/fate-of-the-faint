@@ -5,7 +5,6 @@ public class ActionSystem : BaseSystem
     private readonly CombatSystem combatSystem;
     private readonly EventBus eventBus;
 
-    private int actionNum = 0;
     public ActionSystem(EventBus eventBus, CombatSystem combatSystem) 
     {
         this.eventBus = eventBus;
@@ -42,7 +41,7 @@ public class ActionSystem : BaseSystem
             motion: motionContext
         ));
 
-        combatSystem.AnimationSystem.Play(
+        combatSystem.MotionSystem.Play(
             context: eventContext.RewriteNew(this),
             motion: motionContext
         );

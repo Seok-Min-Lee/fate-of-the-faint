@@ -10,14 +10,13 @@ public class TurnSystem : BaseSystem
     }
 
     public TurnContext TurnContext { get; private set; }
+    private MotionMonoSystem motionSystem;
+
     private int turnId = 0;
-    private List<EnemyInstance> enemies;
     private Queue<Action> eventQueue = new Queue<Action>();
-    private MotionMonoSystem animationSystem;
-    public void Init(IEnumerable<EnemyInstance> enemies, MotionMonoSystem animationSystem)
+    public void Init(MotionMonoSystem motionSystem)
     {
-        this.enemies = new List<EnemyInstance>(enemies);
-        this.animationSystem = animationSystem;
+        this.motionSystem = motionSystem;
     }
     public void UpdateTick()
     {
@@ -104,7 +103,7 @@ public class TurnSystem : BaseSystem
             motion: motionContext
         ));
 
-        animationSystem.Play(
+        motionSystem.Play(
             context: eventContext,
             motion: motionContext
         );
@@ -141,7 +140,7 @@ public class TurnSystem : BaseSystem
             motion: motionContext
         ));
 
-        animationSystem.Play(
+        motionSystem.Play(
             context: eventContext,
             motion: motionContext
         );

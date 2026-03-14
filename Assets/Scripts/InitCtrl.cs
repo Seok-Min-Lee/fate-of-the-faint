@@ -5,7 +5,7 @@ public class InitCtrl : MonoBehaviour
 {
     private IEnumerator Start()
     {
-        while (!PlayManager.Instance.isLoad)
+        while (!RunManager.Instance.isLoad)
         {
             yield return new WaitForSeconds(1f);
         }

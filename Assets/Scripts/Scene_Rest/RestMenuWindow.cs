@@ -11,11 +11,11 @@ public class RestMenuWindow : UIWindow
     }
     public void OnClickRest()
     {
-        int heal = (int)(PlayManager.Instance.CurrentData.MaxHp * 0.3f);
+        int heal = (int)(RunManager.Instance.CurrentData.MaxHp * 0.3f);
 
-        PlayManager.Instance.CurrentData.SetHp(
-            PlayManager.Instance.CurrentData.CurrentHp + heal,
-            PlayManager.Instance.CurrentData.MaxHp
+        RunManager.Instance.CurrentData.SetHp(
+            RunManager.Instance.CurrentData.CurrentHp + heal,
+            RunManager.Instance.CurrentData.MaxHp
         );
 
         completeWindow.CompleteHeal();

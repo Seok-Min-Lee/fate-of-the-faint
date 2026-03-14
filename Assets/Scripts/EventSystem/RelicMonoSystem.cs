@@ -10,7 +10,7 @@ public class RelicMonoSystem : BaseMonoSystem
     private void Start()
     {
         pool.CreateViews(
-            samples: PlayManager.Instance.CurrentData.Relics,
+            samples: RunManager.Instance.CurrentData.Relics,
             onClick: (view) => OnClickRelic(view)
         );
     }
@@ -18,7 +18,7 @@ public class RelicMonoSystem : BaseMonoSystem
     {
         this.eventBus = eventBus;
 
-        foreach (RelicInstance instance in PlayManager.Instance.CurrentData.Relics)
+        foreach (RelicInstance instance in RunManager.Instance.CurrentData.Relics)
         {
             instance.Register(eventBus);
         }
@@ -32,7 +32,7 @@ public class RelicMonoSystem : BaseMonoSystem
     {
         //
         RelicInstance newInstance = relic.CreateInstance();
-        PlayManager.Instance.CurrentData.AddRelic(newInstance);
+        RunManager.Instance.CurrentData.AddRelic(newInstance);
 
         //
         RelicView newView = pool.CreateView(newInstance);

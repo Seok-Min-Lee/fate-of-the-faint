@@ -38,7 +38,7 @@ public class EndingCtrl : MonoBehaviour
     }
     public void OnClickHome()
     {
-        PlayManager.Instance.RemovePlayData();
+        RunManager.Instance.RemovePlayData();
         UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.HOME);
     }
 }
