@@ -126,7 +126,7 @@ public class VictoryWindow : UIMotionWindow
     {
 
 #if !UNITY_EDITOR
-        if (PlayManager.Instance.MapGraph.LatestNode.Type == MapNodeType.Combat && UnityEngine.Random.Range(0, 10) != 0)
+        if (RunManager.Instance.MapGraph.LatestNode.Type == MapNodeType.Combat && UnityEngine.Random.Range(0, 10) != 0)
         {
             return;
         }

@@ -39,9 +39,9 @@ public class RunManager : MonoSingleton<RunManager>
                    MapDataConverter.FromSaveData(mapData) :
                    MapGenerator.Generate(mapConfig);
 #else
-        if (PlaySaveDataIO.TryLoadFromFile(out PlaySaveData data))
+        if (RunSaveDataIO.TryLoadFromFile(out RunSaveData data))
         {
-            CurrentData = PlayData.CreateFromSaveData(data, Catalog);
+            CurrentData = RunData.CreateFromSaveData(data, Catalog);
         }
         if (MapDataIO.TryLoadFromFile(out MapData mapData))
         {
