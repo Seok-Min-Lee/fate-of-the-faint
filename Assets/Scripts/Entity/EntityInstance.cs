@@ -59,7 +59,7 @@ public class EntityInstance
     public void ChangeHp(EventBus eventBus, EventContext context, MotionContext motion, int amount)
     {
         int startAmount = CurrentHp;
-        CurrentHp = Mathf.Max(0, CurrentHp + amount);
+        CurrentHp = Mathf.Clamp(CurrentHp + amount, 0, MaxHp);
 
         eventBus.Publish<HpChanged>(new HpChanged(
             context: context.RewriteNew(this),

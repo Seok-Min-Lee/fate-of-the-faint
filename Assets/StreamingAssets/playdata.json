@@ -1,8 +1,8 @@
 {
     "playerId": "Player_A",
-    "currentHp": 32,
+    "currentHp": 84,
     "maxHp": 100,
-    "gold": 491,
+    "gold": 215,
     "energy": 3,
     "rewardCardOptionCount": 3,
     "rng": {
@@ -11,68 +11,46 @@
     },
     "nodes": [],
     "cardIds": [
+        "atk_bash",
         "atk_strike",
-        "atk_bash",
-        "atk_cleave",
-        "atk_ironWave",
-        "atk_pommelStrike",
-        "atk_twinStrike",
-        "atk_carnage",
-        "atk_hemokinesis",
+        "atk_strike",
+        "atk_strike",
+        "atk_strike",
         "skl_defend",
+        "skl_defend",
+        "skl_defend",
+        "skl_defend",
+        "skl_defend",
+        "skl_ghostlyArmor",
+        "atk_cleave",
         "skl_shrugItOff",
-        "skl_battleTrance",
-        "skl_bloodletting",
-        "skl_ghostlyArmor",
-        "skl_intimidate",
-        "skl_seeingRed",
-        "skl_shockwave",
         "pwr_metallicize",
-        "pwr_combust",
-        "pwr_demonForm",
-        "pwr_juggernaut",
-        "pwr_barricade",
-        "atk_pommelStrike",
-        "skl_intimidate",
-        "atk_carnage",
-        "atk_bash",
-        "atk_twinStrike",
-        "atk_cleave",
-        "skl_ghostlyArmor",
-        "atk_cleave",
-        "atk_bash",
-        "skl_intimidate"
+        "pwr_demonForm"
     ],
-    "relicIds": [],
+    "relicIds": [
+        "Happy Flower",
+        "Akabeko",
+        "Centennial Puzzle",
+        "Burning Blood",
+        "Vajra"
+    ],
     "potionIds": [],
     "records": [
         {
-            "Id": "진행한 턴 수",
-            "Value": 32
+            "Id": "일반 전투 횟수",
+            "Value": 5
         },
         {
-            "Id": "일반 전투 횟수",
-            "Value": 9
+            "Id": "진행한 턴 수",
+            "Value": 11
         },
         {
             "Id": "사용한 카드 수",
-            "Value": 91
+            "Value": 26
         },
         {
             "Id": "몬스터 처치 수",
-            "Value": 32
-        },
-        {
-            "Id": "유물방 방문 횟수",
-            "Value": 1
-        },
-        {
-            "Id": "휴식 횟수",
-            "Value": 1
-        },
-        {
-            "Id": "엘리트 전투 횟수",
-            "Value": 2
+            "Value": 15
         }
     ]
 }

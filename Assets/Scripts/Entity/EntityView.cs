@@ -24,10 +24,11 @@ public class EntityView : MonoBehaviour
     protected EntityInstance instance;
     public void OnHpChanged(HpChanged e)
     {
-        if (e.Context.Combat.state != CombatState.Combat)
-        {
-            return;
-        }
+        // 전투 종료 후 유물이나 파워에 의해 회복할 수 있음
+        //if (e.Context.Combat.state != CombatState.Combat)
+        //{
+        //    return;
+        //}
 
         if (e.Target.Id != instance.Id)
         {

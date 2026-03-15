@@ -118,6 +118,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f0dac4e2bac0e6946a6704cc3d2ccc84, type: 2}
   - {fileID: 11400000, guid: 3f02aa99384048d43b850f2a7a42ef8e, type: 2}
   - {fileID: 11400000, guid: a679a1ed55c72e2458c080b823862c24, type: 2}
+  - {fileID: 11400000, guid: b6da61a80e62e474cb60727664d30afa, type: 2}
   potions: []
   enemyPlans:
   - {fileID: 11400000, guid: 0f5695e55498a59469e6f43ec9de91ad, type: 2}
