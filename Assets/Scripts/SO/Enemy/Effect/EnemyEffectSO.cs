@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(fileName = "Buff ", menuName = "Scriptable Objects/EnemyEffectSO")]
+[CreateAssetMenu(fileName = "Buff ", menuName = "Scriptable Objects/_base/Enemy Effect")]
 public abstract class EnemyEffectSO : ScriptableObject
 {
     [SerializeField] protected IntentTarget targetType;

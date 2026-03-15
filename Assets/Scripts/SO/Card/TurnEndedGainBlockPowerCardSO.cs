@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "pwr_turnEndedGainBlock_", menuName = "Scriptable Objects/CardSO/Turn Ended Gain Block Power Card")]
+[CreateAssetMenu(fileName = "pwr_turnEndedGainBlock_", menuName = "Scriptable Objects/Card/Turn Ended Gain Block Power Card")]
 public class TurnEndedGainBlockPowerCardSO : PowerCardSO
 {
     [SerializeField] private int amount;

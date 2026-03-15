@@ -1,12 +1,6 @@
 ﻿using UnityEngine;
-public interface INormalEffect
-{
-    public RelicTriggerEvent TriggerEvent { get; }
-    public RelicTarget Target { get; }
-    public RelicEffect Effect { get; }
-    public int Value { get; }
-}
-[CreateAssetMenu(fileName = "Relic_", menuName = "Scriptable Objects/Relic")]
+
+[CreateAssetMenu(fileName = "Relic_", menuName = "Scriptable Objects/_base/Relic")]
 public abstract class RelicSO : ScriptableObject
 {
     [SerializeField] private string id;
@@ -33,71 +27,10 @@ public enum RelicRarity
     Shop,
     Event
 }
-public enum RelicTriggerEvent
-{
-    CombatStarted,
-    CombatEnded,
-    PlayerTurnStartRequested,
-    PlayerTurnStarted,
-    PlayerTurnEndRequested,
-    PlayerTurnEnded,
-    EnemyTurnStarted,
-    EnemyTurnEnded,
-    EnemyActionStartRequested,
-    ActionStarted,
-    ActionEnded,
-    EnergyChangeRequested,
-    EnergyResolved,
-    EnergyChanged,
-    CardDrawed,
-    CardDiscarded,
-    CardExhausted,
-    CardCharged,
-    CardPlayDeclared,
-    AttackPlayed,
-    SkillPlayed,
-    PowerPlayed,
-    AttackDeclared,
-    BlockDeclared,
-    DrawCardDeclared,
-    GainEnergyDeclared,
-    ModifyCostDeclared,
-    BuffDeclared,
-    DamageRequested,
-    DamageResolved,
-    BuffRequested,
-    BuffResolved,
-    HpChanged,
-    BlockChanged,
-    BuffChanged,
-    DeathDeclared,
-    AnimationStarted,
-    AnimationEnded,
-    EnemyIntentDecided,
-    RelicActivated,
-}
 public enum RelicTarget
 {
     None,
     Player,
     EnemyAll,
     EnemyRandom,
-}
-public enum RelicEffect
-{
-    Hp,
-    HpMax,
-    Block,
-
-    Strength,
-    Weak,
-    Vulnable,
-
-    DrawCard,
-    GainEnergy,
-}
-public enum UtilEffect
-{
-    DrawCard,
-    GainEnergy,
 }

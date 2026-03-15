@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "atk_", menuName = "Scriptable Objects/CardSO/Attack Card")]
+[CreateAssetMenu(fileName = "atk_", menuName = "Scriptable Objects/Card/Attack Card")]
 public class AttackCardSO : CardSO
 {
     [Header("Effects")]

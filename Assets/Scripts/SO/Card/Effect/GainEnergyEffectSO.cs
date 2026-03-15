@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Gain Energy ", menuName = "Scriptable Objects/EffectSO/Gain Energy Effect ")]
+[CreateAssetMenu(fileName = "Gain Energy ", menuName = "Scriptable Objects/Card Effect/Gain Energy Effect ")]
 public class GainEnergyEffectSO : EffectSO
 {
     public override Action Apply(

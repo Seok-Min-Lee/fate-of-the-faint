@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "skl_", menuName = "Scriptable Objects/CardSO/Skill Card")]
+[CreateAssetMenu(fileName = "skl_", menuName = "Scriptable Objects/Card/Skill Card")]
 public class SkillCardSO : CardSO
 {
     [Header("Effects")]

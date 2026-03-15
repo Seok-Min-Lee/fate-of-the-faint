@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "Posion_", menuName = "Scriptable Objects/PosionSO")]
+[CreateAssetMenu(fileName = "Potion_", menuName = "Scriptable Objects/_base/Potion")]
 public class PotionSO : ScriptableObject
 {
     [SerializeField] private string id;

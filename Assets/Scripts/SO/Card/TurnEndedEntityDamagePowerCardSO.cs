@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "pwr_turnEndedEntityDamage_", menuName = "Scriptable Objects/CardSO/Turn Ended Entity Damage Power Card")]
+[CreateAssetMenu(fileName = "pwr_turnEndedEntityDamage_", menuName = "Scriptable Objects/Card/Turn Ended Entity Damage Power Card")]
 public class TurnEndedEntityDamagePowerCardSO : PowerCardSO
 {
     [SerializeField] private int playerDamage;

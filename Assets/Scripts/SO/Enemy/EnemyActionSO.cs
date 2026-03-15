@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "EnemyAction_", menuName = "Scriptable Objects/Enemy/EnemyActionSO")]
+[CreateAssetMenu(fileName = "EnemyAction_", menuName = "Scriptable Objects/Enemy/Enemy Action")]
 public sealed class EnemyActionSO : ScriptableObject
 {
     [Header("Identity")]

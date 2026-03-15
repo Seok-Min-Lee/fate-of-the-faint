@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EffectSO", menuName = "Scriptable Objects/EffectSO")]
+[CreateAssetMenu(fileName = "EffectSO", menuName = "Scriptable Objects/_base/Effect")]
 public abstract class EffectSO : ScriptableObject
 {
     [SerializeField] protected TargetType targetType;

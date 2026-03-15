@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "pwr_turnStartedRemainBlock_", menuName = "Scriptable Objects/CardSO/Turn Started Remain Block Power Card")]
+[CreateAssetMenu(fileName = "pwr_turnStartedRemainBlock_", menuName = "Scriptable Objects/Card/Turn Started Remain Block Power Card")]
 public class TurnStartedRemainBlockPowerCardSO : PowerCardSO
 {
     public override PowerInstance CreateInstance(EventBus eventBus)

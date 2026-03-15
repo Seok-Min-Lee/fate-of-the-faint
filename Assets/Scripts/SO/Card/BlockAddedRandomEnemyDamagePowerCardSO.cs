@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "pwr_blockAddedRandomEnemyDamage_", menuName = "Scriptable Objects/CardSO/Block Added Random Enemy Damage Power Card")]
+[CreateAssetMenu(fileName = "pwr_blockAddedRandomEnemyDamage_", menuName = "Scriptable Objects/Card/Block Added Random Enemy Damage Power Card")]
 public class BlockAddedRandomEnemyDamagePowerCardSO : PowerCardSO
 {
     [SerializeField] private int amount;

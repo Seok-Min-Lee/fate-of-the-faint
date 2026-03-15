@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Player_", menuName = "Scriptable Objects/PlayerSO")]
+[CreateAssetMenu(fileName = "Player_", menuName = "Scriptable Objects/Player")]
 public class PlayerSO : ScriptableObject
 {
     [Header("Identity")]

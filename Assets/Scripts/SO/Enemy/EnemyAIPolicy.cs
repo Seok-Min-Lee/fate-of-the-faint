@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EnemyAIPolicy_", menuName = "Scriptable Objects/Enemy/EnemyAIPolicySO")]
+[CreateAssetMenu(fileName = "EnemyAIPolicy_", menuName = "Scriptable Objects/Enemy/Enemy AI Policy")]
 public sealed class EnemyAIPolicySO : ScriptableObject
 {
     [Header("Actions")]

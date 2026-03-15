@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "Card_", menuName = "Scriptable Objects/CardSO")]
+[CreateAssetMenu(fileName = "Card_", menuName = "Scriptable Objects/_base/Card")]
 public abstract class CardSO : ScriptableObject
 {
     [Header("Identity")]
