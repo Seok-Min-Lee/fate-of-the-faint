@@ -25,14 +25,11 @@
         "atk_cleave",
         "skl_shrugItOff",
         "pwr_metallicize",
-        "pwr_demonForm"
+        "pwr_demonForm",
+        "skl_flex",
+        "skl_bandageUp"
     ],
     "relicIds": [
-        "Happy Flower",
-        "Akabeko",
-        "Centennial Puzzle",
-        "Burning Blood",
-        "Vajra"
     ],
     "potionIds": [],
     "records": [

@@ -114,7 +114,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 200
         width: 250
         height: 200
       alignment: 0
@@ -136,7 +136,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 250
-        y: 0
+        y: 200
         width: 250
         height: 200
       alignment: 0
@@ -149,6 +149,50 @@ TextureImporter:
       bones: []
       spriteID: 25532ac6679e0b840a57e9438edb7938
       internalID: 1650163060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skill Common_2
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 200
+        width: 250
+        height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7a7bb2793030dc74f8e1620120f46cd5
+      internalID: -1792432983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Skill Common_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 250
+        height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5a0905ecf6448974aa7b9e47182008ca
+      internalID: 1409261421
       vertices: []
       indices: 
       edges: []
@@ -171,6 +215,8 @@ TextureImporter:
     nameFileIdTable:
       Skill Common_0: -2060557703
       Skill Common_1: 1650163060
+      Skill Common_2: -1792432983
+      Skill Common_3: 1409261421
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

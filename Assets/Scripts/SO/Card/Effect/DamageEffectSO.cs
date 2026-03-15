@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Damage ", menuName = "Scriptable Objects/EffectSO/Damage Effect ")]
+[CreateAssetMenu(fileName = "Damage ", menuName = "Scriptable Objects/Card Effect/Damage ")]
 public class DamageEffectSO : EffectSO
 {
     public override Action Apply(

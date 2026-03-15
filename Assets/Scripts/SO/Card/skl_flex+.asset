@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a83c342e46f11764aa9d597e2e63a98a, type: 3}
+  m_Name: skl_flex+
+  m_EditorClassIdentifier: Assembly-CSharp::SkillCardSO
+  id: skl_flex+
+  name: "\uBAB8 \uD480\uAE30+"
+  description: "\uD798\uC744 [{0}] \uC5BB\uC2B5\uB2C8\uB2E4. \uD134\uC774 \uB05D\uB0A0
+    \uB54C \uD798\uC744 2 \uC783\uC2B5\uB2C8\uB2E4."
+  image: {fileID: -1792432983, guid: 690e52a8b5a287e44869ff8d3a4a441b, type: 3}
+  isExhausted: 0
+  existTarget: 0
+  rarity: 0
+  cost: 0
+  isUpgraded: 1
+  upgradeCard: {fileID: 0}
+  effects:
+  - {fileID: 11400000, guid: f582ae5affdb7864d85218de31ca589a, type: 2}
+  - {fileID: 11400000, guid: 725db237d3b61df46a0e53498360446f, type: 2}

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Modify Cost ", menuName = "Scriptable Objects/EffectSO/Modify Cost Effect ")]
+[CreateAssetMenu(fileName = "Modify Cost ", menuName = "Scriptable Objects/Card Effect/Modify Cost ")]
 public class ModifyCostEffectSO : EffectSO
 {
     [SerializeField] private CostModificationScope range;

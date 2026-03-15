@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Buff ", menuName = "Scriptable Objects/EffectSO/Buff Effect ")]
+[CreateAssetMenu(fileName = "Buff ", menuName = "Scriptable Objects/Card Effect/Buff Effect ")]
 public class BuffEffectSO : EffectSO
 {
     [SerializeField] private BuffType buffType;
