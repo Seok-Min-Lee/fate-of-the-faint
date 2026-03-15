@@ -9,12 +9,12 @@ EventBus 기반 아키텍처로 구현한 Slay the Spire 스타일의 덱빌딩 
 ![Attack-Card-Play](Docs/Previews/Attack-Card-Play.gif)
 
 ### Map
-![Map](Docs/PreviewsMap.gif)
+![Map](Docs/Previews/Map.gif)
 
 ### Debug Console
-![Debug-Console](Docs/PreviewsDebug-Console.gif)
+![Debug-Console](Docs/Previews/Debug-Console.gif)
 
-[더 보기](Docs/Previews/Preview.md)
+[더 보기](Docs/Preview.md)
 
 </br>
 
