@@ -43,17 +43,7 @@
         "atk_bash",
         "skl_intimidate"
     ],
-    "relicIds": [
-        "Nunchaku",
-        "Akabeko",
-        "Gremlin Horn",
-        "Art of War",
-        "Happy Flower",
-        "Vajra",
-        "Orichalcum",
-        "Centennial Puzzle",
-        "Bag of Marbles"
-    ],
+    "relicIds": [],
     "potionIds": [],
     "records": [
         {
