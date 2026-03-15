@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AttackCardSO
   id: atk_carnage+
   name: "\uB300\uD559\uC0B4+"
-  description: "\uD53C\uD574\uB97C [{0}] \uC90D\uB2C8\uB2E4. \uD718\uBC1C\uC131."
+  description: "\uD53C\uD574\uB97C {0} \uC90D\uB2C8\uB2E4. \uC18C\uBA78."
   image: {fileID: 2006561657, guid: f01289aada2552542adfb37b1b95436c, type: 3}
   isExhausted: 1
   existTarget: 1

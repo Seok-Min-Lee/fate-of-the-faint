@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillCardSO
   id: skl_ghostlyArmor
   name: "\uC720\uB839 \uAC11\uC637"
-  description: "\uBC29\uC5B4\uB3C4\uB97C {0} \uC5BB\uC2B5\uB2C8\uB2E4. \uD718\uBC1C\uC131."
+  description: "\uBC29\uC5B4\uB3C4\uB97C {0} \uC5BB\uC2B5\uB2C8\uB2E4. \uC18C\uBA78."
   image: {fileID: -485592729, guid: 96bf6d1f28104524aa9159cafa7f98ab, type: 3}
   isExhausted: 1
   existTarget: 0

@@ -14,11 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillCardSO
   id: skl_battleTrance
   name: "\uC804\uD22C \uCD5C\uBA74"
-  description: "\uCE74\uB4DC\uB97C {0}\uC7A5 \uBF51\uC2B5\uB2C8\uB2E4. \uC774\uBC88
-    \uD134 \uB3D9\uC548 \uB354 \uC774\uC0C1 \uCE74\uB4DC\uB97C \uBF51\uC744 \uC218
-    \uC5C6\uC2B5\uB2C8\uB2E4."
+  description: "\uCE74\uB4DC\uB97C {0}\uC7A5 \uBF51\uC2B5\uB2C8\uB2E4. \uC18C\uBA78"
   image: {fileID: -674357495, guid: 96bf6d1f28104524aa9159cafa7f98ab, type: 3}
-  isExhausted: 0
+  isExhausted: 1
   existTarget: 0
   rarity: 1
   cost: 0

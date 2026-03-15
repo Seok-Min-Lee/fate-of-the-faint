@@ -17,7 +17,7 @@ MonoBehaviour:
   maxHp: 100
   baseEnergy: 3
   startingCards:
-  - {fileID: 11400000, guid: a1111ce95ae739b4ea71b13bd6220426, type: 2}
+  - {fileID: 11400000, guid: ab45467c85a7064478200d1d1b276b8e, type: 2}
   - {fileID: 11400000, guid: a1111ce95ae739b4ea71b13bd6220426, type: 2}
   - {fileID: 11400000, guid: a1111ce95ae739b4ea71b13bd6220426, type: 2}
   - {fileID: 11400000, guid: a1111ce95ae739b4ea71b13bd6220426, type: 2}
