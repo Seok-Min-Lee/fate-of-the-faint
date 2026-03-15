@@ -1,8 +1,8 @@
 {
     "playerId": "Player_A",
-    "currentHp": 84,
+    "currentHp": 71,
     "maxHp": 100,
-    "gold": 215,
+    "gold": 265,
     "energy": 3,
     "rewardCardOptionCount": 3,
     "rng": {
@@ -27,9 +27,11 @@
         "pwr_metallicize",
         "pwr_demonForm",
         "skl_flex",
-        "skl_bandageUp"
+        "skl_bandageUp",
+        "atk_cleave"
     ],
     "relicIds": [
+        "Vajra"
     ],
     "potionIds": [],
     "records": [
@@ -39,15 +41,15 @@
         },
         {
             "Id": "진행한 턴 수",
-            "Value": 11
+            "Value": 15
         },
         {
             "Id": "사용한 카드 수",
-            "Value": 26
+            "Value": 39
         },
         {
             "Id": "몬스터 처치 수",
-            "Value": 15
+            "Value": 18
         }
     ]
 }

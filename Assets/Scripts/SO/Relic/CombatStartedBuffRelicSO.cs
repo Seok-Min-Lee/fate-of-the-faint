@@ -53,15 +53,18 @@ public class CombatStartedBuffRelicInstance : RelicInstance, ICombatStarted
                 break;
         }
 
-        for (int i = 0; i < targets.Count; i++)
+        Activate(e.Context, e.Motion, () =>
         {
-            targets[i].ApplyBuff(
-                eventBus: EventBus,
-                context: e.Context,
-                motion: e.Motion,
-                type: buff, 
-                delta: value
-            );
-        }
+            for (int i = 0; i < targets.Count; i++)
+            {
+                targets[i].ApplyBuff(
+                    eventBus: EventBus,
+                    context: e.Context,
+                    motion: e.Motion,
+                    type: buff,
+                    delta: value
+                );
+            }
+        });
     }
 }

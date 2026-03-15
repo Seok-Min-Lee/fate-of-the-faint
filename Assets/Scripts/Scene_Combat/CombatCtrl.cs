@@ -20,6 +20,7 @@ public class CombatCtrl : MonoBehaviour
     [SerializeField] private RectTransform curtainRect;
 
     public CombatSystem CombatSystem { get; private set; }
+    PlayerView playerView;
     private void Awake()
     {
         if (!RunManager.Instance.isLoad)
@@ -30,7 +31,7 @@ public class CombatCtrl : MonoBehaviour
         CombatSystem = new CombatSystem();
 
         PlayerInstance playerInstance = CreatePlayerInstance(RunManager.Instance.CurrentData);
-        PlayerView playerView = GameObject.Instantiate<PlayerView>(playerPrefab);
+        /*PlayerView */playerView = GameObject.Instantiate<PlayerView>(playerPrefab);
         playerView.Init(
             eventBus: CombatSystem.EventBus,
             instance: playerInstance,
@@ -80,6 +81,9 @@ public class CombatCtrl : MonoBehaviour
             enemies: enemyInstances
         );
 
+    }
+    private void Start()
+    {
         Sequence sequence = DOTween.Sequence();
         sequence.Append(playerView.Move(new Vector3(-0.71f, 0f, -0.71f)));
         sequence.AppendCallback(() => CombatSystem.CombatStart());
