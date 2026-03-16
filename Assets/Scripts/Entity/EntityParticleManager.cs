@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EntityParticleManager : MonoBehaviour
@@ -22,5 +23,10 @@ public class EntityParticleManager : MonoBehaviour
         }
 
         dictionary[key].Play();
+    }
+    public IEnumerator PlayCor(EntityParticleKey key)
+    {
+        Play(key);
+        yield break;
     }
 }

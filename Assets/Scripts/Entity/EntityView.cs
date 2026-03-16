@@ -54,7 +54,11 @@ public class EntityView : MonoBehaviour
         }
         else if (e.EndAmount > e.StartAmount)
         {
-            particle.Play(EntityParticleKey.Heal);
+            e.Motion.AddTask(new MotionTask(
+                priority: MotionPriority.Entity,
+                command: () => particle.PlayCor(EntityParticleKey.Heal),
+                source: this
+            ));
         }
 
         e.Motion.AddTask(new MotionTask(
@@ -83,7 +87,11 @@ public class EntityView : MonoBehaviour
                 source: this
             ));
 
-            particle.Play(EntityParticleKey.Block);
+            e.Motion.AddTask(new MotionTask(
+                priority: MotionPriority.Actor,
+                command: () => particle.PlayCor(EntityParticleKey.Block),
+                source: this
+            ));
         }
         else
         {
@@ -166,7 +174,13 @@ public class EntityView : MonoBehaviour
             _ => EntityParticleKey.None
         };
 
-        particle.Play(key);
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Target,
+            command: () => particle.PlayCor(key),
+            source: this
+        ));
+
+        ;
     }
     protected IEnumerator ShowStatusCor()
     {

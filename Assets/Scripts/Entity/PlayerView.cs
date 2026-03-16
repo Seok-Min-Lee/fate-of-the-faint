@@ -146,7 +146,11 @@ public class PlayerView : EntityView, ITargetable
             source: this
         ));
 
-        particle.Play(EntityParticleKey.Power);
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Actor,
+            command: () => particle.PlayCor(EntityParticleKey.Power),
+            source: this
+        ));
     }
     public Tween Move(Vector3 target)
     {

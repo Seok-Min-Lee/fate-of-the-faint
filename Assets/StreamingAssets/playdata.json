@@ -28,7 +28,8 @@
         "pwr_demonForm",
         "skl_flex",
         "skl_bandageUp",
-        "atk_cleave"
+        "atk_cleave",
+        "skl_shockwave"
     ],
     "relicIds": [
         "Vajra"
