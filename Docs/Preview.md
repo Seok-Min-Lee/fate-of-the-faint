@@ -11,7 +11,6 @@
 ![Skill-Card-Play(debuff)](Previews/Skill-Card-Play(heal).gif)  
 ### 스킬 카드 사용 (방패)
 ![Skill-Card-Play(block)](Previews/Skill-Card-Play(block).gif)   
-└ 효과: 방어도를 5 얻습니다.
 ### 스킬 카드 사용 (버프)
 ![Skill-Card-Play(block)](Previews/Skill-Card-Play(buff).gif)  
 └ 효과: 힘을 2 얻습니다.
@@ -20,7 +19,6 @@
 └ 효과: 적 전체에게 약화와 취약을 3 부여합니다.  
 ### 파워 카드 사용
 ![Power-Card-Play](Previews/Power-Card-Play.gif)  
-└ 효과: 턴 종료시 체력을 1 잃고 적 전체에게 피해를 5 줍니다.
 ### 몬스터 사망
 ![Enemy-Death](Previews/Enemy-Death.gif)  
 ### 카드 보상 획득
