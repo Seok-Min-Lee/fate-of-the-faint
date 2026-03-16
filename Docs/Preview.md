@@ -7,13 +7,17 @@
 ### 공격 카드 사용 + 타겟팅
 ![Attack-Card-Play](Previews/Attack-Card-Play.gif)  
 └ 효과: 피해를 6 줍니다.
+### 스킬 카드 사용 (회복)
+![Skill-Card-Play(debuff)](Previews/Skill-Card-Play(heal).gif)  
 ### 스킬 카드 사용 (방패)
-![Skill-Card-Play(block)](Previews/Skill-Card-Play(block).gif)  
+![Skill-Card-Play(block)](Previews/Skill-Card-Play(block).gif)   
 └ 효과: 방어도를 5 얻습니다.
-### 스킬 카드 사용 (디버프) + 카드 소멸
+### 스킬 카드 사용 (버프)
+![Skill-Card-Play(block)](Previews/Skill-Card-Play(buff).gif)  
+└ 효과: 힘을 2 얻습니다.
+### 스킬 카드 사용 (디버프)
 ![Skill-Card-Play(debuff)](Previews/Skill-Card-Play(debuff).gif)  
 └ 효과: 적 전체에게 약화와 취약을 3 부여합니다.  
-└ 소멸: 사용 후 카드 더미로 날아가지 않고 디졸브.
 ### 파워 카드 사용
 ![Power-Card-Play](Previews/Power-Card-Play.gif)  
 └ 효과: 턴 종료시 체력을 1 잃고 적 전체에게 피해를 5 줍니다.
