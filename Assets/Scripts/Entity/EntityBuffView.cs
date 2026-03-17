@@ -1,15 +1,17 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class EntityBuffView : MonoBehaviour, ITooltip
 {
-
     [SerializeField] private Image image;
+    [SerializeField] private Transform textPivot;
     [SerializeField] private TextMeshProUGUI text;
 
     public BuffType Type { get; private set; }
+    private Sequence sequence;
     public void Init(EntityBuffPreset preset, string text, Transform parent)
     {
         Type = preset.Type;
@@ -18,10 +20,46 @@ public class EntityBuffView : MonoBehaviour, ITooltip
 
         transform.parent = parent;
         GetComponent<RectTransform>().localPosition = Vector3.zero;
+
+        image.transform.localScale = Vector3.zero;
     }
     public void SetText(string text)
     {
         this.text.text = text;
+    }
+    public Sequence Show()
+    {
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+
+        sequence.AppendCallback(() =>
+        {
+            image.transform.localScale = Vector3.one * 1.25f;
+            
+        });
+        sequence.Append(image.transform.DOScale(Vector3.one, 0.25f).SetEase(Ease.OutBack));
+
+        return sequence;
+    }
+    public Sequence Change(string str)
+    {
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+
+        sequence.AppendCallback(() =>
+        {
+            text.text = str;
+            textPivot.localScale = Vector3.one * 1.25f;
+        });
+        sequence.Append(textPivot.DOScale(Vector3.one, 0.25f).SetEase(Ease.OutBack));
+
+        return sequence;
     }
 
     public void GetTooltip(out string name, out string description)

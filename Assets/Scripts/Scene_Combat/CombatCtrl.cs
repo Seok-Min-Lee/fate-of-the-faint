@@ -20,7 +20,7 @@ public class CombatCtrl : MonoBehaviour
     [SerializeField] private RectTransform curtainRect;
 
     public CombatSystem CombatSystem { get; private set; }
-    PlayerView playerView;
+    private PlayerView playerView;
     private void Awake()
     {
         if (!RunManager.Instance.isLoad)
@@ -31,7 +31,7 @@ public class CombatCtrl : MonoBehaviour
         CombatSystem = new CombatSystem();
 
         PlayerInstance playerInstance = CreatePlayerInstance(RunManager.Instance.CurrentData);
-        /*PlayerView */playerView = GameObject.Instantiate<PlayerView>(playerPrefab);
+        playerView = GameObject.Instantiate<PlayerView>(playerPrefab);
         playerView.Init(
             eventBus: CombatSystem.EventBus,
             instance: playerInstance,

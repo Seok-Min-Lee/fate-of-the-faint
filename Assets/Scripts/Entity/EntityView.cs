@@ -128,7 +128,18 @@ public class EntityView : MonoBehaviour
             // 버프 업데이트
             if (e.EndAmount > 0)
             {
-                value.SetText(e.EndAmount.ToString());
+                e.Motion.AddTask(new MotionTask(
+                    priority: MotionPriority.Target,
+                    command: () => Cor(),
+                    source: this
+                ));
+
+                // temp
+                IEnumerator Cor()
+                {
+                    value.Change(e.EndAmount.ToString());
+                    yield break;
+                }
             }
             // 버프 소멸
             else
@@ -155,6 +166,18 @@ public class EntityView : MonoBehaviour
                         );
 
                         buffViewDictionary.Add(view.Type, view);
+
+                        e.Motion.AddTask(new MotionTask(
+                            priority: MotionPriority.Target,
+                            command: () => Cor(),
+                            source: this
+                        ));
+
+                        IEnumerator Cor()
+                        {
+                            view.Show();
+                            yield break;
+                        }
                         break;
                     }
                 }
@@ -179,8 +202,6 @@ public class EntityView : MonoBehaviour
             command: () => particle.PlayCor(key),
             source: this
         ));
-
-        ;
     }
     protected IEnumerator ShowStatusCor()
     {
