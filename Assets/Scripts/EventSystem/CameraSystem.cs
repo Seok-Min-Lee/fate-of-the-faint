@@ -27,23 +27,25 @@ public class CameraMonoSystem : BaseMonoSystem
             return;
         }
 
+        Vector2 dir;
         if (e.Source is PlayerInstance)
         {
-            e.Motion.AddTask(new MotionTask(
-                priority: MotionPriority.Entity,
-                command: () => CameraPunchCor(new Vector2(1, 1)),
-                source: this
-            ));
+            dir = new Vector2(1, 1);
+        }
+        else if (e.Target is PlayerInstance)
+        {
+            dir = new Vector2(-1, -1);
+        }
+        else
+        {
+            return;
         }
 
-        if (e.Target is PlayerInstance)
-        {
-            e.Motion.AddTask(new MotionTask(
-                priority: MotionPriority.Entity,
-                command: () => CameraPunchCor(new Vector2(-1, -1)),
-                source: this
-            ));
-        }
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Entity,
+            command: () => CameraPunchCor(dir),
+            source: this
+        ));
     }
     private IEnumerator CameraPunchCor(Vector2 direction)
     {

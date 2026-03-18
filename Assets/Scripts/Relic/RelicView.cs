@@ -39,11 +39,6 @@ public class RelicView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     }
     private IEnumerator ActivateCor()
     {
-        Activate();
-        yield return null;
-    }
-    private void Activate()
-    {
         if (sequence != null)
         {
             sequence.Kill();
@@ -51,6 +46,7 @@ public class RelicView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
         sequence = DOTween.Sequence();
 
         sequence.Append(image.transform.DOScale(Vector3.one * 1.5f, 0.25f).SetLoops(4, LoopType.Yoyo));
+        yield return null;
     }
     public void OnPointerEnter(PointerEventData eventData)
     {

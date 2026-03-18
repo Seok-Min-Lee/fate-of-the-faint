@@ -1,4 +1,6 @@
 ﻿using DG.Tweening;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -25,7 +27,7 @@ public class VictoryWindow : UIMotionWindow
     private Dictionary<RewardButton, List<CardSO>> cardSampleDic = new Dictionary<RewardButton, List<CardSO>>();
     protected override void Awake()
     {
-        _handler.Add(MotionKey.WindowShow, Show);
+        _handler.Add(MotionKey.WindowShow, Show());
     }
     public void OnClickNext()
     {
@@ -42,9 +44,15 @@ public class VictoryWindow : UIMotionWindow
             }
         });
     }
-    private Sequence Show()
+    private Func<IEnumerator> Show()
+    {
+        return () => ShowCor();
+    }
+
+    private IEnumerator ShowCor()
     {
         string tipStr = tipText.text;
+
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() =>
         {
@@ -55,15 +63,14 @@ public class VictoryWindow : UIMotionWindow
         });
         sequence.Append(dimmedCG.DOFade(1f, 1f));
         sequence.Append(contentCG.DOFade(1f, 0.5f));
-        sequence.JoinCallback(() => 
+        sequence.JoinCallback(() =>
         {
             tipText.text = tipStr;
             Utils.TMPDOText(tipText, 2f);
         });
 
-        return sequence;
+        yield return sequence.WaitForCompletion();
     }
-
     public void OnClickGoldReward(RewardButton button, int amount)
     {
         rewardButtonPool.Push(button);

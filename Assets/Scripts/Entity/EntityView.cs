@@ -1,7 +1,7 @@
 ﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class EntityView : MonoBehaviour
@@ -35,35 +35,19 @@ public class EntityView : MonoBehaviour
             return;
         }
 
-        if (e.EndAmount < e.StartAmount)
+        if (e.StartAmount == e.EndAmount)
         {
-            e.Motion.AddTask(new MotionTask(
-                priority: MotionPriority.Target,
-                command: () => ShowDamageTextCor(e.StartAmount - e.EndAmount),
-                source: this
-            ));
+            return;
+        }
 
-            if (e.EndAmount > 0)
-            {
-                e.Motion.AddTask(new MotionTask(
-                    priority: MotionPriority.Target,
-                    command: () => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_HIT),
-                    source: this
-                ));
-            }
-        }
-        else if (e.EndAmount > e.StartAmount)
-        {
-            e.Motion.AddTask(new MotionTask(
-                priority: MotionPriority.Entity,
-                command: () => particle.PlayCor(EntityParticleKey.Heal),
-                source: this
-            ));
-        }
+        int currentHp = instance.CurrentHp;
+        int maxHp = instance.MaxHp;
 
         e.Motion.AddTask(new MotionTask(
             priority: MotionPriority.Entity,
-            command: () => ChangeHpCor(instance.CurrentHp, instance.MaxHp),
+            command: () => e.StartAmount > e.EndAmount ? 
+                           HitCor(e.StartAmount, e.EndAmount, currentHp, maxHp) : 
+                           HealCor(currentHp, maxHp),
             source: this
         ));
     }
@@ -79,37 +63,19 @@ public class EntityView : MonoBehaviour
             return;
         }
 
-        if (e.EndAmount > e.StartAmount)
+        if (e.StartAmount == e.EndAmount)
         {
-            e.Motion.AddTask(new MotionTask(
-                priority: MotionPriority.Actor,
-                command: () => ShowBlockCor(e.EndAmount),
-                source: this
-            ));
-
-            e.Motion.AddTask(new MotionTask(
-                priority: MotionPriority.Actor,
-                command: () => particle.PlayCor(EntityParticleKey.Block),
-                source: this
-            ));
+            return;
         }
-        else
-        {
-            e.Motion.AddTask(new MotionTask(
-                priority: MotionPriority.Target,
-                command: () => ChangeBlockCor(e.EndAmount),
-                source: this
-            ));
 
-            if (instance.Block <= 0)
-            {
-                e.Motion.AddTask(new MotionTask(
-                    priority: MotionPriority.Target,
-                    command: () => HideBlockCor(),
-                    source: this
-                ));
-            }
-        }
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Actor,
+            command: () => e.EndAmount > e.StartAmount ? 
+                           AddBlockCor(e.EndAmount) : 
+                           SubstractBlockCor(e.StartAmount, e.EndAmount),
+            source: this
+        ));
+
     }
     public void OnBuffChanged(BuffChanged e)
     {
@@ -123,143 +89,184 @@ public class EntityView : MonoBehaviour
             return;
         }
 
-        if (buffViewDictionary.TryGetValue(e.Type, out EntityBuffView value))
+        Func<IEnumerator> process;
+        if (!buffViewDictionary.TryGetValue(e.Type, out EntityBuffView view))
         {
-            // 버프 업데이트
-            if (e.EndAmount > 0)
+            if (e.EndAmount <= 0)
             {
-                e.Motion.AddTask(new MotionTask(
-                    priority: MotionPriority.Target,
-                    command: () => Cor(),
-                    source: this
-                ));
+                return;
+            }
 
-                // temp
-                IEnumerator Cor()
-                {
-                    value.Change(e.EndAmount.ToString());
-                    yield break;
-                }
-            }
-            // 버프 소멸
-            else
-            {
-                buffViewPool.Push(value);
-                buffViewDictionary.Remove(e.Type);
-            }
+            process = () => ShowBuffCor(
+                buffType: e.Type,
+                amount: e.EndAmount
+            );
         }
         else
         {
-            // 버프 생성
             if (e.EndAmount > 0)
             {
-                EntityBuffView view = buffViewPool.Pop();
-
-                for (int i = 0; i < buffPresets.Length; i++)
-                {
-                    if (buffPresets[i].Type == e.Type)
-                    {
-                        view.Init(
-                            preset: buffPresets[i],
-                            text: e.EndAmount.ToString(),
-                            parent: buffParent
-                        );
-
-                        buffViewDictionary.Add(view.Type, view);
-
-                        e.Motion.AddTask(new MotionTask(
-                            priority: MotionPriority.Target,
-                            command: () => Cor(),
-                            source: this
-                        ));
-
-                        IEnumerator Cor()
-                        {
-                            view.Show();
-                            yield break;
-                        }
-                        break;
-                    }
-                }
+                process = () => ChangeBuffCor(
+                    view: view, 
+                    buffType: e.Type, 
+                    startAmount: e.StartAmount, 
+                    endAmount: e.EndAmount
+                );
+            }
+            else
+            {
+                process = () => HideBuffCor(
+                    view: view,
+                    buffType: e.Type
+                );
             }
         }
 
-        if (e.EndAmount <= e.StartAmount)
-        {
-            return;
-        }
-
-        // 버프 연출
-        EntityParticleKey key = e.Type switch
-        {
-            BuffType.Strength => EntityParticleKey.Buff,
-            BuffType.Weak or BuffType.Vulnerable => EntityParticleKey.Debuff,
-            _ => EntityParticleKey.None
-        };
-
         e.Motion.AddTask(new MotionTask(
-            priority: MotionPriority.Target,
-            command: () => particle.PlayCor(key),
+            priority: MotionPriority.Actor,
+            command: process,
             source: this
         ));
+
     }
     protected IEnumerator ShowStatusCor()
     {
         statusCG.gameObject.SetActive(true);
         statusCG.DOFade(1f, 1f);
-        yield break;
+        yield return null;
     }
-    protected IEnumerator HideStatusCor()
-    {
-        statusCG.DOFade(0f, 1f).OnComplete(() => statusCG.gameObject.SetActive(false));
-        yield break;
-    }
-    protected IEnumerator PlayAnimatorTriggerCor(string key, float duration = 0)
-    {
-        animator.SetTrigger(key);
 
-        if (duration > 0)
-        {
-            yield return new WaitForSeconds(duration);
-        }
-        else
-        {
-            yield break;
-        }
-    }
-    protected IEnumerator PlayAnimatorBoolCor(string key, bool value)
+    IEnumerator HealCor(int currentHp, int maxHp)
     {
-        animator.SetBool(AnimationKeys.PLAYER_ENCOUNTER, value);
-        yield break;
-    }
-    protected IEnumerator ShowBlockCor(int value)
-    {
-        blockView.Show(value);
-        yield break;
-    }
-    protected IEnumerator HideBlockCor()
-    {
-        blockView.Hide();
-        yield break;
-    }
-    protected IEnumerator ChangeBlockCor(int value)
-    {
-        blockView.Change(value);
-        yield break;
-    }
-    protected IEnumerator ChangeHpCor(int currentHp, int maxHp)
-    {
+        // 파티클
+        particle.Play(EntityParticleKey.Heal);
+        yield return null;
+
+        // UI
         hpView.Change(currentHp, maxHp);
-        yield break;
+        yield return null;
     }
-    protected IEnumerator ShowDamageTextCor(int value)
+    IEnumerator HitCor(int startAmount, int endAmount, int currentHp, int maxHp)
     {
+        // 데미지 표시
         DamageText damageText = damageTextPool.Pop();
+
         damageText.Spawn(
-            text: value.ToString(),
+            text: (startAmount - endAmount).ToString(),
             parent: statusCG.transform,
             pool: damageTextPool
         );
-        yield break;
+        yield return null;
+
+        // 피격 모션
+        if (endAmount > 0)
+        {
+            yield return PlayAnimatorTriggerCor(AnimationKeys.ENEMY_HIT);
+        }
+
+        // UI
+        hpView.Change(currentHp, maxHp);
+        yield return null;
+    }
+    IEnumerator AddBlockCor(int amount)
+    {
+        // 파티클
+        particle.Play(EntityParticleKey.Block);
+        yield return null;
+
+        // UI
+        blockView.Show(amount);
+        yield return null;
+    }
+
+    IEnumerator SubstractBlockCor(int startAmount, int endAmount)
+    {
+        // UI
+        blockView.Change(endAmount);
+        yield return null;
+
+        // 남은 경우 UI 유지
+        if (endAmount > 0)
+        {
+            yield break;
+        }
+
+        // 소진한 경우 UI 숨기기
+        blockView.Hide();
+        yield return null;
+    }
+    IEnumerator ShowBuffCor(BuffType buffType, int amount)
+    {
+        // 파티클
+        EntityParticleKey key = buffType switch
+        {
+            BuffType.Strength => EntityParticleKey.Buff,
+            BuffType.Weak or BuffType.Vulnerable => EntityParticleKey.Debuff,
+            _ => EntityParticleKey.None
+        };
+        particle.Play(key);
+        yield return null;
+
+        // UI
+        EntityBuffView view = buffViewPool.Pop();
+
+        for (int i = 0; i < buffPresets.Length; i++)
+        {
+            if (buffPresets[i].Type == buffType)
+            {
+                view.Init(
+                    preset: buffPresets[i],
+                    text: amount.ToString(),
+                    parent: buffParent
+                );
+
+                buffViewDictionary.Add(view.Type, view);
+                break;
+            }
+        }
+
+        view.Show();
+        yield return null;
+    }
+
+    IEnumerator HideBuffCor(EntityBuffView view, BuffType buffType)
+    {
+        buffViewPool.Push(view);
+        buffViewDictionary.Remove(buffType);
+        yield return null;
+    }
+
+    IEnumerator ChangeBuffCor(EntityBuffView view, BuffType buffType, int startAmount, int endAmount)
+    {
+        // 파티클
+        if (endAmount > startAmount)
+        {
+            EntityParticleKey key = buffType switch
+            {
+                BuffType.Strength => EntityParticleKey.Buff,
+                BuffType.Weak or BuffType.Vulnerable => EntityParticleKey.Debuff,
+                _ => EntityParticleKey.None
+            };
+            particle.Play(key);
+            yield return null;
+        }
+
+        // UI
+        view.Change(endAmount.ToString());
+        yield return null;
+    }
+    protected IEnumerator DeathCor(string key)
+    {
+        // 사망 모션
+        yield return PlayAnimatorTriggerCor(key);
+
+        // UI
+        statusCG.DOFade(0f, 1f).OnComplete(() => statusCG.gameObject.SetActive(false));
+        yield return null;
+    }
+    protected IEnumerator PlayAnimatorTriggerCor(string key, float duration = 0.25f)
+    {
+        animator.SetTrigger(key);
+        yield return new WaitForSeconds(duration);
     }
 }

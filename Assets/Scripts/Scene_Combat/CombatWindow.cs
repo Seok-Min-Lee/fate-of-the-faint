@@ -1,4 +1,6 @@
 ﻿using DG.Tweening;
+using System;
+using System.Collections;
 using UnityEngine;
 
 public class CombatWindow : UIMotionWindow
@@ -10,43 +12,73 @@ public class CombatWindow : UIMotionWindow
     private Sequence sequence;
     protected override void Awake()
     {
-        _handler.Add(MotionKey.CombatAnnounce, AnnounceCombat);
-        _handler.Add(MotionKey.PlayerTurnAnnounce, PlayerTurnAnnounce);
-        _handler.Add(MotionKey.FadeIn, FadeIn);
-        _handler.Add(MotionKey.FadeOut, FadeOut);
+        _handler.Add(MotionKey.CombatStarted, StartCombat());
+        _handler.Add(MotionKey.PlayerTurnStarted, StartPlayerTurn());
+        _handler.Add(MotionKey.EnemyTurnStarted, StartEnemyTurn());
     }
-    public Sequence AnnounceCombat()
+    private Func<IEnumerator> StartCombat()
     {
-        return combatAnnouncer.Announce();
+        return () => AnnounceCombatCor();
     }
-    public Sequence PlayerTurnAnnounce()
+    private Func<IEnumerator> StartPlayerTurn()
     {
-        return turnAnnouncer.PlayerTurnAnnounce();
+        return () => StartPlayerTurnCor();
     }
-    public Sequence EnemyTurnAnnounce()
+    private Func<IEnumerator> StartEnemyTurn()
     {
-        return turnAnnouncer.EnemyTurnAnnounce();
+        return () => StartEnemyTurnCor();
     }
-    public Sequence FadeIn()
+    private IEnumerator AnnounceCombatCor()
     {
         if (sequence != null)
         {
             sequence.Kill();
         }
         sequence = DOTween.Sequence();
+
+        sequence.AppendCallback(() => ChangeWindow(WindowType.Combat, WindowMode.Single));
+        sequence.Append(combatAnnouncer.Announce());
+
+        yield return sequence.WaitForCompletion();
+    }
+    private IEnumerator StartPlayerTurnCor()
+    {
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+
+        sequence.Append(turnAnnouncer.PlayerTurnAnnounce());
+        sequence.Append(FadeIn());
+
+        yield return sequence.WaitForCompletion();
+    }
+    private IEnumerator StartEnemyTurnCor()
+    {
+        if (sequence != null)
+        {
+            sequence.Kill();
+        }
+        sequence = DOTween.Sequence();
+
+        sequence.Append(FadeOut());
+        sequence.Append(turnAnnouncer.EnemyTurnAnnounce());
+
+        yield return sequence.WaitForCompletion();
+    }
+    private Sequence FadeIn()
+    {
+        Sequence sequence = DOTween.Sequence();
 
         sequence.Append(combatUICG.DOFade(1f, 0.5f));
         sequence.AppendCallback(() => combatUICG.blocksRaycasts = true);
 
         return sequence;
     }
-    public Sequence FadeOut()
+    private Sequence FadeOut()
     {
-        if (sequence != null)
-        {
-            sequence.Kill();
-        }
-        sequence = DOTween.Sequence();
+        Sequence sequence = DOTween.Sequence();
 
         sequence.AppendCallback(() => combatUICG.blocksRaycasts = false);
         sequence.Append(combatUICG.DOFade(0f, 0.5f));

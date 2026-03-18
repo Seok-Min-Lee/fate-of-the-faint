@@ -1,4 +1,6 @@
 ﻿using DG.Tweening;
+using System;
+using System.Collections;
 using UnityEngine;
 
 public class DefeatWindow : UIMotionWindow
@@ -13,7 +15,7 @@ public class DefeatWindow : UIMotionWindow
 
     protected override void Awake()
     {
-        _handler.Add(MotionKey.WindowShow, Show);
+        _handler.Add(MotionKey.WindowShow, Show());
     }
     public void OnClickBack()
     {
@@ -23,7 +25,11 @@ public class DefeatWindow : UIMotionWindow
             UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.HOME);
         });
     }
-    private Sequence Show()
+    private Func<IEnumerator> Show()
+    {
+        return () => ShowCor();
+    }
+    private IEnumerator ShowCor()
     {
         Sequence sequence = DOTween.Sequence();
         sequence.AppendCallback(() =>
@@ -48,7 +54,6 @@ public class DefeatWindow : UIMotionWindow
 
         sequence.Append(homeButtonCG.DOFade(1f, 0.5f));
 
-
-        return sequence;
+        yield return sequence.WaitForCompletion();
     }
 }

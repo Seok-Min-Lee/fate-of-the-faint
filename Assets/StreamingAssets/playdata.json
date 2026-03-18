@@ -1,8 +1,8 @@
 {
     "playerId": "Player_A",
-    "currentHp": 71,
+    "currentHp": 100,
     "maxHp": 100,
-    "gold": 265,
+    "gold": 0,
     "energy": 3,
     "rewardCardOptionCount": 3,
     "rng": {
@@ -11,39 +11,18 @@
     },
     "nodes": [],
     "cardIds": [
-        "skl_flex",
-        "skl_intimidate",
-        "skl_flex",
-        "skl_intimidate",
-        "skl_flex",
-        "skl_intimidate",
-        "skl_flex",
-        "skl_intimidate",
-        "skl_flex",
-        "skl_intimidate",
-        "skl_flex",
-        "skl_intimidate"
+        "atk_bash",
+        "atk_strike",
+        "atk_strike",
+        "atk_strike",
+        "atk_strike",
+        "skl_defend",
+        "skl_defend",
+        "skl_defend",
+        "skl_defend",
+        "skl_defend"
     ],
-    "relicIds": [
-        "Vajra"
-    ],
+    "relicIds": [],
     "potionIds": [],
-    "records": [
-        {
-            "Id": "일반 전투 횟수",
-            "Value": 5
-        },
-        {
-            "Id": "진행한 턴 수",
-            "Value": 15
-        },
-        {
-            "Id": "사용한 카드 수",
-            "Value": 39
-        },
-        {
-            "Id": "몬스터 처치 수",
-            "Value": 18
-        }
-    ]
+    "records": []
 }

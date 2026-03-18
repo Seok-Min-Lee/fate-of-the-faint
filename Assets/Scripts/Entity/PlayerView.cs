@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerView : EntityView, ITargetable
@@ -56,11 +57,7 @@ public class PlayerView : EntityView, ITargetable
             return;
         }
 
-        e.Motion.AddTask(new MotionTask(
-            priority: MotionPriority.Start,
-            command: () => PlayAnimatorBoolCor(AnimationKeys.PLAYER_ENCOUNTER, false),
-            source: this
-        ));
+        animator.SetBool(AnimationKeys.PLAYER_ENCOUNTER, false);
 
         e.Motion.AddTask(new MotionTask(
             priority: MotionPriority.Entity,
@@ -95,12 +92,7 @@ public class PlayerView : EntityView, ITargetable
 
         e.Motion.AddTask(new MotionTask(
             priority: MotionPriority.Target,
-            command: () => HideStatusCor(),
-            source: this
-        ));
-        e.Motion.AddTask(new MotionTask(
-            priority: MotionPriority.Target,
-            command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_DIE),
+            command: () => DeathCor(AnimationKeys.PLAYER_DIE),
             source: this
         ));
     }
@@ -142,15 +134,16 @@ public class PlayerView : EntityView, ITargetable
 
         e.Motion.AddTask(new MotionTask(
             priority: MotionPriority.Actor,
-            command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_POWER),
+            command: () => PlayPowerCor(AnimationKeys.PLAYER_POWER),
             source: this
         ));
+    }
+    IEnumerator PlayPowerCor(string key)
+    {
+        yield return PlayAnimatorTriggerCor(key);
 
-        e.Motion.AddTask(new MotionTask(
-            priority: MotionPriority.Actor,
-            command: () => particle.PlayCor(EntityParticleKey.Power),
-            source: this
-        ));
+        particle.Play(EntityParticleKey.Power);
+        yield break;
     }
     public Tween Move(Vector3 target)
     {

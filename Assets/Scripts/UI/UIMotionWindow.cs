@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -31,10 +32,9 @@ public enum WindowMode
 public enum MotionKey
 {
     WindowShow,
-    CombatAnnounce,
-    PlayerTurnAnnounce,
-    FadeOut,
-    FadeIn,
+    CombatStarted,
+    PlayerTurnStarted,
+    EnemyTurnStarted,
 }
 public class UIWindow : MonoBehaviour
 {
@@ -63,13 +63,14 @@ public class UIWindow : MonoBehaviour
 }
 public class UIMotionWindow : UIWindow
 {
-    protected Dictionary<MotionKey, Func<Sequence>> _handler = new Dictionary<MotionKey, Func<Sequence>>();
-    public Sequence GetMotion(MotionKey type)
+    protected Dictionary<MotionKey, Func<IEnumerator>> _handler = new Dictionary<MotionKey, Func<IEnumerator>>();
+    public Func<IEnumerator> GetMotion(MotionKey type)
     {
-        if (!_handler.TryGetValue(key: type, value: out Func<Sequence> value))
+        if (_handler.TryGetValue(key: type, value: out Func<IEnumerator> value))
         {
-            return null;
+            return value;
         }
-        return value.Invoke();
+
+        return null;
     }
 }

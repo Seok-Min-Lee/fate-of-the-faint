@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 public class EnemyView : EntityView, ITargetable
 {
     [SerializeField] private IntentView intentView;
@@ -52,6 +53,11 @@ public class EnemyView : EntityView, ITargetable
     }
     public void OnCombatStarted(CombatStarted e)
     {
+        if (e.Context.Combat.state != CombatState.Combat)
+        {
+            return;
+        }
+
         e.Motion.AddTask(new MotionTask(
             priority: MotionPriority.Entity,
             command: () => ShowStatusCor(),
@@ -85,12 +91,7 @@ public class EnemyView : EntityView, ITargetable
 
         e.Motion.AddTask(new MotionTask(
             priority: MotionPriority.Target,
-            command: () => HideStatusCor(),
-            source: this
-        ));
-        e.Motion.AddTask(new MotionTask(
-            priority: MotionPriority.Target,
-            command: () => PlayAnimatorTriggerCor(AnimationKeys.ENEMY_DIE),
+            command: () => DeathCor(AnimationKeys.ENEMY_DIE),
             source: this
         ));
     }
@@ -104,12 +105,7 @@ public class EnemyView : EntityView, ITargetable
 
         e.Motion.AddTask(new MotionTask(
             priority: MotionPriority.Actor,
-            command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_ATTACK),
-            source: this
-        ));
-        e.Motion.AddTask(new MotionTask(
-            priority: MotionPriority.Actor,
-            command: () => HideIntentCor(),
+            command: () => PlayActionCor(AnimationKeys.PLAYER_ATTACK),
             source: this
         ));
     }
@@ -123,12 +119,7 @@ public class EnemyView : EntityView, ITargetable
 
         e.Motion.AddTask(new MotionTask(
             priority: MotionPriority.Actor,
-            command: () => PlayAnimatorTriggerCor(AnimationKeys.PLAYER_SKILL),
-            source: this
-        ));
-        e.Motion.AddTask(new MotionTask(
-            priority: MotionPriority.Actor,
-            command: () => HideIntentCor(),
+            command: () => PlayActionCor(AnimationKeys.PLAYER_SKILL),
             source: this
         ));
     }
@@ -158,11 +149,13 @@ public class EnemyView : EntityView, ITargetable
     private IEnumerator ShowIntentCor(EnemyActionSO intent)
     {
         intentView.Show(intent);
-        yield break;
+        yield return null;
     }
-    private IEnumerator HideIntentCor()
+    private IEnumerator PlayActionCor(string key)
     {
+        yield return PlayAnimatorTriggerCor(key);
+
         intentView.Hide();
-        yield break;
+        yield return null;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using System;
 using System.Collections;
 using UnityEngine;
 public class UIMonoSystem : BaseMonoSystem
@@ -10,7 +11,6 @@ public class UIMonoSystem : BaseMonoSystem
     [SerializeField] private UIWindowManager windowManager;
     [SerializeField] private EnergyView energy;
 
-    private Sequence sequence;
     public void Init(EventBus eventBus, ActionSystem actionSystem)
     {
         this.eventBus = eventBus;
@@ -26,13 +26,14 @@ public class UIMonoSystem : BaseMonoSystem
 
         e.Motion.AddTask(new MotionTask(
             priority: MotionPriority.Window,
-            command: () => CombatStartedAnimationCor(combatWindow),
+            command: combatWindow.GetMotion(MotionKey.CombatStarted),
             source: this
         ));
     }
     public void OnCombatEnded(CombatEnded e)
     {
         UIWindow window;
+        Func<IEnumerator> process;
 
         if (e.Context.Combat.state == CombatState.Victory &&
             windowManager.TryGetWindow(WindowType.Victory, out window) &&
@@ -40,26 +41,24 @@ public class UIMonoSystem : BaseMonoSystem
         {
             victoryWindow.Init(e.Context.Combat.GoldReward);
 
-            e.Motion.AddTask(new MotionTask(
-                priority: MotionPriority.Window,
-                command: () => CombatEndedVictoryAnimationCor(victoryWindow),
-                source: this
-            ));
+            process = victoryWindow.GetMotion(MotionKey.WindowShow);
         }
         else if (e.Context.Combat.state == CombatState.Defeat &&
                  windowManager.TryGetWindow(WindowType.Defeat, out window) &&
                  window is DefeatWindow defeatWindow)
         {
-            e.Motion.AddTask(new MotionTask(
-                priority: MotionPriority.Window,
-                command: () => CombatEndedDefeatWindowAnimationCor(defeatWindow),
-                source: this
-            ));
+            process = defeatWindow.GetMotion(MotionKey.WindowShow);
         }
         else
         {
             return;
         }
+
+        e.Motion.AddTask(new MotionTask(
+            priority: MotionPriority.Window,
+            command: process,
+            source: this
+        ));
     }
     public void OnPlayerTurnStarted(PlayerTurnStarted e)
     {
@@ -76,7 +75,7 @@ public class UIMonoSystem : BaseMonoSystem
 
         e.Motion.AddTask(new MotionTask(
             priority: MotionPriority.Window,
-            command: () => PlayerTurnStartedMotionCor(combatWindow),
+            command: combatWindow.GetMotion(MotionKey.PlayerTurnStarted),
             source: this
         ));
     }
@@ -95,7 +94,7 @@ public class UIMonoSystem : BaseMonoSystem
 
         e.Motion.AddTask(new MotionTask(
             priority: MotionPriority.Window,
-            command: () => EnemyTurnStartedAnimationCor(combatWindow),
+            command: combatWindow.GetMotion(MotionKey.EnemyTurnStarted),
             source: this
         ));
     }
@@ -136,68 +135,5 @@ public class UIMonoSystem : BaseMonoSystem
                 request: requestContext
             ));
         });
-    }
-    IEnumerator CombatStartedAnimationCor(CombatWindow combatWindow)
-    {
-        if (sequence != null)
-        {
-            sequence.Kill();
-        }
-        sequence = DOTween.Sequence();
-
-        sequence.AppendCallback(() => windowManager.ActivateWindow(WindowType.Combat, WindowMode.Single));
-        sequence.Append(combatWindow.AnnounceCombat());
-
-        yield return sequence.WaitForCompletion();
-    }
-    IEnumerator CombatEndedVictoryAnimationCor(VictoryWindow victoryWindow)
-    {
-        if (sequence != null)
-        {
-            sequence.Kill();
-        }
-        sequence = DOTween.Sequence();
-
-        sequence.Append(victoryWindow.GetMotion(MotionKey.WindowShow));
-
-        yield return sequence.WaitForCompletion();
-    }
-    IEnumerator CombatEndedDefeatWindowAnimationCor(DefeatWindow defeatWindow)
-    {
-        if (sequence != null)
-        {
-            sequence.Kill();
-        }
-        sequence = DOTween.Sequence();
-
-        sequence.Append(defeatWindow.GetMotion(MotionKey.WindowShow));
-
-        yield return sequence.WaitForCompletion();
-    }
-    IEnumerator PlayerTurnStartedMotionCor(CombatWindow combatWindow)
-    {
-        if (sequence != null)
-        {
-            sequence.Kill();
-        }
-        sequence = DOTween.Sequence();
-
-        sequence.Append(combatWindow.PlayerTurnAnnounce());
-        sequence.Append(combatWindow.FadeIn());
-
-        yield return sequence.WaitForCompletion();
-    }
-    IEnumerator EnemyTurnStartedAnimationCor(CombatWindow combatWindow)
-    {
-        if (sequence != null)
-        {
-            sequence.Kill();
-        }
-        sequence = DOTween.Sequence();
-
-        sequence.Append(combatWindow.FadeOut());
-        sequence.Append(combatWindow.EnemyTurnAnnounce());
-
-        yield return sequence.WaitForCompletion();
     }
 }
