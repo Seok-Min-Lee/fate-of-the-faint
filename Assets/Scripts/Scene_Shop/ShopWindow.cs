@@ -1,6 +1,9 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ShopWindow : UIWindow
 {
@@ -9,15 +12,30 @@ public class ShopWindow : UIWindow
 
     [SerializeField] private RelicMonoSystem relicSystem;
     [SerializeField] private GoldMonoSystem goldSystem;
+
+    [SerializeField] private HorizontalLayoutGroup cardLayout;
+    [SerializeField] private HorizontalLayoutGroup relicLayout;
+
     [SerializeField] private PurchasePopup popup;
     [SerializeField] private TooltipView tooltip;
     protected override void OnEnable()
     {
         base.OnEnable();
         popup.gameObject.SetActive(false);
+
+        // 레이아웃 컴포넌트는 자식 오브젝트 위치만 잡고 비활성화
+        StartCoroutine(Cor());
+        IEnumerator Cor()
+        {
+            yield return new WaitForEndOfFrame();
+
+            cardLayout.enabled = false;
+            relicLayout.enabled = false;
+        }
     }
     public void Init()
     {
+        // 카드 상품 생성
         List<CardSO> cards = RunManager.Instance.GetUnupgradedCards(5);
         for (int i = 0; i < cards.Count; i++)
         {
@@ -39,6 +57,7 @@ public class ShopWindow : UIWindow
             );
         }
 
+        // 유물 상품 생성
         List<RelicSO> relics = RunManager.Instance.GetUnacquiredRelics(3);
         for (int i = 0; i < relics.Count; i++)
         {
@@ -80,30 +99,36 @@ public class ShopWindow : UIWindow
     }
     private void OnPurchaseCard(CardShopView view)
     {
+        // 골드량 체크
         if (RunManager.Instance.CurrentData.Gold < view.Price)
         {
             view.FailedToPurchase();
             return;
         }
 
+        // 골드 업데이트
         RunManager.Instance.CurrentData.SubtractGold(view.Price);
         goldSystem.Refresh();
 
+        // 카드 업데이트
         RunManager.Instance.CurrentData.AddCard(view.Origin);
-        cardPool.Push(view);
+        view.SuccessedToPurchase().OnComplete(() => cardPool.Push(view));
     }
     private void OnPurchaseRelic(RelicShopView view)
     {
+        // 골드량 체크
         if (RunManager.Instance.CurrentData.Gold < view.Price)
         {
             view.FailedToPurchase();
             return;
         }
 
+        // 골드 업데이트
         RunManager.Instance.CurrentData.SubtractGold(view.Price);
         goldSystem.Refresh();
 
+        // 유물 업데이트
         relicSystem.AddRelic(view.Origin);
-        relicPool.Push(view);
+        view.SuccessedToPurchase().OnComplete(() => relicPool.Push(view));
     }
 }

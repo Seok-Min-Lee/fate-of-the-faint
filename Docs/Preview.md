@@ -6,17 +6,14 @@
 ![Combat-Start](Previews/Combat-Start.gif)  
 ### 공격 카드 사용 + 타겟팅
 ![Attack-Card-Play](Previews/Attack-Card-Play.gif)  
-└ 효과: 피해를 6 줍니다.
 ### 스킬 카드 사용 (회복)
 ![Skill-Card-Play(debuff)](Previews/Skill-Card-Play(heal).gif)  
 ### 스킬 카드 사용 (방패)
 ![Skill-Card-Play(block)](Previews/Skill-Card-Play(block).gif)   
 ### 스킬 카드 사용 (버프)
 ![Skill-Card-Play(block)](Previews/Skill-Card-Play(buff).gif)  
-└ 효과: 힘을 2 얻습니다.
 ### 스킬 카드 사용 (디버프)
 ![Skill-Card-Play(debuff)](Previews/Skill-Card-Play(debuff).gif)  
-└ 효과: 적 전체에게 약화와 취약을 3 부여합니다.  
 ### 파워 카드 사용
 ![Power-Card-Play](Previews/Power-Card-Play.gif)  
 ### 몬스터 사망
@@ -46,6 +43,9 @@
 
 ## 💎 유물방
 ![Treasure-Room](Previews/Treasure-Room.gif)  
+
+## 🛒 상점
+![Shop](Previews/Shop.gif)
 
 ## 🗺 지도
 ![Map](Previews/Map.gif)  

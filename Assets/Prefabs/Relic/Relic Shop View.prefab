@@ -161,6 +161,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8669923661823195706}
   - component: {fileID: 1846931524827661561}
+  - component: {fileID: 7658259183613023069}
   m_Layer: 5
   m_Name: Relic Shop View
   m_TagString: Untagged
@@ -206,6 +207,18 @@ MonoBehaviour:
   strength: 16
   duration: 0.5
   vibrato: 16
+--- !u!225 &7658259183613023069
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8272807301579974180}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &893409618040642397
 PrefabInstance:
   m_ObjectHideFlags: 0

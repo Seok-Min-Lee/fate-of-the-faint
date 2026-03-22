@@ -5,7 +5,8 @@ using UnityEngine;
 public interface IShopView
 {
     public int Price { get; }
-    public void FailedToPurchase();
+    public Tween SuccessedToPurchase();
+    public Tween FailedToPurchase();
 }
 public class PurchasePopup : MonoBehaviour
 {

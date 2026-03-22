@@ -24,6 +24,18 @@ public class RelicShopView : RelicDefaultView, IShopView, IPointerClickHandler
         }
     }
     private RectTransform _rectTransform;
+    private CanvasGroup canvasGroup
+    {
+        get
+        {
+            if (_canvasGroup == null)
+            {
+                _canvasGroup = GetComponent<CanvasGroup>();
+            }
+            return _canvasGroup;
+        }
+    }
+    private CanvasGroup _canvasGroup;
     public int Price => price;
     private int price;
 
@@ -53,12 +65,16 @@ public class RelicShopView : RelicDefaultView, IShopView, IPointerClickHandler
         base.OnPointerExit(eventData);
         transform.localScale = Vector3.one;
     }
-    public void FailedToPurchase()
+    public Tween FailedToPurchase()
     {
-        rectTransform.DOPunchPosition(
+        return rectTransform.DOPunchPosition(
             punch: UnityEngine.Random.insideUnitCircle * strength,
             duration: duration,
             vibrato: vibrato
         );
+    }
+    public Tween SuccessedToPurchase()
+    {
+        return canvasGroup.DOFade(0f, 0.5f);
     }
 }
