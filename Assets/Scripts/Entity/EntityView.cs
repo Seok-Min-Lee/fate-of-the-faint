@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EntityView : MonoBehaviour
@@ -102,6 +103,7 @@ public class EntityView : MonoBehaviour
                 return;
             }
 
+            // UI 생성
             view = buffViewPool.Pop();
             view.Init(
                 preset: preset,
@@ -110,15 +112,9 @@ public class EntityView : MonoBehaviour
             );
             buffViewDictionary.Add(e.Type, view);
 
-            EntityParticleKey particleKey = e.Type switch
-            {
-                BuffType.Strength => EntityParticleKey.Buff,
-                BuffType.Weak or BuffType.Vulnerable => EntityParticleKey.Debuff,
-                _ => EntityParticleKey.None
-            };
-
+            // 모션
             process = () => ShowBuffCor(
-                particleKey: particleKey,
+                particleKey: GetParticleKey(e.Type),
                 view: view
             );
         }
@@ -127,18 +123,15 @@ public class EntityView : MonoBehaviour
             if (e.EndAmount > 0)
             {
                 process = () => ChangeBuffCor(
+                    particleKey: GetParticleKey(e.Type),
                     view: view, 
-                    buffType: e.Type, 
                     startAmount: e.StartAmount, 
                     endAmount: e.EndAmount
                 );
             }
             else
             {
-                process = () => HideBuffCor(
-                    view: view,
-                    buffType: e.Type
-                );
+                process = () => HideBuffCor(view);
             }
         }
 
@@ -161,6 +154,28 @@ public class EntityView : MonoBehaviour
 
         preset = default;
         return false;
+    }
+    private EntityParticleKey GetParticleKey(BuffType buff)
+    {
+        EntityParticleKey key;
+
+        switch (buff)
+        {
+            case BuffType.Strength:
+                key = EntityParticleKey.Buff;
+                break;
+
+            case BuffType.Weak:
+            case BuffType.Vulnerable:
+                key = EntityParticleKey.Debuff;
+                break;
+
+            default:
+                key = EntityParticleKey.None;
+                break;
+        }
+
+        return key;
     }
     protected IEnumerator ShowStatusCor()
     {
@@ -239,25 +254,19 @@ public class EntityView : MonoBehaviour
         yield return null;
     }
 
-    IEnumerator HideBuffCor(EntityBuffView view, BuffType buffType)
+    IEnumerator HideBuffCor(EntityBuffView view)
     {
         buffViewPool.Push(view);
-        buffViewDictionary.Remove(buffType);
+        buffViewDictionary.Remove(view.Type);
         yield return null;
     }
 
-    IEnumerator ChangeBuffCor(EntityBuffView view, BuffType buffType, int startAmount, int endAmount)
+    IEnumerator ChangeBuffCor(EntityParticleKey particleKey, EntityBuffView view, int startAmount, int endAmount)
     {
         // 파티클
         if (endAmount > startAmount)
         {
-            EntityParticleKey key = buffType switch
-            {
-                BuffType.Strength => EntityParticleKey.Buff,
-                BuffType.Weak or BuffType.Vulnerable => EntityParticleKey.Debuff,
-                _ => EntityParticleKey.None
-            };
-            particle.Play(key);
+            particle.Play(particleKey);
             yield return null;
         }
 

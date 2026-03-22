@@ -1749,7 +1749,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 161863704080426181, guid: e290279d306c55640a5779de6529cb43, type: 3}
       propertyPath: m_Name
-      value: Relics
+      value: Relic System
       objectReference: {fileID: 0}
     - target: {fileID: 2853467941525804516, guid: e290279d306c55640a5779de6529cb43, type: 3}
       propertyPath: windowManager

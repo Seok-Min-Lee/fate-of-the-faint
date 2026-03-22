@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3414256502187622946}
   - component: {fileID: 2853467941525804516}
   m_Layer: 5
-  m_Name: Relics
+  m_Name: Relic System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
