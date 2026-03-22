@@ -5,16 +5,18 @@ EventBus 기반 아키텍처로 구현한 Slay the Spire 스타일의 덱빌딩 
 
 [빌드파일 다운로드(Windows)](https://github.com/Seok-Min-Lee/fate-of-the-faint/releases/tag/Demo)  
 ## 🎮 게임 프리뷰
-### Attack Card Play
-![Attack-Card-Play](Docs/Previews/Attack-Card-Play.gif)  
-
-### Map
+### 전투 (공격 카드 사용)
+![Attack-Card-Play](Docs/Previews/Attack-Card-Play.gif) 
+### 카드 강화
+![Enhance-Card](Docs/Previews/Enhance-Card.gif)  
+### 유물방
+![Treasure-Room](Docs/Previews/Treasure-Room.gif)  
+### 상점
+![Shop](Docs/Previews/Shop.gif)  
+### 지도
 ![Map](Docs/Previews/Map.gif)  
 
-### Debug Console
-![Debug-Console](Docs/Previews/Debug-Console.gif)  
-
-[더 보기](Docs/Preview.md)  
+### [> 더 보기](Docs/Preview.md)  
 
 ## ✨ 기술
 ### EventBus
