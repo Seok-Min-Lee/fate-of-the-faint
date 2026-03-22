@@ -284,3 +284,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SideButton
   startPosition: {x: 450, y: 150}
   endPosition: {x: 150, y: 150}
+  showOnEnabled: 0

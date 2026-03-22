@@ -125,8 +125,8 @@ public class VictoryWindow : UIMotionWindow
         );
 
         int count = RunManager.Instance.CurrentData.RewardCardOptionCount;
-        List<CardSO> samples = Utils.PickRandom<CardSO>(RunManager.Instance.Catalog.CardList.Where(x => x.UpgradeCard != null), count);
-
+        List<CardSO> samples = RunManager.Instance.GetUnupgradedCards(count);
+        //List<CardSO> samples = Utils.PickRandom<CardSO>(RunManager.Instance.Catalog.CardList.Where(x => x.UpgradeCard != null), count);
         cardSampleDic.Add(button, samples);
     }
     private void AddRelicRewardButton()
@@ -140,16 +140,17 @@ public class VictoryWindow : UIMotionWindow
 #endif
 
         //
-        HashSet<RelicSO> hashset = RunManager.Instance.CurrentData.Relics.Select(x => x.Origin).ToHashSet();
-        List<RelicSO> candidates = RunManager.Instance.Catalog.RelicList
-                                   .Where(candidate => !hashset.Contains(candidate))
-                                   .ToList();
+        RelicSO reward = RunManager.Instance.GetUnacquiredRelics(1).FirstOrDefault();
+        //HashSet<RelicSO> hashset = RunManager.Instance.CurrentData.Relics.Select(x => x.Origin).ToHashSet();
+        //List<RelicSO> candidates = RunManager.Instance.Catalog.RelicList
+        //                           .Where(candidate => !hashset.Contains(candidate))
+        //                           .ToList();
 
-        if (candidates.Count == 0)
-        {
-            return;
-        }
-        RelicSO reward = candidates[UnityEngine.Random.Range(0, candidates.Count)];
+        //if (candidates.Count == 0)
+        //{
+        //    return;
+        //}
+        //RelicSO reward = candidates[UnityEngine.Random.Range(0, candidates.Count)];
 
         RewardButton button = rewardButtonPool.Pop();
 

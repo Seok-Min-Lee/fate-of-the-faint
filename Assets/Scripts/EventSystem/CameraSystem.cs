@@ -27,16 +27,14 @@ public class CameraMonoSystem : BaseMonoSystem
             return;
         }
 
-        Vector2 dir;
-        if (e.Source is PlayerInstance)
+        Vector2 dir = e.Target switch
         {
-            dir = new Vector2(1, 1);
-        }
-        else if (e.Target is PlayerInstance)
-        {
-            dir = new Vector2(-1, -1);
-        }
-        else
+            PlayerInstance => new Vector2(-1, -1),
+            EnemyInstance => new Vector2(1, 1),
+            _ => Vector2.zero
+        };
+
+        if (dir == Vector2.zero)
         {
             return;
         }

@@ -8,7 +8,7 @@ public class GoldMonoSystem : BaseMonoSystem
     private EventBus eventBus;
     public void Start()
     {
-        goldText.text = RunManager.Instance.CurrentData.Gold.ToString();
+        Refresh();
     }
     public void Init(EventBus eventBus)
     {
@@ -43,5 +43,9 @@ public class GoldMonoSystem : BaseMonoSystem
             startAmount: startAmount,
             endAmount: endAmount
         ));
+    }
+    public void Refresh()
+    {
+        goldText.text = RunManager.Instance.CurrentData.Gold.ToString();
     }
 }

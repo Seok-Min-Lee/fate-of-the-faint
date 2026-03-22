@@ -7,15 +7,15 @@ public class UIWindowManager : MonoBehaviour
     [SerializeField] WindowType startWindowSource;
     [SerializeField] WindowMode startWindowMode;
 
-    private Dictionary<WindowType, UIWindow> windowDictionary = new Dictionary<WindowType, UIWindow>();
-    private Stack<HashSet<WindowType>> windowSnapshot = new Stack<HashSet<WindowType>>();
+    private Dictionary<WindowType, UIWindow> dictionary = new Dictionary<WindowType, UIWindow>();
+    private Stack<HashSet<WindowType>> snapshots = new Stack<HashSet<WindowType>>();
     private void Awake()
     {
         foreach (UIWindow window in windowParent.GetComponentsInChildren<UIWindow>())
         {
-            if (!windowDictionary.ContainsKey(window.Type))
+            if (!dictionary.ContainsKey(window.Type))
             {
-                windowDictionary.Add(window.Type, window);
+                dictionary.Add(window.Type, window);
                 window.ChangeWindow = ChangeWindow;
             }
         }
@@ -34,7 +34,7 @@ public class UIWindowManager : MonoBehaviour
     }
     public bool TryGetWindow(WindowType type, out UIWindow window)
     {
-        if (windowDictionary.TryGetValue(type, out window))
+        if (dictionary.TryGetValue(type, out window))
         {
             return true;
         }
@@ -46,9 +46,9 @@ public class UIWindowManager : MonoBehaviour
         // Revert
         if (mode == WindowMode.Revert)
         {
-            if (windowSnapshot.TryPop(out HashSet<WindowType> snapshot))
+            if (snapshots.TryPop(out HashSet<WindowType> snapshot))
             {
-                foreach (KeyValuePair<WindowType, UIWindow> kvp in windowDictionary)
+                foreach (KeyValuePair<WindowType, UIWindow> kvp in dictionary)
                 {
                     kvp.Value.gameObject.SetActive(snapshot.Contains(kvp.Key));
                 }
@@ -58,74 +58,27 @@ public class UIWindowManager : MonoBehaviour
 
         // 현재 상태 스냅샷
         HashSet<WindowType> currentActiveWindows = new HashSet<WindowType>();
-        foreach (KeyValuePair<WindowType, UIWindow> kvp in windowDictionary)
+        foreach (KeyValuePair<WindowType, UIWindow> kvp in dictionary)
         {
             if (kvp.Value.gameObject.activeSelf)
             {
                 currentActiveWindows.Add(kvp.Key);
             }
         }
-        windowSnapshot.Push(currentActiveWindows);
+        snapshots.Push(currentActiveWindows);
 
         // 윈도우 변경
         if (source == WindowType.None || mode == WindowMode.Single)
         {
-            foreach (UIWindow w in windowDictionary.Values)
+            foreach (UIWindow w in dictionary.Values)
             {
                 w.gameObject.SetActive(false);
             }
         }
 
-        if (windowDictionary.TryGetValue(source, out UIWindow targetWindow))
+        if (dictionary.TryGetValue(source, out UIWindow targetWindow))
         {
             targetWindow.gameObject.SetActive(true);
         }
-        //UIWindow window;
-        //HashSet<WindowType> snapshot;
-
-        //if (source == WindowType.None)
-        //{
-        //    foreach (UIWindow w in windowDictionary.Values)
-        //    {
-        //        w.gameObject.SetActive(false);
-        //    }
-        //}
-
-        //if (mode == WindowMode.Revert)
-        //{
-        //    if (windowSnapshot.Count > 0)
-        //    {
-        //        snapshot = windowSnapshot.Pop();
-        //        foreach (KeyValuePair<WindowType, UIWindow> kvp in windowDictionary)
-        //        {
-        //            kvp.Value.gameObject.SetActive(snapshot.Contains(kvp.Key));
-        //        }
-        //    }
-        //}
-        //else
-        //{
-        //    snapshot = new HashSet<WindowType>();
-        //    foreach (KeyValuePair<WindowType, UIWindow> kvp in windowDictionary)
-        //    {
-        //        if (kvp.Value.gameObject.activeSelf)
-        //        {
-        //            snapshot.Add(kvp.Key);
-        //        }
-        //    }
-        //    windowSnapshot.Push(snapshot);
-
-        //    if (windowDictionary.TryGetValue(source, out window))
-        //    {
-        //        if (mode == WindowMode.Single)
-        //        {
-        //            foreach (UIWindow w in windowDictionary.Values)
-        //            {
-        //                w.gameObject.SetActive(false);
-        //            }
-        //        }
-
-        //        window.gameObject.SetActive(true);
-        //    }
-        //}
     }
 }

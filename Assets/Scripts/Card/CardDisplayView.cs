@@ -31,12 +31,14 @@ public class CardDisplayView : CardDefaultView, IPointerEnterHandler, IPointerEx
         }
     }
     private Button _button;
+    public CardEntry Entry { get; private set; }
     public int Index { get; private set; }
     private bool isHold;
     private float hoverScale;
-    public void Init(int index, CardSO origin, float hoverScale = 1f)
+    public void Init(int index, CardSO origin, float hoverScale = 1f, CardEntry entry = null)
     {
         Index = index;
+        Entry = entry;
         base.Init(origin);
 
         this.hoverScale = hoverScale;

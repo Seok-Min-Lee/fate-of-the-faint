@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RelicViewPool : GameObjectPool<RelicView>
+public class RelicInstanceViewPool : GameObjectPool<RelicInstanceView>
 {
     [SerializeField] private TooltipView tooltip;
     public TooltipView Tooltip => tooltip;
-    public List<RelicView> CreateViews(IEnumerable<RelicInstance> samples, Action<RelicView> onClick)
+    public List<RelicInstanceView> CreateViews(IEnumerable<RelicInstance> samples, Action<RelicInstanceView> onClick)
     {
-        List<RelicView> views = new List<RelicView>();
+        List<RelicInstanceView> views = new List<RelicInstanceView>();
 
         foreach (RelicInstance sample in samples)
         {
-            RelicView view = Pop();
+            RelicInstanceView view = Pop();
             view.Init(sample, tooltip);
             view.AddListener(onClick);
             views.Add(view);
@@ -20,9 +20,9 @@ public class RelicViewPool : GameObjectPool<RelicView>
 
         return views;
     }
-    public RelicView CreateView(RelicInstance instance)
+    public RelicInstanceView CreateView(RelicInstance instance)
     {
-        RelicView view = Pop();
+        RelicInstanceView view = Pop();
         view.Init(instance, tooltip);
 
         return view;

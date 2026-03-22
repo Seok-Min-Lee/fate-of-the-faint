@@ -5,6 +5,8 @@ public class SideButton : MonoBehaviour
 {
     [SerializeField] private Vector2 startPosition;
     [SerializeField] private Vector2 endPosition;
+
+    [SerializeField] private bool showOnEnabled = true;
     public RectTransform RectTransform
     {
         get
@@ -17,12 +19,22 @@ public class SideButton : MonoBehaviour
             return _rectTransform;
         }
     }
-    RectTransform _rectTransform;
+    private RectTransform _rectTransform;
+    private Tween tween;
+    private void OnEnable()
+    {
+        if (!showOnEnabled)
+        {
+            return;
+        }
 
+        Show();
+    }
     public void Show()
     {
         Reset();
-        RectTransform.DOAnchorPos(endPosition, 0.5f);
+
+        tween = RectTransform.DOAnchorPos(endPosition, 0.5f);
     }
     public void Hide()
     {
@@ -30,6 +42,11 @@ public class SideButton : MonoBehaviour
     }
     private void Reset()
     {
+        if (tween != null)
+        {
+            tween.Kill();
+        }
+
         RectTransform.anchoredPosition = startPosition;
     }
 }

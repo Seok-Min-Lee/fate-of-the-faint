@@ -20,6 +20,9 @@ public enum WindowType
     EnhanceDisplay,
     EnhancePreview,
     RestComplete,
+    //Shop
+    Shop,
+    CardRemove,
     //
     None
 }
@@ -42,23 +45,23 @@ public class UIWindow : MonoBehaviour
     public WindowType Type => type;
     public Action<WindowType, WindowMode> ChangeWindow;
 
-    protected SideButton[] sideButtions;
+    protected SideButton[] sideButtons;
     protected virtual void Awake()
     {
-        sideButtions = transform.GetComponentsInChildren<SideButton>();
+        sideButtons = transform.GetComponentsInChildren<SideButton>();
     }
 
     protected virtual void OnEnable()
     {
-        if (sideButtions == null || sideButtions.Length == 0)
-        {
-            return;
-        }
+        //if (sideButtons == null || sideButtons.Length == 0)
+        //{
+        //    return;
+        //}
 
-        for (int i = 0; i < sideButtions.Length; i++)
-        {
-            sideButtions[i].Show();
-        }
+        //for (int i = 0; i < sideButtons.Length; i++)
+        //{
+        //    sideButtons[i].Show();
+        //}
     }
 }
 public class UIMotionWindow : UIWindow

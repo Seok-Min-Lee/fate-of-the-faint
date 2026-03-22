@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a991d9c652f74544e899fa2a4d70fb32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RelicViewPool
-  prefab: {fileID: 3208016658065742172, guid: b394173db3163f7429e4b241aaea439c, type: 3}
+  prefab: {fileID: 5910474054254048033, guid: b394173db3163f7429e4b241aaea439c, type: 3}
   tooltip: {fileID: 15636154977204129}
 --- !u!1001 &5673384066798982569
 PrefabInstance:

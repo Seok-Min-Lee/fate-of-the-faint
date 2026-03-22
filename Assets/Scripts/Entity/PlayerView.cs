@@ -91,7 +91,7 @@ public class PlayerView : EntityView, ITargetable
         }
 
         e.Motion.AddTask(new MotionTask(
-            priority: MotionPriority.Target,
+            priority: MotionPriority.Entity,
             command: () => DeathCor(AnimationKeys.PLAYER_DIE),
             source: this
         ));

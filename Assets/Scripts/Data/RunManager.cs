@@ -1,4 +1,6 @@
 ﻿using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class RunManager : MonoSingleton<RunManager>
@@ -92,5 +94,28 @@ public class RunManager : MonoSingleton<RunManager>
                 return null;
 #endif
         }
+    }
+    public List<CardSO> GetUnupgradedCards(int count = 0)
+    {
+        IEnumerable<CardSO> candidates = Catalog.CardList.Where(x => x.UpgradeCard != null);
+
+        if (count == 0)
+        {
+            return new List<CardSO>(candidates);
+        }
+
+        return Utils.PickRandom<CardSO>(candidates, count);
+    }
+    public List<RelicSO> GetUnacquiredRelics(int count = 0)
+    {
+        HashSet<RelicSO> hashset = CurrentData.Relics.Select(x => x.Origin).ToHashSet();
+        IEnumerable<RelicSO> candidates = Catalog.RelicList.Where(candidate => !hashset.Contains(candidate));
+
+        if (count == 0)
+        {
+            return new List<RelicSO>(candidates);
+        }
+
+        return Utils.PickRandom<RelicSO>(candidates, count);
     }
 }

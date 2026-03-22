@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CardMonoSystem : BaseMonoSystem
@@ -348,7 +347,7 @@ public class CardMonoSystem : BaseMonoSystem
 
 		// Animation
 		motion.AddTask(new MotionTask(
-			priority: MotionPriority.Start,
+			priority: MotionPriority.Card,
 			command: () => DiscardCardsCor(views),
 			source: this
 		));

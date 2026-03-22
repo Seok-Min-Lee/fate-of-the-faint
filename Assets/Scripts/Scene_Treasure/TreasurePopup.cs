@@ -9,12 +9,12 @@ public class TreasurePopup : MonoBehaviour
     [SerializeField] private Transform content;
 
     [SerializeField] private RelicMonoSystem relicSystem;
-    [SerializeField] private RelicViewPool samplePool;
+    [SerializeField] private RelicInstanceViewPool samplePool;
     [SerializeField] private TreasureCtrl ctrl;
 
     [SerializeField] private int radius;
 
-    private List<RelicView> sampleViews;
+    private List<RelicInstanceView> sampleViews;
 
     private Sequence sequence;
     public void Start()
@@ -51,7 +51,7 @@ public class TreasurePopup : MonoBehaviour
 
 
     }
-    private void Hide(RelicView view)
+    private void Hide(RelicInstanceView view)
     {
         if (sequence != null)
         {
@@ -75,18 +75,13 @@ public class TreasurePopup : MonoBehaviour
             ctrl.ShowNext();
         });
     }
-    private void SelectView(RelicView view)
+    private void SelectView(RelicInstanceView view)
     {
         Hide(view);
     }
     private void GetViews(int count)
     {
-        HashSet<RelicSO> hashset = RunManager.Instance.CurrentData.Relics.Select(x => x.Origin).ToHashSet();
-
-        List<RelicSO> candidates = Utils.PickRandom<RelicSO>(
-            source: RunManager.Instance.Catalog.RelicList.Where(candidate => !hashset.Contains(candidate)),
-            count: count
-        );
+        List<RelicSO> candidates = RunManager.Instance.GetUnacquiredRelics(count);
 
         List<RelicInstance> instances = new List<RelicInstance>();
         for (int i = 0; i < candidates.Count; i++)
@@ -103,7 +98,7 @@ public class TreasurePopup : MonoBehaviour
 
         for (int i = 0; i < sampleViews.Count; i++)
         {
-            RelicView view = sampleViews[i];
+            RelicInstanceView view = sampleViews[i];
 
             view.transform.parent = content;
             view.transform.localScale = Vector3.one;

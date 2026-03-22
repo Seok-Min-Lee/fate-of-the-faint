@@ -3,27 +3,26 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
-public class RelicView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class RelicInstanceView : RelicDefaultView, IPointerClickHandler
 {
-    [SerializeField] private Image image;
     public RelicInstance Instance { get; private set; }
-    public TooltipView Tooltip { get; private set; }
     private Sequence sequence;
-    private Action<RelicView> onClick;
+    private Action<RelicInstanceView> onClick;
     public void Init(RelicInstance instance, TooltipView tooltip)
     {
+        base.Init(instance.Origin, tooltip);
         Instance = instance;
-        Tooltip = tooltip;
-        image.sprite = instance.Origin.Icon;
-
     }
-    public void AddListener(Action<RelicView> onClick)
+    public void AddListener(Action<RelicInstanceView> onClick)
     {
         this.onClick = onClick;
     }
 
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        onClick?.Invoke(this);
+    }
     public void OnRelicActivated(RelicActivated e)
     {
         if (e.Source.Id != Instance.Id)
@@ -47,25 +46,5 @@ public class RelicView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 
         sequence.Append(image.transform.DOScale(Vector3.one * 1.5f, 0.25f).SetLoops(4, LoopType.Yoyo));
         yield return null;
-    }
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        Tooltip.Bind(
-            name: Instance.Origin.DisplayName, 
-            description: Instance.Origin.Description
-        );
-
-        Tooltip.transform.position = transform.position;
-        Tooltip.transform.parent = transform.parent.parent;
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        Tooltip.Clear();
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        onClick?.Invoke(this);
     }
 }

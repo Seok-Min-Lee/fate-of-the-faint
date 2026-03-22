@@ -54,7 +54,7 @@ MonoBehaviour:
     MaxOutDegree: 2
     MaxDeltaCol: 1
     MaxAttempts: 50
-    TargetShops: 0
+    TargetShops: 3
     TargetRests: 3
     TargetElites: 3
     TargetTreasures: 3

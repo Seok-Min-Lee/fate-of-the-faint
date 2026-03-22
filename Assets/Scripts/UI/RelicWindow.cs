@@ -9,7 +9,7 @@ public class RelicWindow : UIWindow
     [SerializeField] private TextMeshProUGUI description;
     [SerializeField] private TextMeshProUGUI flaverText;
 
-    public void Bind(RelicView relic)
+    public void Bind(RelicInstanceView relic)
     {
         RelicSO data = relic.Instance.Origin;
 

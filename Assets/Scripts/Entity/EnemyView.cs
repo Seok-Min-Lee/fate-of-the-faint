@@ -90,7 +90,7 @@ public class EnemyView : EntityView, ITargetable
         }
 
         e.Motion.AddTask(new MotionTask(
-            priority: MotionPriority.Target,
+            priority: MotionPriority.Entity,
             command: () => DeathCor(AnimationKeys.ENEMY_DIE),
             source: this
         ));

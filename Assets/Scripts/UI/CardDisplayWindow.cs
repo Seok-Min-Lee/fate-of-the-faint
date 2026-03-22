@@ -2,8 +2,8 @@
 using UnityEngine;
 public class CardDisplayWindow : UIWindow
 {
-    [SerializeField] private CardDisplayViewPool pool;
-    [SerializeField] private Transform parent;
+    [SerializeField] protected CardDisplayViewPool pool;
+    [SerializeField] protected Transform parent;
 
     protected List<CardDisplayView> views = new List<CardDisplayView>();
     
@@ -36,7 +36,7 @@ public class CardDisplayWindow : UIWindow
         }
         views.Clear();
     }
-    public void OnClickCancel()
+    public virtual void OnClickCancel()
     {
         ChangeWindow(WindowType.CardDisplay, WindowMode.Revert);
     }

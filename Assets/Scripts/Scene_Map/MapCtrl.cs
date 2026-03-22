@@ -126,6 +126,9 @@ public class MapCtrl : MonoBehaviour
                 case MapNodeType.Rest:
                     UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.REST);
                     break;
+                case MapNodeType.Shop:
+                    UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.SHOP);
+                    break;
             }
         });
     }

@@ -44,7 +44,7 @@ public class EntityView : MonoBehaviour
         int maxHp = instance.MaxHp;
 
         e.Motion.AddTask(new MotionTask(
-            priority: MotionPriority.Entity,
+            priority: MotionPriority.Target,
             command: () => e.StartAmount > e.EndAmount ? 
                            HitCor(e.StartAmount, e.EndAmount, currentHp, maxHp) : 
                            HealCor(currentHp, maxHp),
@@ -69,7 +69,7 @@ public class EntityView : MonoBehaviour
         }
 
         e.Motion.AddTask(new MotionTask(
-            priority: MotionPriority.Actor,
+            priority: MotionPriority.Target,
             command: () => e.EndAmount > e.StartAmount ? 
                            AddBlockCor(e.EndAmount) : 
                            SubstractBlockCor(e.StartAmount, e.EndAmount),
@@ -97,9 +97,29 @@ public class EntityView : MonoBehaviour
                 return;
             }
 
+            if (!TryGetBuffPreset(e.Type, out EntityBuffPreset preset))
+            {
+                return;
+            }
+
+            view = buffViewPool.Pop();
+            view.Init(
+                preset: preset,
+                text: e.EndAmount.ToString(),
+                parent: buffParent
+            );
+            buffViewDictionary.Add(e.Type, view);
+
+            EntityParticleKey particleKey = e.Type switch
+            {
+                BuffType.Strength => EntityParticleKey.Buff,
+                BuffType.Weak or BuffType.Vulnerable => EntityParticleKey.Debuff,
+                _ => EntityParticleKey.None
+            };
+
             process = () => ShowBuffCor(
-                buffType: e.Type,
-                amount: e.EndAmount
+                particleKey: particleKey,
+                view: view
             );
         }
         else
@@ -123,11 +143,24 @@ public class EntityView : MonoBehaviour
         }
 
         e.Motion.AddTask(new MotionTask(
-            priority: MotionPriority.Actor,
+            priority: MotionPriority.Target,
             command: process,
             source: this
         ));
+    }
+    private bool TryGetBuffPreset(BuffType key, out EntityBuffPreset preset)
+    {
+        for (int i = 0; i < buffPresets.Length; i++)
+        {
+            if (buffPresets[i].Type == key)
+            {
+                preset = buffPresets[i];
+                return true;
+            }
+        }
 
+        preset = default;
+        return false;
     }
     protected IEnumerator ShowStatusCor()
     {
@@ -195,36 +228,13 @@ public class EntityView : MonoBehaviour
         blockView.Hide();
         yield return null;
     }
-    IEnumerator ShowBuffCor(BuffType buffType, int amount)
+    IEnumerator ShowBuffCor(EntityParticleKey particleKey, EntityBuffView view)
     {
         // 파티클
-        EntityParticleKey key = buffType switch
-        {
-            BuffType.Strength => EntityParticleKey.Buff,
-            BuffType.Weak or BuffType.Vulnerable => EntityParticleKey.Debuff,
-            _ => EntityParticleKey.None
-        };
-        particle.Play(key);
+        particle.Play(particleKey);
         yield return null;
 
         // UI
-        EntityBuffView view = buffViewPool.Pop();
-
-        for (int i = 0; i < buffPresets.Length; i++)
-        {
-            if (buffPresets[i].Type == buffType)
-            {
-                view.Init(
-                    preset: buffPresets[i],
-                    text: amount.ToString(),
-                    parent: buffParent
-                );
-
-                buffViewDictionary.Add(view.Type, view);
-                break;
-            }
-        }
-
         view.Show();
         yield return null;
     }

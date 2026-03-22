@@ -2,11 +2,11 @@
 using UnityEngine;
 public class RelicMonoSystem : BaseMonoSystem
 {
-    [SerializeField] private RelicViewPool pool;
+    [SerializeField] private RelicInstanceViewPool pool;
     [SerializeField] private UIWindowManager windowManager;
 
     private EventBus eventBus;
-    private Action<RelicView> onClick;
+    private Action<RelicInstanceView> onClick;
     private void Start()
     {
         CreateViews();
@@ -22,7 +22,7 @@ public class RelicMonoSystem : BaseMonoSystem
 
         CreateViews();
 
-        foreach (RelicView view in pool.Actives)
+        foreach (RelicInstanceView view in pool.Actives)
         {
             eventBus.Subscribe<RelicActivated>(view.OnRelicActivated);
         }
@@ -34,7 +34,7 @@ public class RelicMonoSystem : BaseMonoSystem
         RunManager.Instance.CurrentData.AddRelic(newInstance);
 
         //
-        RelicView newView = pool.CreateView(newInstance);
+        RelicInstanceView newView = pool.CreateView(newInstance);
         newView.AddListener(onClick);
 
         if (eventBus == null)
@@ -50,7 +50,7 @@ public class RelicMonoSystem : BaseMonoSystem
             source: relic
         ));
     }
-    public void OnClickRelic(RelicView relic)
+    public void OnClickRelic(RelicInstanceView relic)
     {
         if (!windowManager.TryGetWindow(WindowType.Relic, out UIWindow window) ||
             window is not RelicWindow relicWindow)
