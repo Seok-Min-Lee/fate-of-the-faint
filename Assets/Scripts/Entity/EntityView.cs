@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class EntityView : MonoBehaviour
@@ -93,12 +92,7 @@ public class EntityView : MonoBehaviour
         Func<IEnumerator> process;
         if (!buffViewDictionary.TryGetValue(e.Type, out EntityBuffView view))
         {
-            if (e.EndAmount <= 0)
-            {
-                return;
-            }
-
-            if (!TryGetBuffPreset(e.Type, out EntityBuffPreset preset))
+            if (e.EndAmount <= 0 || !TryGetBuffPreset(e.Type, out EntityBuffPreset preset))
             {
                 return;
             }
@@ -124,8 +118,8 @@ public class EntityView : MonoBehaviour
             {
                 process = () => ChangeBuffCor(
                     particleKey: GetParticleKey(e.Type),
-                    view: view, 
-                    startAmount: e.StartAmount, 
+                    view: view,
+                    startAmount: e.StartAmount,
                     endAmount: e.EndAmount
                 );
             }
@@ -141,7 +135,7 @@ public class EntityView : MonoBehaviour
             source: this
         ));
     }
-    private bool TryGetBuffPreset(BuffType key, out EntityBuffPreset preset)
+    protected bool TryGetBuffPreset(BuffType key, out EntityBuffPreset preset)
     {
         for (int i = 0; i < buffPresets.Length; i++)
         {
@@ -155,7 +149,7 @@ public class EntityView : MonoBehaviour
         preset = default;
         return false;
     }
-    private EntityParticleKey GetParticleKey(BuffType buff)
+    protected EntityParticleKey GetParticleKey(BuffType buff)
     {
         EntityParticleKey key;
 
@@ -184,7 +178,7 @@ public class EntityView : MonoBehaviour
         yield return null;
     }
 
-    IEnumerator HealCor(int currentHp, int maxHp)
+    protected IEnumerator HealCor(int currentHp, int maxHp)
     {
         // 파티클
         particle.Play(EntityParticleKey.Heal);
@@ -194,7 +188,7 @@ public class EntityView : MonoBehaviour
         hpView.Change(currentHp, maxHp);
         yield return null;
     }
-    IEnumerator HitCor(int startAmount, int endAmount, int currentHp, int maxHp)
+    protected IEnumerator HitCor(int startAmount, int endAmount, int currentHp, int maxHp)
     {
         // 데미지 표시
         DamageText damageText = damageTextPool.Pop();
@@ -216,7 +210,7 @@ public class EntityView : MonoBehaviour
         hpView.Change(currentHp, maxHp);
         yield return null;
     }
-    IEnumerator AddBlockCor(int amount)
+    protected IEnumerator AddBlockCor(int amount)
     {
         // 파티클
         particle.Play(EntityParticleKey.Block);
@@ -227,7 +221,7 @@ public class EntityView : MonoBehaviour
         yield return null;
     }
 
-    IEnumerator SubstractBlockCor(int startAmount, int endAmount)
+    protected IEnumerator SubstractBlockCor(int startAmount, int endAmount)
     {
         // UI
         blockView.Change(endAmount);
@@ -243,7 +237,7 @@ public class EntityView : MonoBehaviour
         blockView.Hide();
         yield return null;
     }
-    IEnumerator ShowBuffCor(EntityParticleKey particleKey, EntityBuffView view)
+    protected IEnumerator ShowBuffCor(EntityParticleKey particleKey, EntityBuffView view)
     {
         // 파티클
         particle.Play(particleKey);
@@ -254,14 +248,14 @@ public class EntityView : MonoBehaviour
         yield return null;
     }
 
-    IEnumerator HideBuffCor(EntityBuffView view)
+    protected IEnumerator HideBuffCor(EntityBuffView view)
     {
         buffViewPool.Push(view);
         buffViewDictionary.Remove(view.Type);
         yield return null;
     }
 
-    IEnumerator ChangeBuffCor(EntityParticleKey particleKey, EntityBuffView view, int startAmount, int endAmount)
+    protected IEnumerator ChangeBuffCor(EntityParticleKey particleKey, EntityBuffView view, int startAmount, int endAmount)
     {
         // 파티클
         if (endAmount > startAmount)
@@ -280,7 +274,8 @@ public class EntityView : MonoBehaviour
         yield return PlayAnimatorTriggerCor(key);
 
         // UI
-        statusCG.DOFade(0f, 1f).OnComplete(() => statusCG.gameObject.SetActive(false));
+        statusCG.DOFade(0f, 1f)
+                .OnComplete(() => statusCG.gameObject.SetActive(false));
         yield return null;
     }
     protected IEnumerator PlayAnimatorTriggerCor(string key, float duration = 0.25f)

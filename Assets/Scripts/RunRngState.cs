@@ -18,11 +18,9 @@ public sealed class RunRngState
 
         rng = new Random(Seed);
 
-        int i = 0;
-        while (i < Calls)
+        for (int i = 0; i < Calls; i++)
         {
             rng.Next();
-            i++;
         }
     }
 
