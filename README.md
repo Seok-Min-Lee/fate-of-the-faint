@@ -3,7 +3,7 @@ EventBus 기반 아키텍처로 구현한 Slay the Spire 스타일의 덱빌딩 
 전투 시스템을 이벤트 기반으로 설계하여 카드, 버프, 유물 시스템 간 결합도를 낮추었습니다.  
 카드 기반 턴제 전투와 덱 빌딩, 유물 시스템을 중심으로 설계되었습니다.  
 
-[빌드파일 다운로드(Windows)](https://github.com/Seok-Min-Lee/fate-of-the-faint/releases/tag/Demo_v2)  
+### [> 빌드파일 다운로드(Windows)](https://github.com/Seok-Min-Lee/fate-of-the-faint/releases/tag/Demo_v2)  
 ## 🎮 게임 프리뷰
 ### 전투 (공격 카드 사용)
 ![Attack-Card-Play](Docs/Previews/Attack-Card-Play.gif) 
@@ -28,10 +28,12 @@ EventBus 기반 아키텍처로 구현한 Slay the Spire 스타일의 덱빌딩 
 ### DAG (Directed Acyclic Graph)
 - **방향성 비순환 그래프** 방식을 활용하여 랜덤한 맵을 생성합니다.  
 ### Debug Console
-- 전투 중 발생하는 이벤트 흐름을 추적하기 위한 디버그 콘솔을 구현했습니다.  
+- 전투 중 발생하는 이벤트 흐름을 추적하기 위한 디버그 콘솔을 구현했습니다.
+### DOTween
+- DOTween 애니메이션 엔진을 활용하여 모션을 구현했습니다.
 
-# Architecture
-## 🔄 Gameplay Flow Architecture
+# 설계
+## 🔄 게임 진행
 게임 진행의 흐름을 **Run, Combat, Turn, Action** 구조로 분리하여 설계했습니다.  
 
 ![Gameplay Flow Architecture](Docs/Gameplay-Flow-Architecture.png)  
@@ -43,7 +45,7 @@ EventBus 기반 아키텍처로 구현한 Slay the Spire 스타일의 덱빌딩 
 | Turn | Combat 안에서 플레이어와 적이 번갈아 행동하는 **행동 단계** |
 | Action | Turn 안에서 실행되는 **개별 게임 이벤트 단위** (카드 사용, 턴 종료 등) |
 
-## 🧩 Data Architecture
+## 🧩 데이터
 게임 데이터를 **Data, Instance, View** 구조로 분리하여 설계했습니다.  
 이를 통해 데이터 정의, 런타임 상태 및 로직, 표현 계층을 독립적으로 관리할 수 있습니다.  
 
@@ -53,7 +55,7 @@ EventBus 기반 아키텍처로 구현한 Slay the Spire 스타일의 덱빌딩 
 | Instance | C# Script | Combat 또는 Run 단위로 생성되어 **게임 로직과 상태를 처리** |
 | View | Monobehavior | Instance 상태를 기반으로 **애니메이션 및 UI 표현** |
 
-## 🏗 System Architecture
+## 🏗 시스템
 **이벤트 기반 아키텍처(EventBus)** 를 사용하여 시스템 간 결합도를 낮추도록 설계했습니다.  
 각 시스템은 EventBus를 통해 상호작용합니다.  
 
