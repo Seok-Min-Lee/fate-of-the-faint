@@ -84,6 +84,15 @@ public class CombatCtrl : MonoBehaviour
     }
     private void Start()
     {
+        SoundKey bgm = RunManager.Instance.MapGraph.LatestNode.Type switch
+        {
+            MapNodeType.Combat => SoundKey.CombatBGM,
+            MapNodeType.Elite => SoundKey.EliteBGM,
+            MapNodeType.Boss => SoundKey.BossBGM,
+            _ => SoundKey.NormalBGM
+        };
+        AudioManager.Instance.PlayBGM(bgm);
+
         Sequence sequence = DOTween.Sequence();
         sequence.Append(playerView.Move(new Vector3(-0.71f, 0f, -0.71f)));
         sequence.AppendCallback(() => CombatSystem.CombatStart());

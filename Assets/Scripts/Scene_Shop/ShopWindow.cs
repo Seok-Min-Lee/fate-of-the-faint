@@ -73,14 +73,20 @@ public class ShopWindow : UIWindow
     }
     public void OnClickCancel()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         ChangeWindow(WindowType.Shop, WindowMode.Revert);
     }
     public void OnClickRemove()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         ChangeWindow(WindowType.CardRemove, WindowMode.Single);
     }
     private void OnClickGoods(IShopView source)
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         Action action = null;
         if (source is CardShopView card)
         {

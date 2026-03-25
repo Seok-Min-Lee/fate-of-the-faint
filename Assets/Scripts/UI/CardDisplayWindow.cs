@@ -38,6 +38,8 @@ public class CardDisplayWindow : UIWindow
     }
     public virtual void OnClickCancel()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         ChangeWindow(WindowType.CardDisplay, WindowMode.Revert);
     }
 }

@@ -20,6 +20,8 @@ public class RelicWindow : UIWindow
     }
     public void OnClick()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         ChangeWindow(WindowType.Relic, WindowMode.Revert);
     }
 }

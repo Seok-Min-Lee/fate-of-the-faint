@@ -27,11 +27,15 @@ public class PurchasePopup : MonoBehaviour
     }
     public void OnClickSubmit()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         onSubmit?.Invoke();
         Reset();
     }
     public void OnClickCancel()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         Reset();
     }
     private void Reset()

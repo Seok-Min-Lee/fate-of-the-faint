@@ -19,6 +19,8 @@ public class DefeatWindow : UIMotionWindow
     }
     public void OnClickBack()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         curtain.Close().OnComplete(() =>
         {
             RunManager.Instance.RemovePlayData();

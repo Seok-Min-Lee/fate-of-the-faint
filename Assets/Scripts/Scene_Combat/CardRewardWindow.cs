@@ -51,6 +51,8 @@ public class CardRewardWindow : UIWindow
     }
     public void OnClickSubmit()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         Vector3 startPos = selectedView.transform.position;
         Vector3 endPos = icon.transform.position;
 
@@ -84,6 +86,8 @@ public class CardRewardWindow : UIWindow
     }
     public void OnClickReset()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         // 전체 Hover Cancel, Hold Cancel
         for (int i = 0; i < pool.Actives.Count; i++)
         {
@@ -98,11 +102,15 @@ public class CardRewardWindow : UIWindow
     }
     public void OnClickSkip()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         ClearViews();
         ChangeWindow?.Invoke(WindowType.CardRewards, WindowMode.Revert);
     }
     public void OnClickNext()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         ClearViews();
         ChangeWindow?.Invoke(WindowType.Victory, WindowMode.Single);
     }

@@ -11,6 +11,8 @@ public class RestMenuWindow : UIWindow
     }
     public void OnClickRest()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         int heal = (int)(RunManager.Instance.CurrentData.MaxHp * 0.3f);
 
         RunManager.Instance.CurrentData.SetHp(
@@ -23,6 +25,8 @@ public class RestMenuWindow : UIWindow
     }
     public void OnClickEnhance()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         ChangeWindow(WindowType.EnhanceDisplay, WindowMode.Single);
     }
 }

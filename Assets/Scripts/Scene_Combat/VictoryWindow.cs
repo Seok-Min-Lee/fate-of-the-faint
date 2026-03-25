@@ -31,6 +31,8 @@ public class VictoryWindow : UIMotionWindow
     }
     public void OnClickNext()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         curtain.Close().OnComplete(() =>
         {
             if (RunManager.Instance.MapGraph.LatestNode.Type == MapNodeType.Boss)
@@ -73,16 +75,22 @@ public class VictoryWindow : UIMotionWindow
     }
     public void OnClickGoldReward(RewardButton button, int amount)
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         rewardButtonPool.Push(button);
         goldSystem.Add(amount);
     }
     public void OnClickRelicReward(RewardButton button, RelicSO relic)
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         relicSystem.AddRelic(relic);
         rewardButtonPool.Push(button);
     }
     public void OnClickCardReward(RewardButton button)
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         if (!cardSampleDic.TryGetValue(button, out List<CardSO> samples))
         {
             return;
@@ -131,7 +139,6 @@ public class VictoryWindow : UIMotionWindow
     }
     private void AddRelicRewardButton()
     {
-
 #if !UNITY_EDITOR
         if (RunManager.Instance.MapGraph.LatestNode.Type == MapNodeType.Combat && UnityEngine.Random.Range(0, 10) != 0)
         {
@@ -141,16 +148,11 @@ public class VictoryWindow : UIMotionWindow
 
         //
         RelicSO reward = RunManager.Instance.GetUnacquiredRelics(1).FirstOrDefault();
-        //HashSet<RelicSO> hashset = RunManager.Instance.CurrentData.Relics.Select(x => x.Origin).ToHashSet();
-        //List<RelicSO> candidates = RunManager.Instance.Catalog.RelicList
-        //                           .Where(candidate => !hashset.Contains(candidate))
-        //                           .ToList();
 
-        //if (candidates.Count == 0)
-        //{
-        //    return;
-        //}
-        //RelicSO reward = candidates[UnityEngine.Random.Range(0, candidates.Count)];
+        if (reward == null)
+        {
+            return;
+        }
 
         RewardButton button = rewardButtonPool.Pop();
 

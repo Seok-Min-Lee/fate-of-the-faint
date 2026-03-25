@@ -12,6 +12,8 @@ public class EndingCtrl : MonoBehaviour
     [SerializeField] private float duration;
     private void Start()
     {
+        AudioManager.Instance.PlayBGM(SoundKey.EndingBGM);
+
         homeButtonCG.blocksRaycasts = false;
         dimmedCG.alpha = 1f;
         homeButtonCG.alpha = 0f;
@@ -33,11 +35,15 @@ public class EndingCtrl : MonoBehaviour
     }
     public void OnClickBackground()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         homeButtonCG.blocksRaycasts = true;
         homeButtonCG.alpha += 0.1f;
     }
     public void OnClickHome()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         RunManager.Instance.RemovePlayData();
         UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.HOME);
     }

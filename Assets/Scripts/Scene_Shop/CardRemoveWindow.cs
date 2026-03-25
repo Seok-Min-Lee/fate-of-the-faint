@@ -44,6 +44,8 @@ public class CardRemoveWindow : CardDisplayWindow
     }
     public void OnClickSubmit()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         if (RunManager.Instance.CurrentData.Gold < 75)
         {
             submitButton.RectTransform.DOPunchPosition(
@@ -65,6 +67,8 @@ public class CardRemoveWindow : CardDisplayWindow
     }
     public void OnClickBackground()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         if (currentView != null)
         {
             currentView.HoldCancel();
@@ -77,6 +81,8 @@ public class CardRemoveWindow : CardDisplayWindow
     }
     private void OnClickView(CardDisplayView view)
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         if (currentView != null)
         {
             currentView.HoldCancel();

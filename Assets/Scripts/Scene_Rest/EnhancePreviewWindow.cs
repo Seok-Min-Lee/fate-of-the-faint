@@ -39,10 +39,14 @@ public class EnhancePreviewWindow : UIWindow
 
     public void OnClickCancel()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         ChangeWindow(WindowType.EnhancePreview, WindowMode.Revert);
     }
     public void OnClickSelect()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         RunManager.Instance.CurrentData.RemoveCard(before.Id, before.SubId);
         RunManager.Instance.CurrentData.AddCard(after);
 

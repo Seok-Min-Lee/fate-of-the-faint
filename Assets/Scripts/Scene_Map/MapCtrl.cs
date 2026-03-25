@@ -21,6 +21,7 @@ public class MapCtrl : MonoBehaviour
             UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.INIT);
             return;
         }
+        AudioManager.Instance.PlayBGM(SoundKey.NormalBGM);
 
         // Init
         Graph = RunManager.Instance.MapGraph;
@@ -57,14 +58,20 @@ public class MapCtrl : MonoBehaviour
 #endif
     public void OnClickCardDisplay()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         windowManager.ActivateWindow(WindowType.CardDisplay, WindowMode.Single);
     }
     public void OnClickMap()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         windowManager.ActivateWindow(WindowType.Map, WindowMode.Single);
     }
     public void OnClickSetting()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         windowManager.ActivateWindow(WindowType.Setting, WindowMode.Single);
     }
     private bool TrySelectNode(MapNode node)

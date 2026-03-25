@@ -20,6 +20,8 @@ public class EnhanceDisplayWindow : CardDisplayWindow
     }
     private void OnClickView(CardDisplayView view)
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         if (view.Origin.UpgradeCard == null)
         {
             view.RectTransform.DOPunchPosition(

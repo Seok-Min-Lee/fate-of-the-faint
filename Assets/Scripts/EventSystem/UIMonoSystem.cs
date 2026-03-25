@@ -113,18 +113,26 @@ public class UIMonoSystem : BaseMonoSystem
     }
     public void OnClickCardDisplay()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         windowManager.ActivateWindow(WindowType.CardDisplay, WindowMode.Single);
     }
     public void OnClickMap()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         windowManager.ActivateWindow(WindowType.Map, WindowMode.Single);
     }
     public void OnClickSetting()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         windowManager.ActivateWindow(WindowType.Setting, WindowMode.Single);
     }
     public void OnClickReturn()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         actionSystem.ExcuteAction(source: this, type: ActionType.PlayerTurnEnd, (eventContext, motionContext) =>
         {
             RequestContext requestContext = new RequestContext(source: this);

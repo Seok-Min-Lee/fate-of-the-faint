@@ -100,6 +100,8 @@ public class MapNodeView : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     }
     public void OnClick()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         if (checkProcess != null && checkProcess.Invoke(Node))
         {
             Sequence sequence = DOTween.Sequence();

@@ -46,6 +46,8 @@ public class RewardButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     }
     public void OnClick()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         onClick?.Invoke(this);
     }
 }

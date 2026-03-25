@@ -11,6 +11,8 @@ public class HomeCtrl : MonoBehaviour
     [SerializeField] private MenuButton continueButton;
     private void Start()
     {
+        AudioManager.Instance.PlayBGM(SoundKey.TitleBGM);
+
         background.CanvasGroup.alpha = 0f;
         titleCG.alpha = 0f;
         menuCG.alpha = 0f;
@@ -42,16 +44,22 @@ public class HomeCtrl : MonoBehaviour
 
     public void OnClickContinue()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
     }
     public void OnClickNewGame()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         RunManager.Instance.ClearPlayData();
         RunManager.Instance.SaveData();
         UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
     }
     public void OnClickExit()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         Application.Quit();
     }
 }

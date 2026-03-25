@@ -95,6 +95,8 @@ public class RestCompleteWindow : UIWindow
 
     public void OnClickNext()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         curtain.Close().OnComplete(() =>
         {
             RunManager.Instance.SaveData();

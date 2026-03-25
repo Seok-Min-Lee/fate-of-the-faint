@@ -52,6 +52,8 @@ public class RelicMonoSystem : BaseMonoSystem
     }
     public void OnClickRelic(RelicInstanceView relic)
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         if (!windowManager.TryGetWindow(WindowType.Relic, out UIWindow window) ||
             window is not RelicWindow relicWindow)
         {

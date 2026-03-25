@@ -20,11 +20,15 @@ public class TreasureCtrl : MonoBehaviour
     }
     public void OnClickBox()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         button.interactable = false;
         popup.Init();
     }
     public void OnClickNext()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         curtain.Close().OnComplete(() =>
         {
             RunManager.Instance.SaveData();
@@ -37,14 +41,20 @@ public class TreasureCtrl : MonoBehaviour
     }
     public void OnClickCardDisplay()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         windowManager.ActivateWindow(WindowType.CardDisplay, WindowMode.Single);
     }
     public void OnClickMap()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         windowManager.ActivateWindow(WindowType.Map, WindowMode.Single);
     }
     public void OnClickSetting()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         windowManager.ActivateWindow(WindowType.Setting, WindowMode.Single);
     }
 }

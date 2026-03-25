@@ -8,6 +8,8 @@ public class ShopCtrl : MonoBehaviour
     
     private void Start()
     {
+        AudioManager.Instance.PlayBGM(SoundKey.NormalBGM);
+
         if (windowManager.TryGetWindow(WindowType.Shop, out UIWindow window) &&
             window is ShopWindow shopWindow)
         {
@@ -16,10 +18,14 @@ public class ShopCtrl : MonoBehaviour
     }
     public void OnClickShop()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         windowManager.ActivateWindow(WindowType.Shop, WindowMode.Single);
     }
     public void OnClickNext()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         curtain.Close().OnComplete(() =>
         {
             RunManager.Instance.SaveData();
@@ -28,14 +34,20 @@ public class ShopCtrl : MonoBehaviour
     }
     public void OnClickCardDisplay()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         windowManager.ActivateWindow(WindowType.CardDisplay, WindowMode.Single);
     }
     public void OnClickMap()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         windowManager.ActivateWindow(WindowType.Map, WindowMode.Single);
     }
     public void OnClickSetting()
     {
+        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
+
         windowManager.ActivateWindow(WindowType.Setting, WindowMode.Single);
     }
 }
