@@ -1,11 +1,10 @@
-﻿using DG.Tweening;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TreasureCtrl : MonoBehaviour
+public class TreasureCtrl : BaseSceneCtrl
 {
-    [SerializeField] private UIWindowManager windowManager;
     [SerializeField] private UICurtain curtain;
 
     [SerializeField] private Button button;
@@ -38,23 +37,5 @@ public class TreasureCtrl : MonoBehaviour
     public void ShowNext()
     {
         nextButton.gameObject.SetActive(true);
-    }
-    public void OnClickCardDisplay()
-    {
-        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
-
-        windowManager.ActivateWindow(WindowType.CardDisplay, WindowMode.Single);
-    }
-    public void OnClickMap()
-    {
-        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
-
-        windowManager.ActivateWindow(WindowType.Map, WindowMode.Single);
-    }
-    public void OnClickSetting()
-    {
-        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
-
-        windowManager.ActivateWindow(WindowType.Setting, WindowMode.Single);
     }
 }

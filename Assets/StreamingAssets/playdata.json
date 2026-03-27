@@ -1,8 +1,8 @@
 {
     "playerId": "Player_A",
-    "currentHp": 100,
+    "currentHp": 51,
     "maxHp": 100,
-    "gold": 201,
+    "gold": 304,
     "energy": 3,
     "rewardCardOptionCount": 3,
     "rng": {
@@ -11,28 +11,34 @@
     },
     "nodes": [],
     "cardIds": [
-        "atk_cleave+",
-        "atk_cleave+",
-        "atk_cleave+",
-        "atk_cleave+",
-        "atk_cleave+",
-        "atk_cleave+",
-        "atk_cleave+",
-        "atk_cleave+",
-        "atk_cleave+",
-        "atk_cleave+"
+        "atk_bash",
+        "atk_strike",
+        "atk_strike",
+        "atk_strike",
+        "atk_strike",
+        "skl_defend",
+        "skl_defend",
+        "skl_defend",
+        "skl_defend",
+        "skl_defend",
+        "skl_shrugItOff",
+        "atk_twinStrike",
+        "skl_flex",
+        "skl_bandageUp",
+        "pwr_combust",
+        "atk_strike",
+        "atk_cleave"
     ],
     "relicIds": [
-        "Bag of Marbles",
-        "Akabeko",
-        "Burning Blood",
-        "Vajra",
-        "Happy Flower",
-        "Gremlin Horn",
-        "Centennial Puzzle",
         "Art of War",
+        "Akabeko",
+        "Centennial Puzzle",
+        "Vajra",
         "Nunchaku",
-        "Orichalcum"
+        "Bag of Marbles",
+        "Orichalcum",
+        "Burning Blood",
+        "Gremlin Horn"
     ],
     "potionIds": [],
     "records": [
@@ -42,30 +48,18 @@
         },
         {
             "Id": "진행한 턴 수",
-            "Value": 11
+            "Value": 26
         },
         {
             "Id": "사용한 카드 수",
-            "Value": 17
+            "Value": 70
         },
         {
             "Id": "몬스터 처치 수",
-            "Value": 28
-        },
-        {
-            "Id": "유물방 방문 횟수",
-            "Value": 1
-        },
-        {
-            "Id": "엘리트 전투 횟수",
-            "Value": 1
+            "Value": 27
         },
         {
             "Id": "상점 방문 횟수",
-            "Value": 1
-        },
-        {
-            "Id": "휴식 횟수",
             "Value": 1
         }
     ]

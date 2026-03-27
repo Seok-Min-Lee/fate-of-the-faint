@@ -1,10 +1,9 @@
-﻿using DG.Tweening;
+using DG.Tweening;
 using UnityEngine;
 
-public class ShopCtrl : MonoBehaviour
+public class ShopCtrl : BaseSceneCtrl
 {
     [SerializeField] private UICurtain curtain;
-    [SerializeField] private UIWindowManager windowManager;
     
     private void Start()
     {
@@ -31,23 +30,5 @@ public class ShopCtrl : MonoBehaviour
             RunManager.Instance.SaveData();
             UnityEngine.SceneManagement.SceneManager.LoadScene(SceneNames.MAP);
         });
-    }
-    public void OnClickCardDisplay()
-    {
-        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
-
-        windowManager.ActivateWindow(WindowType.CardDisplay, WindowMode.Single);
-    }
-    public void OnClickMap()
-    {
-        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
-
-        windowManager.ActivateWindow(WindowType.Map, WindowMode.Single);
-    }
-    public void OnClickSetting()
-    {
-        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
-
-        windowManager.ActivateWindow(WindowType.Setting, WindowMode.Single);
     }
 }

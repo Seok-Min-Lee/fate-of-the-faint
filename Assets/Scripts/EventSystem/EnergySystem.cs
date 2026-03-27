@@ -75,7 +75,7 @@ public class EnergySystem : BaseSystem
             return;
         }
 
-        // 1. 소모량이 양수이거나 현재 남은 마나보다 요구치가 많은지 검증 (불가 시 리턴)
+        // 1. 소모량이 양수이거나 현재량보다 많으면 리턴
         if (e.Amount > 0 || Mathf.Abs(e.Amount) > Energy)
         {
             return;
@@ -191,7 +191,7 @@ public class EnergyContext
     }
 
     /// <summary>
-    /// 누적된 보정치를 반영한 최종 가감 수치 산출
+    /// 누적된 보정치를 반영한 최종 수치 산출
     /// </summary>
     public int Calculate()
     {

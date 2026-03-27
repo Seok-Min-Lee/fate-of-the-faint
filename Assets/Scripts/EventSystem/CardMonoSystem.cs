@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// 전투 내 카드 덱(뽑을 카드, 패, 버린 카드, 소멸 덱) 풀 관리 및 드로우/사용 사이클 총괄 시스템
+/// 전투 내 카드 풀 관리 및 사이클 총괄 시스템
 /// </summary>
 public class CardMonoSystem : BaseMonoSystem
 {
@@ -32,7 +32,7 @@ public class CardMonoSystem : BaseMonoSystem
     private ITargetable target;
 
     /// <summary>
-    /// 시스템 초기화 시 전역 런 매니저 덱의 카드 구조를 인게임 컨텍스트용 인스턴스 배열로 구성 (셔플)
+    /// 시스템 초기화 시 인게임용 인스턴스 구성 (셔플)
     /// </summary>
     public void Init(
         EventBus eventBus,
@@ -44,7 +44,7 @@ public class CardMonoSystem : BaseMonoSystem
         this.actionSystem = actionSystem;
         this.powerSystem = powerSystem;
 
-        // 1. 원본 세이브 데이터(Run 데이터) 순회하며 현재 전투용 카드 복제 객체 할당
+        // 1. 전투용 카드 복제 객체 할당
         List<CardInstance> instances = new List<CardInstance>();
         foreach (CardEntry entry in RunManager.Instance.CurrentData.Cards)
         {
@@ -54,7 +54,7 @@ public class CardMonoSystem : BaseMonoSystem
             ));
         }
 
-        // 2. 관리 배열 모두 비우고 셔플을 통해 최초 뽑을 카드 더미 구조 구축 반영
+        // 2. 최초 뽑을 카드 더미 구축 (셔플)
         cardInstanceAll.Clear();
         cardInstanceAll.AddRange(instances);
         drawPile.AddRange(Utils.Shuffle(instances));
@@ -63,7 +63,7 @@ public class CardMonoSystem : BaseMonoSystem
         UpdateUI();
     }
     /// <summary>
-    /// 카드 사용 개시 시 에너지 결제 심사 및 카드 종류에 따른 목적지(소멸/버림) 분기 처리
+    /// 카드 사용 처리
     /// </summary>
     public void PlayCardStart(CardView cardView, ITargetable target)
     {
@@ -74,7 +74,7 @@ public class CardMonoSystem : BaseMonoSystem
         {
             bool existModifier = cardInstanceAll.Any(c => c.ExistModifier);
 
-            // 1. 카드 사용 선언 이벤트 발행 (UI 및 연출 동기화 선행 진행)
+            // 1. 카드 사용 선언 이벤트 발행
             eventBus.Publish<CardPlayDeclared>(new CardPlayDeclared(
                 context: eventContext,
                 motion: motionContext,
@@ -83,7 +83,7 @@ public class CardMonoSystem : BaseMonoSystem
 
             RequestContext requestContext = new RequestContext(source: this);
 
-            // 2. 카드 비용만큼 코스트(에너지) 결제 차감 요청 발행
+            // 2. 카드 비용만큼 에너지 차감 요청 발행
             eventBus.Publish<EnergyChangeRequested>(new EnergyChangeRequested(
                 context: eventContext,
                 motion: motionContext,
@@ -94,7 +94,7 @@ public class CardMonoSystem : BaseMonoSystem
             // 3. 결제 승인 성공 시 동작 수행
             if (requestContext.isResult)
             {
-                // 소멸(이례) 속성을 지녔는가 판별하여 맞는 더미로 영구 폐기 및 버리기 이동
+                // 소멸 속성 여부에 따라 소멸 및 버리기
                 if (cardView.CardInstance.Origin.IsExhausted)
                 {
                     ExhaustCard(
@@ -128,7 +128,7 @@ public class CardMonoSystem : BaseMonoSystem
         });
     }
     /// <summary>
-    /// 전투 수명 주기를 갖는 비용 증감 효과 객체 만료 일괄 초기화
+    /// 전투 종료 처리
     /// </summary>
     public void OnCombatEnded(CombatEnded e)
     {
@@ -137,11 +137,12 @@ public class CardMonoSystem : BaseMonoSystem
             return;
         }
 
+        // 전투 단위 보정 효과 초기화
         RemoveModificationsByScope(CostModificationScope.Combat);
     }
 
     /// <summary>
-    /// 플레이어 시작 단위 턴 개시 시 기본 패 드로우 루프(5장) 가동
+    /// 플레이어 턴 개시 처리 
     /// </summary>
     public void OnPlayerTurnStarted(PlayerTurnStarted e) 
     {
@@ -150,6 +151,7 @@ public class CardMonoSystem : BaseMonoSystem
             return;
         }
 
+        // 기본 패 5장 드로우
         for (int i = 0; i < 5; i++)
         {
             DrawCard(context: e.Context, motion: e.Motion);
@@ -157,7 +159,7 @@ public class CardMonoSystem : BaseMonoSystem
     }
 
     /// <summary>
-    /// 단위 턴 종료 시 남은 패 전체 일괄 소모 및 턴 보유 스코프 보정 효과 초기화
+    /// 단위 턴 종료 처리
     /// </summary>
     public void OnPlayerTurnEnded(PlayerTurnEnded e)
     {
@@ -166,16 +168,18 @@ public class CardMonoSystem : BaseMonoSystem
             return;
         }
 
+        // 남은 패 전체 일괄 소모
         ClearCardHand(
             context: e.Context.RewriteNew(this), 
             motion: e.Motion
         );
 
+        // 턴 단위 보정 효과 초기화
         RemoveModificationsByScope(CostModificationScope.Turn);
     }
 
     /// <summary>
-    /// 카드 코스트 지불 확정 시 세부 분류군(공격/스킬/파워 등) 본연의 대상 타겟 효과 적용 프로세스 실행
+    /// 카드 코스트 지불 확정 후 카드 효과 처리
     /// </summary>
     public void OnEnergyResolved(EnergyResolved e)
     {
@@ -186,7 +190,7 @@ public class CardMonoSystem : BaseMonoSystem
 
         EventContext context = e.Context.RewriteNew(this);
 
-        // 1. 공격군 카드 처리
+        // 1. 공격 카드 처리
         if (cardInstance.Origin is AttackCardSO)
         {
             eventBus.Publish<AttackPlayed>(new AttackPlayed(
@@ -203,7 +207,7 @@ public class CardMonoSystem : BaseMonoSystem
                 effects: cardSO.Effects
             );
         }
-        // 2. 스킬군 카드 처리
+        // 2. 스킬 카드 처리
         else if (cardInstance.Origin is SkillCardSO)
         {
             eventBus.Publish<SkillPlayed>(new SkillPlayed(
@@ -220,7 +224,7 @@ public class CardMonoSystem : BaseMonoSystem
                 effects: cardSO.Effects
             );
         }
-        // 3. 파워(지속/수명 스택)군 카드 처리
+        // 3. 파워 카드 처리
         else
         {
             eventBus.Publish<PowerPlayed>(new PowerPlayed(
@@ -272,14 +276,14 @@ public class CardMonoSystem : BaseMonoSystem
             ));
         }
 
-        // 활성화(핸드) 카드 UI 외형 수치 텍스트 업데이트
+        // 핸드 카드 UI 외형 수치 텍스트 업데이트
         foreach (CardView view in cardViewPool.Actives)
         {
             view.ModifiyCost();
         }
     }
     /// <summary>
-    /// 단일 카드가 소유 범주로 갖고 있는 전체 상태이상 및 데미지 배열 반복 연산 수행
+    /// 카드 효과 처리
     /// </summary>
     private void ApplyEffects(IEnumerable<EffectSO> effects, EventContext context, MotionContext motion)
     {
@@ -287,13 +291,13 @@ public class CardMonoSystem : BaseMonoSystem
 
         foreach (EffectSO effect in effects)
         {
-            // 1. 단일 대상 또는 모든 대상 판별 배열 컴파일 추출
+            // 1. 타겟 설정
             List<EntityInstance> targets = GetTargets(
                 type: effect.TargetType, 
                 context: context
             );
 
-            // 2. 단일 타겟에 대한 세부 단위 효과 처리 로직 콜백 대리자 취합
+            // 2. 타겟에 대한 세부 효과 처리 로직 콜백 취합
             Action apply = effect.Apply(
                 eventBus: eventBus, 
                 context: context,
@@ -319,7 +323,7 @@ public class CardMonoSystem : BaseMonoSystem
     }
 
     /// <summary>
-    /// 이넘 식별자에 따라 효과가 도달할 오브젝트 인스턴스 배열을 반환 구성
+    /// TargetType 에 따라 효과 대상 인스턴스 리스트 반환
     /// </summary>
     private List<EntityInstance> GetTargets(TargetType type, EventContext context)
     {
@@ -351,10 +355,10 @@ public class CardMonoSystem : BaseMonoSystem
             return;
         }
 
-        // 2. 뽑을 더미가 고갈됐을 시 무덤을 덱으로 변환하여 충전
+        // 2. 뽑을 더미가 고갈되면 버린 더미에서 충전
         ChargeCard(context: context, motion: motion);
 
-        // 3. 내부 보유 리스트 주소 변경 조작 
+        // 3. 뽑을 카드 인스턴스 획득 및 리스트 이동
         CardInstance cardInstance = drawPile.FirstOrDefault();
         drawPile.Remove(cardInstance);
         hand.Add(cardInstance);
@@ -374,7 +378,7 @@ public class CardMonoSystem : BaseMonoSystem
     }
 
     /// <summary>
-    /// 단일 카드를 패에서 제외 후 버린 카드 더미(무덤)로 이관 조작 수행
+    /// 단일 카드를 패에서 버린 카드 더미로 이관
     /// </summary>
     private void DiscardCard(CardView cardView, EventContext context, MotionContext motion)
     {
@@ -389,7 +393,7 @@ public class CardMonoSystem : BaseMonoSystem
             source: this
         ));
 
-        // 3. 대상 카드 파기 완료 통보 알림
+        // 3. 처리 종료 통보 이벤트 알림
         eventBus.Publish<CardDiscarded>(new CardDiscarded(
             context: context.RewriteNew(this),
             motion: motion
@@ -397,7 +401,7 @@ public class CardMonoSystem : BaseMonoSystem
     }
 
     /// <summary>
-    /// 여러 카드를 한 번에 패에서 제외시켜 대량의 버린 카드 더미(무덤)로 단체 이관 루프 조작
+    /// 여러 카드를 패에서 버린 카드 더미로 단체 이관
     /// </summary>
     private void DiscardCards(IEnumerable<CardView> views, EventContext context, MotionContext motion)
 	{
@@ -415,7 +419,7 @@ public class CardMonoSystem : BaseMonoSystem
 			source: this
 		));
 
-		// 3. 다중 대상 카드 통보 알림
+		// 3. 처리 종료 통보 이벤트 알림
 		eventBus.Publish<CardDiscarded>(new CardDiscarded(
             context: context.RewriteNew(this),
             motion: motion
@@ -423,11 +427,11 @@ public class CardMonoSystem : BaseMonoSystem
     }
 
     /// <summary>
-    /// 특정 효과 등을 가진 단일 카드를 일시적 영구 추방(소멸 더미) 상태로 이관 조작 지정 수행
+    /// 단일 카드를 소멸 더미로 이관
     /// </summary>
     private void ExhaustCard(CardView cardView, EventContext context, MotionContext motion)
     {
-        // 1. 영구 소멸 풀 데이터 이관
+        // 1. 소멸 풀 데이터 이관
         hand.Remove(cardView.CardInstance);
         exhaustPile.Add(cardView.CardInstance);
 
@@ -438,7 +442,7 @@ public class CardMonoSystem : BaseMonoSystem
             source: this
         ));
 
-        // 3. 소멸 완료 이벤트 전파
+        // 3. 처리 종료 통보 이벤트 알림
         eventBus.Publish<CardExhausted>(new CardExhausted(
             context: context.RewriteNew(this),
             motion: motion
@@ -446,7 +450,7 @@ public class CardMonoSystem : BaseMonoSystem
     }
 
     /// <summary>
-    /// 드로우 파일이 고갈되었을 때, 버린 카드 더미를 섞어 덱을 충전 재생구축 수행
+    /// 뽑을 카드 더미 고갈 시, 버린 카드 더미를 섞어 충전
     /// </summary>
     private void ChargeCard(EventContext context, MotionContext motion)
     {
@@ -462,7 +466,7 @@ public class CardMonoSystem : BaseMonoSystem
 
         UpdateUI();
 
-        // 덱 리셰플 알림 전달
+        // 처리 종료 통보 이벤트 알림
         eventBus.Publish<CardCharged>(new CardCharged(
             context: context.RewriteNew(this),
             motion: motion
@@ -470,18 +474,18 @@ public class CardMonoSystem : BaseMonoSystem
     }
 
     /// <summary>
-    /// 손패에 가지고 있는 전체 단일 카드 목록들을 역순으로 비우기 처리 조달
+    /// 손패에 가지고 있는 전체 단일 카드 목록 비우기
     /// </summary>
     private void ClearCardHand(EventContext context, MotionContext motion)
     {
 		DiscardCards(
-			views: cardHand.Cards.Reverse(),
+			views: cardHand.Cards.Reverse(),    // 역순
 			context: context,
 			motion: motion
 		);
 	}
     /// <summary>
-    /// 카드 드로우 UI 애니메이션 동작 코루틴
+    /// 단일 카드 드로우 모션 코루틴
     /// </summary>
     IEnumerator DrawCardCor(CardInstance cardInstance)
     {
@@ -498,7 +502,7 @@ public class CardMonoSystem : BaseMonoSystem
     }
 
     /// <summary>
-    /// 카드 단일 버림 UI 애니메이션 동작 코루틴
+    /// 단일 카드 버림 모션 코루틴
     /// </summary>
     IEnumerator DiscardCardCor(CardView cardView)
     {
@@ -511,20 +515,7 @@ public class CardMonoSystem : BaseMonoSystem
     }
 
     /// <summary>
-    /// 카드 영구 소멸 UI 애니메이션 동작 코루틴
-    /// </summary>
-    IEnumerator ExhaustCardCor(CardView cardView)
-    {
-        cardHand.DestroyCard(cardView);
-
-        yield return cardView.Exhaust().WaitForCompletion();
-
-        cardViewPool.Push(cardView);
-        UpdateUI();
-    }
-
-    /// <summary>
-    /// 카드 다중 일괄 버림 간격 순차 UI 애니메이션 동작 코루틴
+    /// 다중 카드 일괄 버림 모션 코루틴
     /// </summary>
     IEnumerator DiscardCardsCor(IEnumerable<CardView> views)
     {
@@ -551,7 +542,20 @@ public class CardMonoSystem : BaseMonoSystem
 	}
 
     /// <summary>
-    /// 적용 수명이 끝난 특정 스코프 조건 카드 비용 조작(할인/가중 등) 효과의 일괄 초기화
+    /// 단일 카드 소멸 모션 코루틴
+    /// </summary>
+    IEnumerator ExhaustCardCor(CardView cardView)
+    {
+        cardHand.DestroyCard(cardView);
+
+        yield return cardView.Exhaust().WaitForCompletion();
+
+        cardViewPool.Push(cardView);
+        UpdateUI();
+    }
+
+    /// <summary>
+    /// 수명이 끝난 효과 초기화
     /// </summary>
     private void RemoveModificationsByScope(CostModificationScope scope)
     {

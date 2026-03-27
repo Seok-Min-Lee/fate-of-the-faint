@@ -1,17 +1,15 @@
-﻿using DG.Tweening;
+using DG.Tweening;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MapCtrl : MonoBehaviour
+public class MapCtrl : BaseSceneCtrl
 {
     [SerializeField] private UICurtain curtain;
 
     [SerializeField] private MapBootstrap bootstrap;
     [SerializeField] private ScrollRect scrollRect;
-
-    [SerializeField] private UIWindowManager windowManager;
     public MapGraph Graph { get; private set; }
     private Sequence seq;
     private void Awake()
@@ -56,24 +54,7 @@ public class MapCtrl : MonoBehaviour
         }
     }
 #endif
-    public void OnClickCardDisplay()
-    {
-        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
 
-        windowManager.ActivateWindow(WindowType.CardDisplay, WindowMode.Single);
-    }
-    public void OnClickMap()
-    {
-        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
-
-        windowManager.ActivateWindow(WindowType.Map, WindowMode.Single);
-    }
-    public void OnClickSetting()
-    {
-        AudioManager.Instance.PlaySFX(SoundKey.TouchSFX);
-
-        windowManager.ActivateWindow(WindowType.Setting, WindowMode.Single);
-    }
     private bool TrySelectNode(MapNode node)
     {
         bool success = false;
