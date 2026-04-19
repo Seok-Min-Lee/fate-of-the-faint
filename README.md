@@ -1,9 +1,21 @@
 # fate-of-the-faint
-EventBus 기반 아키텍처로 구현한 Slay the Spire 스타일의 덱빌딩 로그라이크 게임입니다.  
-전투 시스템을 이벤트 기반으로 설계하여 카드, 버프, 유물 시스템 간 결합도를 낮추었습니다.  
+Slay the Spire 스타일의 덱빌딩 로그라이크 게임입니다.  
+EventBus 기반으로 전투 시스템을 설계하여 카드, 버프, 유물 시스템 간 결합도를 낮추었습니다.  
 카드 기반 턴제 전투와 덱 빌딩, 유물 시스템을 중심으로 설계되었습니다.  
 
-### [> 빌드파일 다운로드(Windows)](https://github.com/Seok-Min-Lee/fate-of-the-faint/releases/tag/Demo_v2)  
+| 구분 | 요소 | 상세 |
+|:---:|---|---|
+| 엔진 | 버전 | Unity 6 (6000.2.12f1) |
+|  | 렌더 파이프라인 | URP (Universal Render Pipeline) |
+| 라이브러리 | 모션 | DOTween  |
+|  | AI Agent System | MCP For Unity |
+| 활용 도구 | 리소스 | Figma |
+|  | 개발 | ChatGPT, Gemini |
+|  | 리팩토링 | Antigravity |
+| 기타 | 타겟 플랫폼 | Windows |
+|  | 개발 규모 | 1인 / 2개월 |
+
+[> 빌드파일 다운로드(Windows)](https://github.com/Seok-Min-Lee/fate-of-the-faint/releases/tag/Demo_v2)  
 ## 🎮 게임 프리뷰
 ### 전투 (공격 카드 사용)
 ![Attack-Card-Play](Docs/Previews/Attack-Card-Play.gif) 
